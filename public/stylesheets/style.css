@@ -6,3 +6,24 @@ body {
 a {
   color: #00B7FF;
 }
+
+nav > img {
+  width: 100px;
+  object-fit: contain;
+  margin: 2px 30px;
+  
+}
+
+.login {
+  height: auto;
+}
+
+.login img {
+  height: 20px;
+  margin-left: 5px;
+}
+
+.review-user img {
+  border-radius: 50%;
+  height: 40px;
+}
