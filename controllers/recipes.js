@@ -6,6 +6,8 @@ module.exports = {
   show,
   new: newRecipe,
   create,
+  edit,
+  update
 };
 
 function index(req, res) {
@@ -19,6 +21,7 @@ function show(req, res) {
     .populate("origin")
     .exec(function (err, recipe) {
       Cuisine.find({ _id: { $nin: recipe.origin } }, function (err, cuisines) {
+        origin = {}
         console.log(recipe);
         res.render("recipes/show", { title: "Recipe Detail", recipe, cuisines });
       });
@@ -40,4 +43,16 @@ function create(req, res) {
     console.log(recipe);
     res.redirect(`/recipes/${recipe._id}`);
   });
+}
+
+function edit(req, res) {
+  res.render('recipes/edit', {
+      title: 'Edit Recipe',
+      recipe: Recipe.findById(req.params.id)
+  })
+}
+
+function update(req, res) {
+  Recipe.findById(req.body, req.params.id)
+  res.redirect(`/recipes/${req.params.id}`)
 }

@@ -60,7 +60,8 @@ const recipeSchema = new Schema({
   },
   origin: [{
     type: Schema.Types.ObjectId,
-    ref: 'Cuisine'
+    ref: 'Cuisine',
+    default: {}
   }],
   haveMade: {type: Boolean, default: false},
   ingredients: [ingredientSchema],

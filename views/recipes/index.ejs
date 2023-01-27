@@ -7,6 +7,7 @@
       <th>Course</th>
       <th>Total Time</th>
       <th></th>
+      <th>Edit</th>
     </tr>
   </thead>
   <tbody>
@@ -16,6 +17,7 @@
         <td><%= g.course %></td>
         <td><%= g.totalTime %></td>
         <td><a href="/recipes/<%= g._id %>">Instructions</a></td>
+        <td><a href="/recipes/<%= g._id %>/edit">Edit Recipe</a></td>
       </tr>
       <% }); %>
     </tbody>
