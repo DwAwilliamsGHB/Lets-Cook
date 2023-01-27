@@ -3,7 +3,6 @@ var router = express.Router();
 var recipesCtrl = require('../controllers/recipes');
 const ensureLoggedIn = require('../config/ensureLoggedIn')
 
-// All routes start with '/recipes'
 
 router.get('/', recipesCtrl.index);
 router.get('/new', ensureLoggedIn, recipesCtrl.new);

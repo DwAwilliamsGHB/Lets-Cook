@@ -15,7 +15,6 @@ function create(req, res) {
 
 function newCuisine(req, res) {
   Cuisine.find({})
-    //Sort cuisines by their name
     .sort('name')
     .exec(function (err, cuisines) {
       res.render('cuisines/new', {
