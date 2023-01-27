@@ -1,0 +1,26 @@
+<%- include('../partials/header') %>
+
+<section id="show-page">
+  <div>Dish Name: </div>
+  <div><%= recipe.dishName %></div>
+  <div>Course: </div>
+  <div><%= recipe.course %></div>
+  <div>Servings: </div>
+  <div><%= recipe.serving %></div>
+  <div>Cuisine:</div>
+  <ul>
+    <%- recipe.origin.map(c => 
+    `<li>${c.name}</li>`) %>
+  </ul>
+  <form id="add-to-origin" action="/recipes/<%= recipe._id %>/cuisines" method="POST">
+    <select name="cuisineId">
+      <%- cuisines.map(c => 
+      `<option value="${c._id}">${c.name}</option>`
+      ).join('') %>
+    </select>
+    <button type="submit">Add Cuisine</button>
+  </form>
+  <div>Have made before: <%= recipe.haveMade ? 'Yes' : 'No' %></div>
+</section>
+
+<%- include('../partials/footer') %>

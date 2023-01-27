@@ -1,11 +1,12 @@
 const Recipe = require("../models/recipe");
+const Cuisine = require('../models/cuisine')
 
 module.exports = {
   index,
   show,
   new: newRecipe,
   create,
-  // delete: deleteRecipe
+
  
 };
 
@@ -21,7 +22,7 @@ function show(req, res) {
     .exec(function (err, recipe) {
       Cuisine.find({ _id: { $nin: recipe.origin } }, function (err, cuisines) {
         console.log(recipe);
-        res.render("recipes/show", { title: "Recipe Details", recipe, cuisines });
+        res.render("recipes/show", { title: "Instructions", recipe, cuisines });
       });
     });
 }

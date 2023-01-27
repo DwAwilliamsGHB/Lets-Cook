@@ -15,6 +15,8 @@
       |
       <a href="/recipes" <%- title === 'Recipes' ? 'class="active"' : '' %>>Recipes</a>
       |
+      <a href="/cuisines/new"	<%- title === 'Add cuisine' ? 'class="active"' : '' %>>Cuisines</a>
+      |
       <% if (user) { %>
         <a href="/logout" class="login">Sign Out&nbsp;<img src="https://i.imgur.com/FHjYyi0.png"></a>
       <% } else { %>

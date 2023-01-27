@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+
+<h2>Enter a New Recipe</h2>
+<form action="/recipes" method="POST">
+  <label>Dish Name:
+    <input type="text" name="dishName">
+  </label><br>
+  <label>Course
+    <select name="course">
+      <option value="Appetizer">Appetizer</option>
+      <option value="Side-Dish">Side Dish</option>
+      <option value="Main-Dish">Main Dish</option>
+      <option value="Dessert">Dessert</option>
+      <option value="Full-Course">Full Course</option>
+    </select>
+  </label><br>
+  <label>Servings:
+    <input type="number" name="serving">
+  </label>
+  <label>Prep Time:
+    <input type="number" name="prepTime">
+  </label>
+  <label>Cook Time:
+    <input type="number" name="cookTime">
+  </label>
+  <label>Total Time:
+    <input type="number" name="totalTime">
+  </label><br>
+  <label>Have made before:
+    <input type="checkbox" name="haveMade" checked>
+  </label><br>
+  <button type="submit">Add Recipe</button>
+</form>
+
+<%- include('../partials/footer') %>

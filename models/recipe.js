@@ -18,6 +18,10 @@ const recipeSchema = new Schema({
     type: Number,
     default: 1
   },
+  totalTime: {
+    type: Number,
+    default: 1
+  },
   serving: {
     type: Number,
     default: 2
@@ -27,7 +31,7 @@ const recipeSchema = new Schema({
     ref: 'Cuisine'
   }],
   haveMade: {type: Boolean, default: false},
-  reviews: [reviewSchema]
+  // reviews: [reviewSchema]
 }, {
   timestamps: true
 });
