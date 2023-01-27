@@ -108,11 +108,6 @@ label {
   text-align: right;
 }
 
-label+input {
-  width: 3%;
-  margin: 0 30% 0 4%;
-}
-
 input+input {
   float: right;
 }
