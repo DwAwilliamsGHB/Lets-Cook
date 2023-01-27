@@ -1,6 +1,5 @@
 <%- include('../partials/header') %>
 
-<div>Before adding, please ensure that the Cuisine is not in the following list:</div>
 <section id="badge-container">
   <% cuisines.forEach(function(c) { %>
     <article class="badge"><%= c.name %></article>
@@ -8,7 +7,7 @@
 </section>
 
 <form id="add-cuisine-form" action="/cuisines" method="POST">
-  <label>Name:</label>
+  <label>Cuisine:</label>
   <input type="text" name="name">
   <input type="submit" value="Add Cuisine">
 </form>

@@ -1,10 +1,13 @@
 * {
   box-sizing: border-box;
   font-family: Helvetica;
-  color: #424748;
+  color: #d6472e;
+
 }
 
 body {
+  background: url("../images/vegetables-set-left-black-slate.jpg") 50% 50% no-repeat;
+  background-size: 1580px;
   margin: 0;
   height: 100vh;
   display: grid;
@@ -14,19 +17,32 @@ body {
     "main"
 }
 
+h1 {
+  font-size: 80px;
+}
+
+h2 {
+  margin: 0px 100px;
+}
+
+
+
 body > nav {
   grid-area: nav;
-  background-color: #B8C0C2;
+  background-color: #194913;
+  color: aliceblue;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex;
   align-items: center;
   padding: 0 20px 0 30px;
 }
+a {
+  color: rgb(224, 224, 224);
+}
 
 nav > img {
-  width: 34px;
-  object-fit: contain;
-  margin-right: auto;
+  width: 90px;
+  margin-top: 50px;
 }
 
 body > main {
@@ -34,7 +50,6 @@ body > main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #E8ECEB;
   padding: 20px;
   overflow-y: scroll;
 }
@@ -52,7 +67,7 @@ nav > a {
 
 nav > a:hover:not(.active) {
   color: white;
-  background-color: #424748;
+  background-color: #3c150b;
 }
 
 nav > a.active {
@@ -80,8 +95,26 @@ nav > a.active {
   margin-left: auto;
 }
 
-table {
-  font-size: 20px;
+form {
+  margin: 0 auto;
+  align-content: center;
+}
+
+label, input {
+  display: inline;
+}
+label {
+  width: 3%;
+  text-align: right;
+}
+
+label+input {
+  width: 3%;
+  margin: 0 30% 0 4%;
+}
+
+input+input {
+  float: right;
 }
 
 table thead th {
@@ -89,9 +122,32 @@ table thead th {
   border-bottom: 2px solid #424748;
 }
 
+.x-button {
+  font-size: 40px;
+  padding: 0px 15px;
+}
+
 table td {
   padding: 10px;
-  text-align: center;
+  text-align: left;
+  list-style: circle;
+  content: "\a";
+  white-space: pre-wrap;
+  word-wrap:break-word;
+}
+
+.table-instruction {
+  font-size: 20px;
+  text-align: left;
+  background-color: #424748df;
+  border-radius: .5rem;
+  margin: 20px;
+  width: 1000px;
+  word-break:break-word;
+}
+
+tbody {
+  list-style-type: decimal;
 }
 
 #list td:nth-child(2), #list td:nth-child(3){
@@ -114,6 +170,7 @@ table td {
   display: grid;
   grid-template-columns: auto auto;
   grid-gap: 1rem;
+  margin-bottom: 60px;
 }
 
 #show-page div:nth-child(even) {
@@ -146,6 +203,7 @@ hr {
   border: 2px solid #B8C0C2;
   border-radius: .5rem;
   margin: .5rem 0 2rem;
+  background-color: #424748cc;
 }
 
 .badge {
@@ -190,13 +248,19 @@ li {
 }
 
 .ingredient-form {
-  list-style-type: decimal;
+  width: 600px;
+  height: 150px;
 }
 
 .input-contianer {
   display: flex;
-  /* padding: 1rem; */
   border: 2px solid #B8C0C2;
   border-radius: .5rem;
+  background-color: #424748cd;
   padding: 30px;
+}
+.input-div {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }

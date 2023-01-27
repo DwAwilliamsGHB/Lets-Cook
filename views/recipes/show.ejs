@@ -33,11 +33,10 @@
 </section>
 
 <% if (recipe.ingredients.length) { %>
-  <table>
+  <table class="table-instruction">
     <thead>
       <tr>
         <th></th>
-        <th>Edit</th>
         <th></th>
       </tr>
     </thead>
@@ -46,11 +45,10 @@
       <% recipe.ingredients.forEach(function(r) { %>
         <tr>
           <td class="ingredient-form" ><%= r.content %></td>
-          <td><%= r.edit %></td>
           <td>
             <% if (user?._id.equals(r.user)) { %>
               <form action="/ingredients/<%= r._id %>?_method=DELETE" method="POST">
-                <button type="submit">X</button>
+                <button class="x-button" type="submit">File 13</button>
               </form>
             <% } %>
           </td>
@@ -64,26 +62,28 @@
 <% } %>
 
 <div class="input-contianer">
+<div class="input-div">
+  <h2>Ingredients</h2>
+  <% if(user) { %>
+    <form id="add-ingredient-form" method="POST"
+      action="/recipes/<%= recipe._id %>/ingredients">
+      <label></label>
+      <textarea class="ingredient-form" name="content"></textarea>
+      <input type="submit" value="Add Ingredient">
+    </form>
+  <% } %>
+</div>
 
-<h2>Ingredients</h2>
-<% if(user) { %>
-  <form id="add-ingredient-form" method="POST"
-    action="/recipes/<%= recipe._id %>/ingredients">
-    <label></label>
-    <textarea class="ingredient-form" name="content"></textarea>
-    <input type="submit" value="Add Ingredient">
-  </form>
-<% } %>
-
-<h2>Steps</h2>
-
-<% if(user) { %>
-  <form id="add-ingredient-form" method="POST"
-    action="/recipes/<%= recipe._id %>/ingredients">
-    <label></label>
-    <textarea class="ingredient-form" name="content"></textarea>
-    <input type="submit" value="Add Steps">
-  </form>
-<% } %>
+<div class="input-div">
+  <h2>Steps</h2>
+  <% if(user) { %>
+    <form id="add-ingredient-form" method="POST"
+      action="/recipes/<%= recipe._id %>/ingredients">
+      <label></label>
+      <textarea class="ingredient-form" name="content"></textarea>
+      <input type="submit" value="Add Steps">
+    </form>
+  <% } %>
+  </div>
 </div>
 <%- include('../partials/footer') %>
