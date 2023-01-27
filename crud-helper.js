@@ -1,6 +1,6 @@
 // crud-helper.js
 /*---
-Used to perform CRUD external to the application
+Used to Cuisine CRUD external to the application
 
 To use (don't type the $'s):
   1. Open a Node REPL in Terminal:
@@ -31,7 +31,7 @@ let recipe, recipes;
 
 /*--- Example ---*/
 
-// console.log all movie documents
+// console.log all recipe documents
 // Preview of promise syntax - coming SOON!
 Recipe.find({}).then(console.log);
 
