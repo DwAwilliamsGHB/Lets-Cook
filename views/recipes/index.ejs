@@ -1,29 +1,24 @@
 <%- include('../partials/header') %>
 
-<div class="container">
-  <h1>Recipes</h1><a href="/recipes/new" <%- title === 'Add Recipe' ? 'class="active"' : '' %>>ADD Recipe</a>
-
-  <table id="list">
-    <thead>
+<table id="list">
+  <thead>
+    <tr>
+      <th>Dish Name</th>
+      <th>Course</th>
+      <th>Total Time</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% recipes.forEach(function(g) { %>
       <tr>
-        <th>Dish Name</th>
-        <th>Course</th>
-        <th>Total Time</th>
-        <th>Cuisine</th>
-        <th></th>
+        <td><%= g.dishName %></td>
+        <td><%= g.course %></td>
+        <td><%= g.totalTime %></td>
+        <td><a href="/recipes/<%= g._id %>">Instructions</a></td>
       </tr>
-    </thead>
-    <tbody>
-      <% recipes.forEach(function(r) { %>
-        <tr>
-          <td><%= r.dishName %></td>
-          <td><%= r.course %></td>
-          <td><%= r.totalTime %></td>
-          <td><a href="/recipes/<%= r._id %>">Instructions</a></td>
-        </tr>
-        <% }); %>
-      </tbody>
-  </table>
-</div>
-
+      <% }); %>
+    </tbody>
+</table>
+  
 <%- include('../partials/footer') %>

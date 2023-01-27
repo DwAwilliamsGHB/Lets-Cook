@@ -1,6 +1,38 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const ingredientSchema = new Schema({
+  content: {
+    type: String,
+    required: true
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  userName: String,
+  userAvatar: String
+}, {
+  timestamps: true
+})
+
+const stepSchema = new Schema({
+  content: {
+    type: String,
+    required: true
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  userName: String,
+  userAvatar: String
+}, {
+  timestamps: true
+})
+
 const recipeSchema = new Schema({
   dishName: {
     type: String,
@@ -31,7 +63,8 @@ const recipeSchema = new Schema({
     ref: 'Cuisine'
   }],
   haveMade: {type: Boolean, default: false},
-  // reviews: [reviewSchema]
+  ingredients: [ingredientSchema],
+  steps: [stepSchema]
 }, {
   timestamps: true
 });

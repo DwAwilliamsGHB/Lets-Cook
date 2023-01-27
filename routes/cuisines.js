@@ -7,4 +7,5 @@ router.get('/cuisines/new', ensureLoggedIn, cuisinesCtrl.new);
 router.post('/cuisines', ensureLoggedIn,  cuisinesCtrl.create);
 router.post('/recipes/:id/cuisines', cuisinesCtrl.addToOrigin)
 
+
 module.exports = router;

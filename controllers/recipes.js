@@ -1,18 +1,16 @@
 const Recipe = require("../models/recipe");
-const Cuisine = require('../models/cuisine')
+const Cuisine = require("../models/cuisine");
 
 module.exports = {
   index,
   show,
   new: newRecipe,
   create,
-
- 
 };
 
 function index(req, res) {
   Recipe.find({}, function (err, recipes) {
-    res.render("recipes/index", { title: 'Recipes', recipes });
+    res.render("recipes/index", { title: "All Recipes", recipes });
   });
 }
 
@@ -22,7 +20,7 @@ function show(req, res) {
     .exec(function (err, recipe) {
       Cuisine.find({ _id: { $nin: recipe.origin } }, function (err, cuisines) {
         console.log(recipe);
-        res.render("recipes/show", { title: "Instructions", recipe, cuisines });
+        res.render("recipes/show", { title: "Recipe Detail", recipe, cuisines });
       });
     });
 }
@@ -36,7 +34,6 @@ function create(req, res) {
   for (let key in req.body) {
     if (req.body[key] === "") delete req.body[key];
   }
-
   const recipe = new Recipe(req.body);
   recipe.save(function (err) {
     if (err) return res.redirect("/recipes/new");

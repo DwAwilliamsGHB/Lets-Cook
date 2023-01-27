@@ -3,24 +3,87 @@
 <section id="show-page">
   <div>Dish Name: </div>
   <div><%= recipe.dishName %></div>
-  <div>Course: </div>
-  <div><%= recipe.course %></div>
+  <div>Prep Time: </div>
+  <div><%= recipe.prepTime %></div>
+  <div>Cook Time: </div>
+  <div><%= recipe.cookTime %></div>
+  <div>Total Time: </div>
+  <div><%= recipe.totalTime %></div>
   <div>Servings: </div>
   <div><%= recipe.serving %></div>
+  <div>Course: </div>
+  <div><%= recipe.course %></div>
+  <div>Have made before: </div>
+  <div><%= recipe.haveMade ? 'Yes' : 'Nope' %></div>
   <div>Cuisine:</div>
   <ul>
     <%- recipe.origin.map(c => 
-    `<li>${c.name}</li>`) %>
+      `<li>${c.name}</li>`
+    ).join('') %>
   </ul>
   <form id="add-to-origin" action="/recipes/<%= recipe._id %>/cuisines" method="POST">
     <select name="cuisineId">
+      <!-- Emit an option for each cuisine -->
       <%- cuisines.map(c => 
-      `<option value="${c._id}">${c.name}</option>`
+        `<option value="${c._id}">${c.name}</option>`
       ).join('') %>
     </select>
     <button type="submit">Add Cuisine</button>
   </form>
-  <div>Have made before: <%= recipe.haveMade ? 'Yes' : 'No' %></div>
 </section>
 
+<% if (recipe.ingredients.length) { %>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Edit</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% let total = 0 %>
+      <% recipe.ingredients.forEach(function(r) { %>
+        <tr>
+          <td class="ingredient-form" ><%= r.content %></td>
+          <td><%= r.edit %></td>
+          <td>
+            <% if (user?._id.equals(r.user)) { %>
+              <form action="/ingredients/<%= r._id %>?_method=DELETE" method="POST">
+                <button type="submit">X</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+      <% }); %>
+      <tr>
+      </tr>
+    </tbody>
+  </table>
+  
+<% } %>
+
+<div class="input-contianer">
+
+<h2>Ingredients</h2>
+<% if(user) { %>
+  <form id="add-ingredient-form" method="POST"
+    action="/recipes/<%= recipe._id %>/ingredients">
+    <label></label>
+    <textarea class="ingredient-form" name="content"></textarea>
+    <input type="submit" value="Add Ingredient">
+  </form>
+<% } %>
+
+<h2>Steps</h2>
+
+<% if(user) { %>
+  <form id="add-ingredient-form" method="POST"
+    action="/recipes/<%= recipe._id %>/ingredients">
+    <label></label>
+    <textarea class="ingredient-form" name="content"></textarea>
+    <input type="submit" value="Add Steps">
+  </form>
+<% } %>
+</div>
 <%- include('../partials/footer') %>
