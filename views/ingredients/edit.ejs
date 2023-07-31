@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+
+<div class="input-div">
+    <form action="/recipes/<%= recipe._id %>/ingredients/<%= ingredient._id %>?_method=PUT" id="add-ingredient-form" method="POST">
+        <input  name="quantity" id="quantity-form" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
+        <select name="measurement" id="measurement-form">
+            <option value="" selected disabled>Measurement</option>
+            <option value="Pinch" <%= ingredient.measurement === 'Pinch' ? 'selected' : '' %>>Pinch</option>
+            <option value="Dash" <%= ingredient.measurement === 'Dash' ? 'selected' : '' %>>Dash</option>
+            <option value="Ounce" <%= ingredient.measurement === 'Ounce' ? 'selected' : '' %>>Ounce</option>
+            <option value="Teaspoon" <%= ingredient.measurement === 'Teaspoon' ? 'selected' : '' %>>Teaspoon</option>
+            <option value="Tablespoon" <%= ingredient.measurement === 'Tablespoon' ? 'selected' : '' %>>Tablespoon</option>
+            <option value="Pound" <%= ingredient.measurement === 'Pound' ? 'selected' : '' %>>Pound</option>
+            <option value="Fluid Ounce" <%= ingredient.measurement === 'Fluid Ounce' ? 'selected' : '' %>>Fluid Ounce</option>
+            <option value="Cup" <%= ingredient.measurement === 'Cup' ? 'selected' : '' %>>Cup</option>
+            <option value="Pint" <%= ingredient.measurement === 'Pint' ? 'selected' : '' %>>Pint</option>
+            <option value="Quart" <%= ingredient.measurement === 'Quart' ? 'selected' : '' %>>Quart</option>
+            <option value="Gallon" <%= ingredient.measurement === 'Gallon' ? 'selected' : '' %>>Gallon</option>
+        </select>
+        <input  name="content" id="ingredient-form" placeholder="Ingredient Name" value="<%= ingredient.content %>"></input>
+        <input type="hidden" name="_method" value="PUT">
+        <input type="submit" value="Update Ingredient">
+      <br>
+    </form>
+</div>
+
+<%- include('../partials/footer') %>

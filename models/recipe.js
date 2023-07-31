@@ -2,6 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ingredientSchema = new Schema({
+  quantity: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
+  measurement: {
+    type: String,
+    enum: ['Pinch', 'Dash', 'Ounce', 'Teaspoon', 'Tablespoon', 'Pound', 'Fluid Ounce', 'Cup', 'Pint', 'Quart', 'Gallon'],
+  },
   content: {
     type: String,
     required: true
@@ -38,7 +47,7 @@ const recipeSchema = new Schema({
     type: String,
     required: true
   },
-  course: {
+  foodType: {
     type: String,
     enum: ['Appetizer', 'Main Dish', 'Side Dish', 'Dessert', 'Full Course']
   },
@@ -58,12 +67,14 @@ const recipeSchema = new Schema({
     type: Number,
     default: 2
   },
-  origin: [{
+  cuisine: {
     type: Schema.Types.ObjectId,
     ref: 'Cuisine',
-    default: {}
-  }],
-  haveMade: {type: Boolean, default: false},
+  },
+  haveMade: {
+    type: Boolean, 
+    default: false
+  },
   ingredients: [ingredientSchema],
   steps: [stepSchema]
 }, {

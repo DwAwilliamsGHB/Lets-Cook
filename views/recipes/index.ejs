@@ -4,20 +4,21 @@
   <thead>
     <tr>
       <th>Dish Name</th>
-      <th>Course</th>
+      <th>Cuisine</th>
+      <th>Type of Food</th>
+      <th>Servings</th>
       <th>Total Time</th>
-      <th></th>
-      <th>Edit</th>
+      <th>Made Before</th>
     </tr>
   </thead>
   <tbody>
     <% recipes.forEach(function(g) { %>
       <tr>
-        <td><%= g.dishName %></td>
-        <td><%= g.course %></td>
+        <td><a href="/recipes/<%= g._id %>" class="recipe-name"><%= g.dishName %></a></td>
+        <td><%= g.cuisine ? g.cuisine.name : '' %></td> <!-- Add the conditional check here -->        <td><%= g.foodType %></td>
+        <td><%= g.serving %></td>
         <td><%= g.totalTime %></td>
-        <td><a href="/recipes/<%= g._id %>">Instructions</a></td>
-        <td><a href="/recipes/<%= g._id %>/edit">Edit Recipe</a></td>
+        <td><%= g.haveMade ? 'Yes' : 'No' %></td>
       </tr>
       <% }); %>
     </tbody>

@@ -45,8 +45,8 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/recipes', recipesRouter);
 app.use('/', ingredientsRouter);
+app.use('/', stepsRouter);
 app.use('/', cuisinesRouter);
-app.use('/', stepsRouter)
 
 app.use(function(req, res, next) {
   next(createError(404));

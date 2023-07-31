@@ -1,0 +1,11 @@
+<%- include('../partials/header') %>
+
+<div class="input-div">
+    <form action="/recipes/<%= recipe._id %>/steps/<%= step._id %>?_method=PUT" id="add-step-form" method="POST">
+        <textarea id="step-form" name="content" placeholder="Add New Step"><%= step.content %></textarea>
+        <input type="hidden" name="_method" value="PUT">
+        <input type="submit" value="Update Step">
+    </form>
+</div>
+
+<%- include('../partials/footer') %>

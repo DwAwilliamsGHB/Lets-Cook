@@ -1,0 +1,12 @@
+<%- include('../partials/header') %>
+
+<h2>Confirm Delete</h2>
+
+<p>Are you sure you want to delete the recipe <strong><%= recipe.dishName %></strong>?</p>
+
+<form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST">
+  <button type="submit">Delete</button>
+  <a href="/recipes/<%= recipe._id %>" class="cancel-link">Cancel</a>
+</form>
+
+<%- include('../partials/footer') %>

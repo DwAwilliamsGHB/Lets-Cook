@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+
+<div id="ed-de-div">
+  <div class="edit-button">
+    <a href="/cuisines/<%= cuisine._id %>/edit">
+      <button>
+        <img src="/images/edit-icon.png" alt="Edit Icon" class="ed-de-icon"/>
+      </button>
+    </a>
+  </div>
+  <div class="trash-button">
+    <button id="originalButton" onclick="replaceButtons()">
+      <img src="/images/trash-icon.png" alt="Trash Icon" class="ed-de-icon">
+    </button>
+  </div>
+  <div id="newButtons" class="hidden">
+    <div id="confcanc-buttons">
+      <button onclick="restoreButton()">
+        <img src="/images/close.png" alt="Close Icon" class="ed-de-icon" id="close-button">
+      </button>
+      <form action="/cuisines/<%= cuisine._id %>?_method=DELETE" method="POST">
+        <button type="submit">
+          <img src="/images/check.png" alt="Check Icon" class="ed-de-icon" id="check-button"/>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function replaceButtons() {
+    var originalButton = document.getElementById("originalButton");
+    var newButtons = document.getElementById("newButtons");
+
+    originalButton.classList.add("hidden");
+    newButtons.classList.remove("hidden");
+  }
+
+  function restoreButton() {
+    var originalButton = document.getElementById("originalButton");
+    var newButtons = document.getElementById("newButtons");
+
+    originalButton.classList.remove("hidden");
+    newButtons.classList.add("hidden");
+  }
+</script>
+
+<%- include('../partials/footer') %>

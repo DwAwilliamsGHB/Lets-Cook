@@ -7,29 +7,41 @@ module.exports = {
   new: newRecipe,
   create,
   edit,
-  update
+  update,
+  confirmDelete,
+  delete: deleteRecipe
 };
 
-function index(req, res) {
-  Recipe.find({}, function (err, recipes) {
-    res.render("recipes/index", { title: "All Recipes", recipes });
-  });
+async function index(req, res) {
+  try {
+    // Fetch all recipes and populate the 'cuisine' field with cuisine data
+    const recipes = await Recipe.find().populate('cuisine').exec();
+    res.render('recipes/index', { recipes, title: 'All Recipes' }); // Make sure to pass the 'title' option here
+  } catch (error) {
+    // Handle any potential errors
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
 }
 
 function show(req, res) {
   Recipe.findById(req.params.id)
-    .populate("origin")
+    .populate("cuisine")
     .exec(function (err, recipe) {
-      Cuisine.find({ _id: { $nin: recipe.origin } }, function (err, cuisines) {
-        origin = {}
-        console.log(recipe);
-        res.render("recipes/show", { title: "Recipe Detail", recipe, cuisines });
-      });
+      if (err || !recipe) {
+        return res.status(404).json({ message: 'Recipe not found' });
+      }
+      res.render("recipes/show", { title: recipe.dishName, recipe });
     });
 }
 
 function newRecipe(req, res) {
-  res.render("recipes/new", { title: "Add Recipe" });
+  Cuisine.find({}, function (err, cuisines) {
+    if (err) {
+      // Handle error
+    }
+    res.render("recipes/new", { title: "Add Recipe", cuisines });
+  });
 }
 
 function create(req, res) {
@@ -37,22 +49,87 @@ function create(req, res) {
   for (let key in req.body) {
     if (req.body[key] === "") delete req.body[key];
   }
-  const recipe = new Recipe(req.body);
-  recipe.save(function (err) {
-    if (err) return res.redirect("/recipes/new");
-    console.log(recipe);
-    res.redirect(`/recipes/${recipe._id}`);
+  const cuisineId = req.body.cuisine;
+  Cuisine.findById(cuisineId, function (err, cuisine) {
+    if (err) {
+      // Handle error
+    }
+    const recipe = new Recipe(req.body);
+    recipe.cuisine = cuisine; 
+    recipe.save(function (err) {
+      if (err) {
+        // Handle error
+      }
+      console.log(recipe);
+      res.redirect(`/recipes/${recipe._id}`);
+    });
   });
 }
 
 function edit(req, res) {
-  res.render('recipes/edit', {
-      title: 'Edit Recipe',
-      recipe: Recipe.findById(req.params.id)
-  })
+  Recipe.findById(req.params.id)
+    .populate("cuisine") 
+    .exec(function (err, recipe) {
+      if (err || !recipe) {
+        return res.status(404).json({ message: 'Recipe not found' });
+      }
+      Cuisine.find({}, function (err, cuisines) {
+        if (err) {
+          // Handle error
+        }
+        res.render('recipes/edit', {
+          title: 'Edit Recipe',
+          recipe,
+          cuisines
+        });
+      });
+    });
 }
 
 function update(req, res) {
-  Recipe.findById(req.body, req.params.id)
-  res.redirect(`/recipes/${req.params.id}`)
+  Recipe.findById(req.params.id, function (err, recipe) {
+    if (err || !recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+  
+    recipe.dishName = req.body.dishName;
+    recipe.foodType = req.body.foodType;
+    recipe.serving = req.body.serving;
+    recipe.prepTime = req.body.prepTime;
+    recipe.cookTime = req.body.cookTime;
+    recipe.totalTime = req.body.totalTime;
+    recipe.cuisine = req.body.cuisine;
+    recipe.haveMade = !!req.body.haveMade;
+  
+    recipe.save(function (err) {
+      if (err) {
+        // Handle error
+      }
+  
+      res.redirect(`/recipes/${recipe._id}`);
+    });
+  });
+}
+
+function confirmDelete(req, res) {
+  Recipe.findById(req.params.id)
+    .populate("cuisine")
+    .exec(function (err, recipe) {
+      if (err || !recipe) {
+        return res.status(404).json({ message: 'Recipe not found' });
+      }
+      res.render('recipes/confirmDelete', {
+        title: 'Confirm Delete',
+        recipe
+      });
+    });
+}
+
+function deleteRecipe(req, res) {
+  Recipe.findByIdAndDelete(req.params.id, function (err) {
+    if (err) {
+      // Handle error
+    }
+    res.redirect('/recipes');
+  });
 }

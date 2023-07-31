@@ -1,89 +1,159 @@
 <%- include('../partials/header') %>
+<div id="recipe-div">
+  <div id="show-ed-de-div">
+    <div id="show-page">
+      <div>Cuisine: </div>
+      <div>
+        <% if (recipe.cuisine) { %>
+          <%= recipe.cuisine.name %>
+        <% } %>
+      </div>
+      <div>Type of Food: </div>
+      <div><%= recipe.foodType %></div>
+      <div>Servings: </div>
+      <div><%= recipe.serving %></div>
+      <div>Prep Time: </div>
+      <div><%= recipe.prepTime %></div>
+      <div>Cook Time: </div>
+      <div><%= recipe.cookTime %></div>
+      <div>Total Time: </div>
+      <div><%= recipe.totalTime %></div>
+      <div>Have made before: </div>
+      <div><%= recipe.haveMade ? 'Yes' : 'No' %></div>
+    </div>
+    <div id="ed-de-div">
+      <div class="edit-button">
+        <a href="/recipes/<%= recipe._id %>/edit">
+          <button>
+            <img src="/images/edit-icon.png" alt="Edit Icon" class="ed-de-icon"/>
+          </button>
+        </a>
+      </div>
+      <div class="trash-button">
+        <button id="originalButton" onclick="replaceButtons()">
+          <img src="/images/trash-icon.png" alt="Trash Icon" class="ed-de-icon">
+        </button>
+      </div>
+      <div id="newButtons" class="hidden">
+        <div id="confcanc-buttons">
+          <button onclick="restoreButton()">
+            <img src="/images/close.png" alt="Close Icon" class="ed-de-icon" id="close-button">
+          </button>
+          <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST">
+            <button type="submit">
+              <img src="/images/check.png" alt="Check Icon" class="ed-de-icon" id="check-button"/>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<section id="show-page">
-  <div>Dish Name: </div>
-  <div><%= recipe.dishName %></div>
-  <div>Prep Time: </div>
-  <div><%= recipe.prepTime %></div>
-  <div>Cook Time: </div>
-  <div><%= recipe.cookTime %></div>
-  <div>Total Time: </div>
-  <div><%= recipe.totalTime %></div>
-  <div>Servings: </div>
-  <div><%= recipe.serving %></div>
-  <div>Course: </div>
-  <div><%= recipe.course %></div>
-  <div>Have made before: </div>
-  <div><%= recipe.haveMade ? 'Yes' : 'Nope' %></div>
-  <div>Cuisine:</div>
-  <ul>
-    <%- recipe.origin.map(c => 
-      `<li>${c.name}</li>`
-    ).join('') %>
-  </ul>
-  <form id="add-to-origin" action="/recipes/<%= recipe._id %>/cuisines" method="POST">
-    <select name="cuisineId">
-      <!-- Emit an option for each cuisine -->
-      <%- cuisines.map(c => 
-        `<option value="${c._id}">${c.name}</option>`
-      ).join('') %>
-    </select>
-    <button type="submit">Add Cuisine</button>
-  </form>
-</section>
+  <script>
+    function replaceButtons() {
+      var originalButton = document.getElementById("originalButton");
+      var newButtons = document.getElementById("newButtons");
 
-<% if (recipe.ingredients.length) { %>
-  <table class="table-instruction">
-    <thead>
-      <tr>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% let total = 0 %>
-      <% recipe.ingredients.forEach(function(r) { %>
-        <tr>
-          <td class="ingredient-form" ><%= r.content %></td>
-          <td>
-            <% if (user?._id.equals(r.user)) { %>
-              <form action="/ingredients/<%= r._id %>?_method=DELETE" method="POST">
-                <button class="x-button" type="submit">File 13</button>
-              </form>
-            <% } %>
-          </td>
-        </tr>
-      <% }); %>
-      <tr>
-      </tr>
-    </tbody>
-  </table>
+      originalButton.classList.add("hidden");
+      newButtons.classList.remove("hidden");
+    }
+
+    function restoreButton() {
+      var originalButton = document.getElementById("originalButton");
+      var newButtons = document.getElementById("newButtons");
+
+      originalButton.classList.remove("hidden");
+      newButtons.classList.add("hidden");
+    }
+  </script>
+
+  <% if (recipe.ingredients.length) { %>
+    <div class="instruction-list">
+      <h2>Ingredients</h2>
+        <ul>
+          <% let total = 0 %>
+          <% recipe.ingredients.forEach(function(r) { %>
+                <li>
+                  <%= r.quantity %>
+                  <%= r.measurement %>
+                  <%= r.content %>
+                </li>
+                  <button class="list-edit-button">
+                    <a href="recipes/ingredients/<%= r._id %>/edit">
+                      Edit
+                    </a>
+                  </button>
+                <div>
+                  <% if (user?._id.equals(r.user)) { %>
+                    <form action="/ingredients/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
+                      <button class="x-button" type="submit">X</button>
+                    </form>
+                  <% } %>
+                </div>
+          <% }); %>
+        </ul>
+    </div>
+  <% } %>
   
-<% } %>
-
-<div class="input-contianer">
-<div class="input-div">
-  <h2>Ingredients</h2>
-  <% if(user) { %>
-    <form id="add-ingredient-form" method="POST"
-      action="/recipes/<%= recipe._id %>/ingredients">
-      <label></label>
-      <textarea class="ingredient-form" name="content"></textarea>
-      <input type="submit" value="Add Ingredient">
-    </form>
+  <div class="input-div">
+    <% if(user) { %>
+      <form id="add-ingredient-form" method="POST"
+        action="/recipes/<%= recipe._id %>/ingredients">
+        <input  name="quantity" id="quantity-form" placeholder="Qty."></input>
+        <select name="measurement" id="measurement-form">
+          <option value="" selected disabled>Measurement</option>
+          <option value="Pinch">Pinch</option>
+          <option value="Dash">Dash</option>
+          <option value="Ounce">Ounce</option>
+          <option value="Teaspoon">Teaspoon</option>
+          <option value="Tablespoon">Tablespoon</option>
+          <option value="Pound">Pound</option>
+          <option value="Fluid Ounce">Fluid Ounce</option>
+          <option value="Cup">Cup</option>
+          <option value="Pint">Pint</option>
+          <option value="Quart">Quart</option>
+          <option value="Gallon">Gallon</option>
+        </select>
+        <input  name="content" id="ingredient-form" placeholder="Ingredient Name"></input>
+        <input type="submit" value="Add Ingredient">
+      </form>
+    <% } %>
+  </div>
+  
+  <% if (recipe.steps.length) { %>
+    <div class="instruction-list">
+      <h2>Steps</h2>
+        <ol>
+          <% let total = 0 %>
+          <% recipe.steps.forEach(function(r) { %>
+                <li>
+                  <%= r.content %>
+                </li>
+                <button class="list-edit-button">
+                  <a href="recipes/steps/<%= r._id %>/edit">
+                    Edit
+                  </a>
+                </button>
+                <div>
+                  <% if (user?._id.equals(r.user)) { %>
+                    <form action="/steps/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
+                      <button class="x-button" type="submit">X</button>
+                    </form>
+                  <% } %>
+                </div>
+          <% }); %>
+        </ol>
+    </div>
   <% } %>
-</div>
-
-<div class="input-div">
-  <h2>Steps</h2>
-  <% if(user) { %>
-    <form id="add-ingredient-form" method="POST"
-      action="/recipes/<%= recipe._id %>/ingredients">
-      <label></label>
-      <textarea class="ingredient-form" name="content"></textarea>
-      <input type="submit" value="Add Steps">
-    </form>
-  <% } %>
+  
+  <div class="input-div">
+    <% if(user) { %>
+      <form id="add-step-form" method="POST"
+        action="/recipes/<%= recipe._id %>/steps">
+        <textarea id="step-form" name="content" placeholder="Add New Step"></textarea>
+        <input type="submit" value="Add Step">
+      </form>
+    <% } %>
   </div>
 </div>
 <%- include('../partials/footer') %>

@@ -24,7 +24,8 @@ router.get('/oauth2callback', passport.authenticate(
 
 router.get('/logout', function(req, res) {
   req.logout(function() {
-    res.render('index', {title: 'Lets Cook'})
+    res.redirect('/');
+
   })
 })
 

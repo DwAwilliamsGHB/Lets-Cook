@@ -1,13 +1,14 @@
 * {
   box-sizing: border-box;
   font-family: Helvetica;
-  color: #d6472e;
+  color: #333333;
+}
 
+html{
+  background-color:rgb(255, 255, 255);
 }
 
 body {
-  background: url("../images/vegetables-set-left-black-slate.jpg") 50% 50% no-repeat;
-  background-size: 1580px;
   margin: 0;
   height: 100vh;
   display: grid;
@@ -18,26 +19,23 @@ body {
 }
 
 h1 {
-  font-size: 80px;
+  font-size: 60px;
+
 }
-
-h2 {
-  margin: 0px 100px;
-}
-
-
 
 body > nav {
   grid-area: nav;
-  background-color: #194913;
-  color: aliceblue;
+  background-color: #292b2f;
+  color: red;
   display: flex;
   justify-content: flex;
   align-items: center;
   padding: 0 20px 0 30px;
 }
+
 a {
-  color: rgb(224, 224, 224);
+  color: rgb(181, 181, 181);
+  text-decoration: none;
 }
 
 nav > img {
@@ -59,29 +57,23 @@ body > main h1:first-child {
 }
 
 nav > a {
-  margin: 20px;
+  margin: 10px;
   text-decoration: none;
   padding: 10px;
   border-radius: 5px;
+  font-size: large;
 }
 
 nav > a:hover:not(.active) {
   color: white;
-  background-color: #3c150b;
+  background-color: #1c1c1c;
 }
 
 nav > a.active {
-  color: white;
+  color: red;
   cursor: default;
 }
 
-#new-form {
-  display: grid;
-  grid-gap: 10px;
-  grid-template-columns: repeat(2, minmax(auto, 22rem));
-}
-
-#new-form *,
 #add-ingredient-form *,
 #add-cuisine-form * {
   font-size: 20px;
@@ -89,22 +81,56 @@ nav > a.active {
   border-radius: 5px;
 }
 
-#new-form input[type="submit"] {
-  grid-column: span 2;
-  width: 10rem;
-  margin-left: auto;
-}
-
 form {
   margin: 0 auto;
   align-content: center;
 }
 
+.form-container {
+  background-color: #fafafa;
+  padding: 15px;
+  border-radius: .25rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-container label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-container label span {
+  width: 45%; 
+}
+
+.form-container input[type="text"],
+.form-container select,
+.form-container input[type="number"],
+.form-container button {
+  width: 50%; 
+  padding: 5px;
+  border: 1px solid #eeeeee;
+  border-radius: 3px;
+}
+
+.form-container button {
+  margin-top: 10px;
+  background-color: #eeeeee;
+}
+
+.add-recipe-btn:hover {
+  background-color: #e2e2e2;
+}
+
 label, input {
   display: inline;
 }
+
 label {
-  width: 3%;
   text-align: right;
 }
 
@@ -112,33 +138,26 @@ input+input {
   float: right;
 }
 
-table thead th {
-  padding: 5px;
-  border-bottom: 2px solid #424748;
+.recipe-name {
+  color: #333333;
 }
 
-.x-button {
-  font-size: 40px;
-  padding: 0px 15px;
+table {
+  background-color: #fafafa;
+  padding: 15px;
+}
+
+table thead th {
+  padding: 5px;
 }
 
 table td {
   padding: 10px;
-  text-align: left;
+  text-align: center;
   list-style: circle;
   content: "\a";
   white-space: pre-wrap;
   word-wrap:break-word;
-}
-
-.table-instruction {
-  font-size: 20px;
-  text-align: left;
-  background-color: #424748df;
-  border-radius: .5rem;
-  margin: 20px;
-  width: 1000px;
-  word-break:break-word;
 }
 
 tbody {
@@ -151,39 +170,42 @@ tbody {
 
 #list a {
   border-radius: 4px;
-  background-color: #B8C0C2;
+  background-color: #eeeeee;
   padding: 4px;
   text-decoration: none;
   font-size: 14px;
 }
 
 #list a:hover {
-  background-color: white;
+  background-color: #e2e2e2;
 }
 
-#show-page {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-gap: 1rem;
-  margin-bottom: 60px;
-}
-
-#show-page div:nth-child(even) {
-  font-weight: bold;
+h3 {
+  font-size: 40px;
 }
 
 #add-ingredient-form,
 #add-cuisine-form {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-gap: 1rem;
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
-#add-ingredient-form input[type="submit"],
-#add-cuisine-form input[type="submit"]  {
-  width: 10rem;
-  grid-column: 2 / 3;
+#add-cuisine-form input[type="submit"] {
+  color: white;
+  font-size: 1.6em;
+  background-color: #444444;
+  border: 1px solid #444444;
+  border-radius: 0px 5px 5px 0px;
+  padding: 10px 20px;
+}
+
+#cuisine-form {
+  border: 1px solid #444444;
+  border-radius: 5px 0px 0px 5px;
+  padding: 10px 20px;
+  font-size: 1.6em;
 }
 
 hr {
@@ -193,31 +215,26 @@ hr {
 #badge-container {
   display: flex;
   flex-wrap: wrap;
-  /* padding: 1rem; */
+  padding: 1rem;
   width: 80%;
-  border: 2px solid #B8C0C2;
-  border-radius: .5rem;
+  border-radius: .25rem;
   margin: .5rem 0 2rem;
-  background-color: #424748cc;
+  background-color: #fafafa;
+  justify-content: center;
 }
 
 .badge {
-  background-color: #B8C0C2;
-  padding: .5rem;
-  margin: .5rem;
-  border-radius: .3rem;
-  font-size: .8rem;
+  color: #333333;
+  background-color: #f1f1f1;
+  padding: .8rem;
+  margin: .5rem 1rem;
+  border-radius: .25rem;
+  font-size: 2.2em;
   text-align: center;
 }
 
-ul {
-  margin: 0 0 1rem;
-  padding: 0;
-  list-style: none;
-}
-	
-li {
-  font-weight: bold;
+.badge > a {
+  color: #333333;
 }
 
 .login {
@@ -242,9 +259,157 @@ li {
   height: 40px;
 }
 
-.ingredient-form {
-  width: 600px;
-  height: 150px;
+#recipe-div {
+  background-color: #fafafa;
+  border-radius: 5px;
+  width: 900px;
+  padding: 30px;
+  padding-top: 50px;
+}
+
+#show-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+  margin-bottom: 20px;
+  font-size: 20px;
+  width: 400px;
+  padding-left: 30px;
+}
+
+#show-page div:nth-child(even) {
+  font-weight: bold;
+}
+
+#show-ed-de-div {
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+}
+
+#ed-de-div {
+  display: flex;
+  flex-direction: row;
+}
+
+.ed-de-icon {
+  height: 30px;
+  width: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+.edit-button {
+  margin-right: 15px;
+}
+
+#close-button {
+  padding: 3px 2px 2px 2px;
+}
+
+#confcanc-buttons {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 15px;
+}
+
+#add-ingredient-form input[type="submit"], #add-step-form input[type="submit"] {
+  color: white;
+  font-size: 20px;
+  background-color: #444444;
+  border: 1px solid #444444;
+  border-radius: 0px 5px 5px 0px;
+  padding: 7px 20px;
+}
+
+#add-ingredient-form, #add-step-form {
+  display: grid;
+  grid-template-columns: 1fr 2fr 5fr 2fr;
+  width: 800px;
+}
+
+#add-step-form {
+  display: grid;
+  grid-template-columns: 9fr 1fr;
+  vertical-align: top;
+}
+
+.x-form {
+  text-align: right;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  background-color: rgb(232, 240, 254)
+}
+
+#ingredient-form, #measurement-form {
+  border-radius: 0px;
+  border: 1px solid #444444;
+  padding: 7px 10px;
+}
+
+#measurement-form {
+  border-width: 1px 0px 1px 1px;
+  border-style: solid;
+  border-color: #444444;
+  padding: 6px 10px;
+}
+
+select {
+  padding-right: 20px;
+}
+
+#quantity-form {
+  text-align: center;
+  width: 100px;
+  border-radius: 5px 0px 0px 5px;
+  border-width: 1px 0px 1px 1px;
+  border-style: solid;
+  border-color: #444444;
+  padding: 7px;
+}
+
+#step-form {
+  border-radius: 5px 0px 0px 5px;
+  border: 1px solid #444444;
+  height: 100px;
+  font-size: 20px;
+  padding: 10px;
+  resize: none;
+}
+
+.instruction-list {
+  font-size: 20px;
+  text-align: left;
+  background-color: #fafafa;
+  border-radius: 5px;
+  margin: 30px;
+  width: auto;
+  word-break:break-word;
+}
+
+ul, ol {
+  display: grid;
+  grid-template-columns: 8fr 3fr 1fr;
+  grid-row-gap: 5px;
+  grid-column-gap: 10px;
+  padding-left: 35px;
+  width: auto;
+
+}
+
+.x-button {
+  font-size: 15px;
+  margin-left: auto;
+}
+
+.list-edit-button {
+  height: 25px;
+  width: 40px;
+  margin-top: 1px;
+  margin-left: auto;
 }
 
 .input-contianer {
@@ -252,10 +417,12 @@ li {
   border: 2px solid #B8C0C2;
   border-radius: .5rem;
   background-color: #424748cd;
-  padding: 30px;
+  padding: 10px;
 }
+
 .input-div {
   text-align: center;
   justify-content: center;
   align-items: center;
+  margin: 20px 0px;
 }
