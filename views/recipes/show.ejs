@@ -23,20 +23,30 @@
     </div>
     <div id="ed-de-div">
       <div class="edit-button">
-        <a href="/recipes/<%= recipe._id %>/edit">
-          <button>
+        <button id="editOriginalButton" onclick="replaceAndToggleEditButtons()" id="toggleEditButtons">
+          <img src="/images/edit-icon.png" alt="Edit Icon" class="ed-de-icon"/>
+        </button>
+      </div>
+      <div id="editNewButtons" class="hidden">
+        <div id="confcanc-buttons">
+          <button onclick="restoreAndToggleEditButton()">
             <img src="/images/edit-icon.png" alt="Edit Icon" class="ed-de-icon"/>
           </button>
-        </a>
+          <a href="/recipes/<%= recipe._id %>/edit">
+            <button type="submit">
+              <img src="/images/check.png" alt="Check Icon" class="ed-de-icon" id="check-button"/>
+            </button>
+          </a>
+        </div>
       </div>
       <div class="trash-button">
-        <button id="originalButton" onclick="replaceButtons()">
+        <button id="deleteOriginalButton" onclick="replaceDeleteButtons()">
           <img src="/images/trash-icon.png" alt="Trash Icon" class="ed-de-icon">
         </button>
       </div>
-      <div id="newButtons" class="hidden">
+      <div id="deleteNewButtons" class="hidden">
         <div id="confcanc-buttons">
-          <button onclick="restoreButton()">
+          <button onclick="restoreDeleteButton()">
             <img src="/images/close.png" alt="Close Icon" class="ed-de-icon" id="close-button">
           </button>
           <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST">
@@ -49,24 +59,6 @@
     </div>
   </div>
 
-  <script>
-    function replaceButtons() {
-      var originalButton = document.getElementById("originalButton");
-      var newButtons = document.getElementById("newButtons");
-
-      originalButton.classList.add("hidden");
-      newButtons.classList.remove("hidden");
-    }
-
-    function restoreButton() {
-      var originalButton = document.getElementById("originalButton");
-      var newButtons = document.getElementById("newButtons");
-
-      originalButton.classList.remove("hidden");
-      newButtons.classList.add("hidden");
-    }
-  </script>
-
   <% if (recipe.ingredients.length) { %>
     <div class="instruction-list">
       <h2>Ingredients</h2>
@@ -78,11 +70,15 @@
                   <%= r.measurement %>
                   <%= r.content %>
                 </li>
-                  <button class="list-edit-button">
-                    <a href="recipes/ingredients/<%= r._id %>/edit">
-                      Edit
-                    </a>
-                  </button>
+                <div>
+                  <% if (user?._id.equals(r.user)) { %>
+                    <button class="list-edit-button">
+                      <a href="recipes/ingredients/<%= r._id %>/edit">
+                        Edit
+                      </a>
+                    </button>
+                  <% } %>
+                </div>
                 <div>
                   <% if (user?._id.equals(r.user)) { %>
                     <form action="/ingredients/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
@@ -129,11 +125,15 @@
                 <li>
                   <%= r.content %>
                 </li>
-                <button class="list-edit-button">
-                  <a href="recipes/steps/<%= r._id %>/edit">
-                    Edit
-                  </a>
-                </button>
+                <div>
+                  <% if (user?._id.equals(r.user)) { %>
+                    <button class="list-edit-button">
+                      <a href="recipes/steps/<%= r._id %>/edit">
+                        Edit
+                      </a>
+                    </button>
+                  <% } %>
+                </div>
                 <div>
                   <% if (user?._id.equals(r.user)) { %>
                     <form action="/steps/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
@@ -157,3 +157,96 @@
   </div>
 </div>
 <%- include('../partials/footer') %>
+
+<script>
+    
+  function replaceEditButtons() {
+    var originalButton = document.getElementById("editOriginalButton");
+    var newButtons = document.getElementById("editNewButtons");
+    
+    originalButton.classList.add("hidden");
+    newButtons.classList.remove("hidden");
+  }
+  
+  function restoreEditButton() {
+    var originalButton = document.getElementById("editOriginalButton");
+    var newButtons = document.getElementById("editNewButtons");
+    
+    originalButton.classList.remove("hidden");
+    newButtons.classList.add("hidden");
+  }
+  
+  function replaceDeleteButtons() {
+    var originalButton = document.getElementById("deleteOriginalButton");
+    var newButtons = document.getElementById("deleteNewButtons");
+    
+    originalButton.classList.add("hidden");
+    newButtons.classList.remove("hidden");
+  }
+  
+  function restoreDeleteButton() {
+    var originalButton = document.getElementById("deleteOriginalButton");
+    var newButtons = document.getElementById("deleteNewButtons");
+    
+    originalButton.classList.remove("hidden");
+    newButtons.classList.add("hidden");
+  }
+  
+  function replaceAndToggleEditButtons() {
+    replaceEditButtons();
+    toggleEditState();
+  }
+  
+  function restoreAndToggleEditButton() {
+    restoreEditButton();
+    toggleEditState();
+  }
+
+
+  function setEditState(editState) {
+    Cookies.set('editState', editState);
+  }
+
+  function getEditState() {
+    return Cookies.get('editState');
+  }
+
+  function toggleEditState() {
+    const editState = getEditState() === 'true';
+    setEditState(!editState);
+
+    const editButtons = document.querySelectorAll('.list-edit-button, .x-form');
+
+    if (!editState) {
+      editButtons.forEach((button) => {
+            button.style.display = 'none';
+        });
+    } else {
+      editButtons.forEach((button) => {
+            button.style.display = 'block'; // Adjust the display style as needed
+        });
+    }
+  }
+
+  function initializeEditState() {
+    const editState = getEditState() === 'true';
+
+    if (editState) {
+        restoreEditButton();
+    } else {
+        replaceEditButtons();
+    }
+
+    const editButtons = document.querySelectorAll('.list-edit-button');
+    editButtons.forEach(function(button) {
+        button.style.display = editState ? 'none' : 'block';
+    });
+
+    const xForms = document.querySelectorAll('.x-form');
+    xForms.forEach(function(form) {
+        form.style.display = editState ? 'none' : 'block';
+    });
+}
+
+  window.addEventListener('load', initializeEditState);
+  </script>
