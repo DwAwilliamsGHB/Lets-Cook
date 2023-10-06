@@ -229,7 +229,7 @@
   }
 
   function initializeEditState() {
-    const editState = getEditState() === 'true';
+    const editState = getEditState() !== 'false';
 
     if (editState) {
         restoreEditButton();
