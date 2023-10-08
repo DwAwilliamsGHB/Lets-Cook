@@ -401,6 +401,15 @@ ul, ol {
 
 }
 
+.ingredient-li {
+  height: 26px;
+}
+
+.step-li {
+  width: 564px;
+  padding: 2px 0px;
+}
+
 .x-button {
   font-size: 15px;
   margin-right: auto;

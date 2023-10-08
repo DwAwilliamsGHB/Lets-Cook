@@ -65,7 +65,7 @@
         <ul>
           <% let total = 0 %>
           <% recipe.ingredients.forEach(function(r) { %>
-                <li>
+                <li class="ingredient-li">
                   <%= r.quantity %>
                   <%= r.measurement %>
                   <%= r.content %>
@@ -122,7 +122,7 @@
         <ol>
           <% let total = 0 %>
           <% recipe.steps.forEach(function(r) { %>
-                <li>
+                <li class="step-li">
                   <%= r.content %>
                 </li>
                 <div>
@@ -217,27 +217,18 @@
     const editState = getEditState() === 'true';
     setEditState(!editState);
 
-    const editButtons = document.querySelectorAll('.list-edit-button');
-    const xForms = document.querySelectorAll('.x-form');
+    const editButtons = document.querySelectorAll('.list-edit-button, .x-form');
 
     if (!editState) {
       editButtons.forEach((button) => {
-            button.style.visibility = 'hidden';
-        });
-
-      xForms.forEach((form) => {
-            form.style.visibility = 'hidden';
+            button.style.display = 'none';
         });
     } else {
       editButtons.forEach((button) => {
-            button.style.visibility = 'visible';
-        });
-
-      xForms.forEach((form) => {
-            form.style.visibility = 'visible';
+            button.style.display = 'block';
         });
     }
-}
+  }
 
   function toggleFormsVisibility() {
     const ingredientForm = document.getElementById("add-ingredient-form");
