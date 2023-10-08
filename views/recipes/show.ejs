@@ -195,11 +195,13 @@
   function replaceAndToggleEditButtons() {
     replaceEditButtons();
     toggleEditState();
+    toggleFormsVisibility();
   }
   
   function restoreAndToggleEditButton() {
     restoreEditButton();
     toggleEditState();
+    toggleFormsVisibility();
   }
 
 
@@ -215,18 +217,40 @@
     const editState = getEditState() === 'true';
     setEditState(!editState);
 
-    const editButtons = document.querySelectorAll('.list-edit-button, .x-form');
+    const editButtons = document.querySelectorAll('.list-edit-button');
+    const xForms = document.querySelectorAll('.x-form');
 
     if (!editState) {
       editButtons.forEach((button) => {
-            button.style.display = 'none';
+            button.style.visibility = 'hidden';
+        });
+
+      xForms.forEach((form) => {
+            form.style.visibility = 'hidden';
         });
     } else {
       editButtons.forEach((button) => {
-            button.style.display = 'block'; // Adjust the display style as needed
+            button.style.visibility = 'visible';
+        });
+
+      xForms.forEach((form) => {
+            form.style.visibility = 'visible';
         });
     }
-  }
+}
+
+  function toggleFormsVisibility() {
+    const ingredientForm = document.getElementById("add-ingredient-form");
+    const stepForm = document.getElementById("add-step-form");
+
+    if (ingredientForm.style.visibility === "visible") {
+        ingredientForm.style.visibility = "hidden";
+        stepForm.style.visibility = "hidden";
+    } else {
+        ingredientForm.style.visibility = "visible";
+        stepForm.style.visibility = "visible";
+    }
+}
 
   function initializeEditState() {
     const editState = getEditState() !== 'false';
@@ -246,7 +270,18 @@
     xForms.forEach(function(form) {
         form.style.display = editState ? 'none' : 'block';
     });
-}
+
+    const stepForms = document.querySelectorAll('#add-step-form');
+    stepForms.forEach(function(form) {
+        form.style.visibility = editState ? 'hidden' : 'visible';
+    });
+
+    const ingredientForms = document.querySelectorAll('#add-ingredient-form');
+    ingredientForms.forEach(function(form) {
+        form.style.visibility = editState ? 'hidden' : 'visible';
+    });
+
+  }
 
   window.addEventListener('load', initializeEditState);
-  </script>
+</script>
