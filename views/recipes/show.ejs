@@ -62,11 +62,17 @@
   <% if (recipe.ingredients.length) { %>
     <div class="instruction-list">
       <h2>Ingredients</h2>
+      <div>Servings: </div>
+      <div>
+        <span id="serving-quantity"><%= recipe.serving %></span>
+        <button id="increase-servings" onclick="adjustServings(1)">+</button>
+        <button id="decrease-servings" onclick="adjustServings(-1)">-</button>
+      </div>
         <ul>
           <% let total = 0 %>
           <% recipe.ingredients.forEach(function(r) { %>
                 <li class="ingredient-li">
-                  <%= r.quantity %>
+                  <span class="ingredient-quantity" data-quantity="<%= r.quantity %>"><%= r.quantity %></span>
                   <%= r.measurement %>
                   <%= r.content %>
                 </li>
@@ -159,6 +165,36 @@
 <%- include('../partials/footer') %>
 
 <script>
+
+  const originalServings = <%= recipe.serving %>;
+    let currentServings = originalServings;
+
+    function updateIngredientQuantities() {
+      const scalingFactor = currentServings / originalServings;
+
+      const ingredientQuantities = document.querySelectorAll(".ingredient-li .ingredient-quantity");
+      ingredientQuantities.forEach(function (quantityElement) {
+        const originalQuantity = parseFloat(quantityElement.getAttribute("data-quantity"));
+        let newQuantity = (originalQuantity * scalingFactor); // as a floating-point number
+        newQuantity = newQuantity.toFixed(3).replace(/\.?0+$/, ""); // Remove trailing zeroes
+        quantityElement.textContent = newQuantity;
+      });
+    }
+
+    function adjustServings(change) {
+      const newServings = currentServings + change;
+
+      if (newServings < 1) return;
+
+      const servingQuantityElement = document.getElementById("serving-quantity");
+      servingQuantityElement.textContent = newServings;
+
+      currentServings = newServings;
+      updateIngredientQuantities();
+    }
+
+    // Initial update of ingredient quantities
+    updateIngredientQuantities();
     
   function replaceEditButtons() {
     var originalButton = document.getElementById("editOriginalButton");
