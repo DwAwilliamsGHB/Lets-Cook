@@ -195,35 +195,36 @@
   function decimalToFraction(decimal) {
     if (decimal === 0) return "0";
 
-    let tolerance = 0.01; // Define your tolerance level for rounding
+    const tolerance = 0.01; // Define your tolerance level for rounding
 
     let sign = 1;
     if (decimal < 0) {
-        sign = -1;
-        decimal = Math.abs(decimal);
+      sign = -1;
+      decimal = Math.abs(decimal);
     }
 
     let wholeNumberPart = Math.floor(decimal);
     let fractionalPart = decimal - wholeNumberPart;
 
     for (let denominator = 2; denominator <= 8; denominator++) {
-        for (let numerator = 1; numerator < denominator; numerator++) {
-            if (Math.abs(fractionalPart - numerator / denominator) < tolerance) {
-                let fraction = "";
-                if (wholeNumberPart > 0) {
-                    fraction = wholeNumberPart + " ";
-                }
-                if (numerator === 1) {
-                    fraction += "1/" + denominator;
-                } else {
-                    fraction += numerator + "/" + denominator;
-                }
-                return sign === -1 ? "-" + fraction : fraction;
-            }
+      for (let numerator = 1; numerator < denominator; numerator++) {
+        const fractionValue = numerator / denominator;
+        if (Math.abs(fractionalPart - fractionValue) < tolerance) {
+          let fraction = "";
+          if (wholeNumberPart > 0) {
+            fraction = wholeNumberPart + " ";
+          }
+          if (numerator === 1) {
+            fraction += "1/" + denominator;
+          } else {
+            fraction += numerator + "/" + denominator;
+          }
+          return sign === -1 ? "-" + fraction : fraction;
         }
+      }
     }
 
-    return (sign === -1 ? "-" : "") + decimal.toString();
+    return (sign === -1 ? "-" : "") + decimal.toFixed(2).replace(/\.?0+$/, "");
   }
 
   let useFractions = true; // By default, start with fractions
