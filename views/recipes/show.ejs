@@ -68,6 +68,9 @@
         <button id="increase-servings" onclick="adjustServings(1)">+</button>
         <button id="decrease-servings" onclick="adjustServings(-1)">-</button>
       </div>
+      <div>
+        <button id="toggleQuantityFormat" onclick="toggleQuantityFormat()">Toggle Format</button>
+      </div>
         <ul>
           <% let total = 0 %>
           <% recipe.ingredients.forEach(function(r) { %>
@@ -171,16 +174,21 @@
 
   function updateIngredientQuantities() {
     const scalingFactor = currentServings / originalServings;
-
     const ingredientQuantities = document.querySelectorAll(".ingredient-li .ingredient-quantity");
-    ingredientQuantities.forEach(function (quantityElement) {
-        const originalQuantity = parseFloat(quantityElement.getAttribute("data-quantity"));
-        let newQuantity = (originalQuantity * scalingFactor); // as a floating-point number
 
+    ingredientQuantities.forEach(function (quantityElement) {
+      const originalQuantity = parseFloat(quantityElement.getAttribute("data-quantity"));
+      let newQuantity = originalQuantity * scalingFactor; // as a floating-point number
+
+      if (useFractions) {
         // Convert decimal to fraction
         newQuantity = decimalToFraction(newQuantity);
+      } else {
+        // Display decimal
+        newQuantity = newQuantity.toFixed(2).replace(/\.?0+$/, "");
+      }
 
-        quantityElement.textContent = newQuantity;
+      quantityElement.textContent = newQuantity;
     });
   }
 
@@ -216,6 +224,13 @@
     }
 
     return (sign === -1 ? "-" : "") + decimal.toString();
+  }
+
+  let useFractions = true; // By default, start with fractions
+
+  function toggleQuantityFormat() {
+    useFractions = !useFractions;
+    updateIngredientQuantities();
   }
 
   function adjustServings(change) {
