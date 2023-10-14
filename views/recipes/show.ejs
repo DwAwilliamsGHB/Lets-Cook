@@ -176,7 +176,7 @@
       ingredientQuantities.forEach(function (quantityElement) {
         const originalQuantity = parseFloat(quantityElement.getAttribute("data-quantity"));
         let newQuantity = (originalQuantity * scalingFactor); // as a floating-point number
-        newQuantity = newQuantity.toFixed(3).replace(/\.?0+$/, ""); // Remove trailing zeroes
+        newQuantity = newQuantity.toFixed(2).replace(/\.?0+$/, ""); // Remove trailing zeroes
         quantityElement.textContent = newQuantity;
       });
     }
