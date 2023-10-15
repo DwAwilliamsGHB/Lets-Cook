@@ -5,7 +5,7 @@ const ingredientSchema = new Schema({
   quantity: {
     type: Number,
     default: 0,
-    required: true,
+    required: false,
   },
   measurement: {
     type: String,
