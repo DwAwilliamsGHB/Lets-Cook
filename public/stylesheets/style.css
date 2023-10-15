@@ -456,7 +456,8 @@ ul, ol {
 }
 
 .ingredient-li {
-  height: 26px;
+  width: 564px;
+  padding: 2px 0px;
 }
 
 .step-li {
