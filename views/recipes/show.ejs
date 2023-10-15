@@ -62,15 +62,21 @@
   <% if (recipe.ingredients.length) { %>
     <div class="instruction-list">
       <h2>Ingredients</h2>
-      <div>Servings: </div>
-      <div>
-        <span id="serving-quantity"><%= recipe.serving %></span>
-        <button id="increase-servings" onclick="adjustServings(1)">+</button>
-        <button id="decrease-servings" onclick="adjustServings(-1)">-</button>
+      <div id="servings-adjuster">
+        <div>Servings</div>
+        <div>
+          <button id="decrease-servings" onclick="adjustServings(-1)">-</button>
+          <input type="number" id="servings-input" value="<%= recipe.serving %>">
+          <button id="increase-servings" onclick="adjustServings(1)">+</button>
+        </div>
+        <div>Display</div>
+        <% const useFractions = true; %>
+        <button id="toggleQuantityFormat" onclick="toggleQuantityFormat()">
+          <%- useFractions ? '1.23' : '1/2' %>
+        </button>
       </div>
-      <div>
-        <button id="toggleQuantityFormat" onclick="toggleQuantityFormat()">Toggle Format</button>
-      </div>
+
+
         <ul>
           <% let total = 0 %>
           <% recipe.ingredients.forEach(function(r) { %>
@@ -243,16 +249,28 @@
   function toggleQuantityFormat() {
     useFractions = !useFractions;
     updateIngredientQuantities();
+
+    const toggleButton = document.getElementById("toggleQuantityFormat");
+    toggleButton.innerText = useFractions ? '1.23' : '1/2';
+
   }
 
+  const servingsInput = document.getElementById("servings-input");
+
+  servingsInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent the Enter key from submitting the form (if it's inside a form)
+      adjustServings(0); // Trigger the adjustment with change = 0
+    }
+  });
+
   function adjustServings(change) {
-    const newServings = currentServings + change;
+    const servingsInput = document.getElementById("servings-input");
+    const newServings = parseInt(servingsInput.value) + change;
 
     if (newServings < 1) return;
 
-    const servingQuantityElement = document.getElementById("serving-quantity");
-    servingQuantityElement.textContent = newServings;
-
+    servingsInput.value = newServings;
     currentServings = newServings;
     updateIngredientQuantities();
   }
