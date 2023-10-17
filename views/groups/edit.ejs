@@ -1,0 +1,11 @@
+<%- include('../partials/header') %>
+
+<div class="input-div">
+    <form action="/recipes/<%= recipe._id %>/groups/<%= group._id %>?_method=PUT" id="add-group-form" method="POST">
+        <input id="group-form" name="name" placeholder="Group Name" value="<%= group.name %>"></input>
+        <input type="hidden" name="_method" value="PUT">
+        <input type="submit" value="Update Group">
+    </form>
+</div>
+
+<%- include('../partials/footer') %>

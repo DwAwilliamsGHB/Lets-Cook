@@ -5,7 +5,6 @@ const ingredientSchema = new Schema({
   quantity: {
     type: Number,
     default: 0,
-    required: false,
   },
   measurement: {
     type: String,
@@ -42,6 +41,23 @@ const stepSchema = new Schema({
   timestamps: true
 })
 
+const groupSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  ingredients: [ingredientSchema],
+  userName: String,
+  userAvatar: String
+}, {
+  timestamps: true,
+});
+
 const recipeSchema = new Schema({
   dishName: {
     type: String,
@@ -75,6 +91,7 @@ const recipeSchema = new Schema({
     type: Boolean, 
     default: false
   },
+  groups: [groupSchema],
   ingredients: [ingredientSchema],
   steps: [stepSchema]
 }, {

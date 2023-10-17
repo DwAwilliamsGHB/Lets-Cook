@@ -186,7 +186,7 @@ tbody {
 }
 
 h3 {
-  font-size: 40px;
+  font-size: 25px;
 }
 
 #add-ingredient-form,
@@ -319,7 +319,7 @@ hr {
   grid-gap: 15px;
 }
 
-#add-ingredient-form input[type="submit"], #add-step-form input[type="submit"] {
+#add-ingredient-form input[type="submit"], #add-step-form input[type="submit"], #add-group-form input[type="submit"] {
   color: white;
   font-size: 20px;
   background-color: #444444;
@@ -377,7 +377,7 @@ hr {
   width: 60px;
 }
 
-#add-ingredient-form, #add-step-form {
+#add-ingredient-form {
   display: grid;
   grid-template-columns: 1fr 2fr 5fr 2fr;
   width: 800px;
@@ -389,6 +389,14 @@ hr {
   vertical-align: top;
 }
 
+#add-group-form {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  vertical-align: top;
+  width: 450px;
+  font-size: 20px;
+}
+
 .x-form {
   text-align: right;
   display: none;
@@ -397,6 +405,13 @@ hr {
 input:focus, select:focus, textarea:focus {
   outline: none;
   background-color: rgb(232, 240, 254)
+}
+
+#group-form {
+  border-radius: 5px 0px 0px 5px;
+  border: 1px solid #444444;
+  padding: 7px 10px;
+  font-size: 20px;
 }
 
 #ingredient-form, #measurement-form {
@@ -445,7 +460,7 @@ select {
   word-break:break-word;
 }
 
-ul, ol {
+ul, ol, #group-list {
   display: grid;
   grid-template-columns: 8fr 1fr 1fr;
   grid-row-gap: 5px;
@@ -491,4 +506,5 @@ ul, ol {
   justify-content: center;
   align-items: center;
   margin: 20px 0px;
+  padding: 20px;
 }

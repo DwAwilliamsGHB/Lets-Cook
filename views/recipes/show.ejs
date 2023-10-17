@@ -168,6 +168,44 @@
       </form>
     <% } %>
   </div>
+
+  <% if (recipe.groups.length) { %>
+    <div class="instruction-list">
+      <h2>Groups</h2>
+      <div id="group-list">
+        <% let total = 0 %>
+        <% recipe.groups.forEach(function(r) { %>
+          <h3><%= r.name %></h3>
+          <div>
+            <% if (user?._id.equals(r.user)) { %>
+              <button class="list-edit-button">
+                <a href="recipes/groups/<%= r._id %>/edit">
+                  Edit
+                </a>
+              </button>
+            <% } %>
+          </div>
+          <div>
+            <% if (user?._id.equals(r.user)) { %>
+              <form action="/groups/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
+                <button class="x-button" type="submit">X</button>
+              </form>
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="input-div">
+    <% if (user) { %>
+      <form id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
+        <input id="group-form" name="name" placeholder="Add Group"></input>
+        <input type="submit" value="Group Name">
+      </form>
+    <% } %>
+  </div>
+
 </div>
 <%- include('../partials/footer') %>
 

@@ -3,18 +3,19 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const session = require('express-session')
-const passport = require('passport')
-const methodOverride = require('method-override')
+const session = require('express-session');
+const passport = require('passport');
+const methodOverride = require('method-override');
 
 require('dotenv').config();
 require('./config/database');
-require('./config/passport')
+require('./config/passport');
 
 var indexRouter = require('./routes/index');
 var recipesRouter = require('./routes/recipes');
+var groupsRouter = require('./routes/groups');
 var ingredientsRouter = require('./routes/ingredients');
-var stepsRouter = require('./routes/steps')
+var stepsRouter = require('./routes/steps');
 var cuisinesRouter = require('./routes/cuisines');
 
 var app = express();
@@ -44,6 +45,7 @@ app.use(function(req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/recipes', recipesRouter);
+app.use('/', groupsRouter);
 app.use('/', ingredientsRouter);
 app.use('/', stepsRouter);
 app.use('/', cuisinesRouter);
