@@ -9,17 +9,32 @@ module.exports = {
 }
 
 function create(req, res) {
-    Recipe.findById(req.params.id, function(err, recipe) {
+    Recipe.findOne({ _id: req.params.id, 'groups._id': req.params.groupId }, function (err, recipe) {
+        if (err || !recipe) {
+            return res.status(404).json({ message: 'Recipe or Group not found' });
+        }
 
-        req.body.user = req.user._id
-        req.body.userName = req.user.name
-        req.body.userAvatar = req.user.avatar
+        // Create the ingredient object and add it to the group's ingredients array
+        const ingredient = {
+            user: req.user._id,
+            userName: req.user.name,
+            userAvatar: req.user.avatar,
+            quantity: req.body.quantity,
+            measurement: req.body.measurement,
+            content: req.body.content,
+        };
 
-        recipe.ingredients.push(req.body)
-        recipe.save(function(err) {
-            res.redirect(`/recipes/${recipe._id}`)
-        })
-    })
+        const group = recipe.groups.id(req.params.groupId);
+        group.ingredients.push(ingredient);
+
+        recipe.save(function (err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Failed to add ingredient to group' });
+            }
+            res.redirect(`/recipes/${recipe._id}`);
+        });
+    });
 }
 
 function edit(req, res) {

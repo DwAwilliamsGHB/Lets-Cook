@@ -1,0 +1,12 @@
+id="add-ingredient-form-<%= r._id %>"
+
+const ingredientGroupForm = document.getElementById("add-ingredient-form-" + groupId);
+
+ingredientGroupForm.style.visibility = "hidden";
+
+ingredientGroupForm.style.visibility = "visible";
+
+const ingredientGroupForms = document.querySelectorAll('add-ingredient-form-' + groupId);
+ingredientGroupForms.forEach(function(form) {
+    form.style.visibility = editState ? 'hidden' : 'visible';
+});

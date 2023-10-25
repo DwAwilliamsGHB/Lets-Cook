@@ -186,7 +186,8 @@ tbody {
 }
 
 h3 {
-  font-size: 25px;
+  font-size: 20px;
+  text-decoration: none;
 }
 
 #add-ingredient-form,
@@ -455,19 +456,47 @@ select {
   text-align: left;
   background-color: #fafafa;
   border-radius: 5px;
-  margin: 30px;
+  margin: auto;
   width: auto;
   word-break:break-word;
 }
 
-ul, ol, #group-list {
+ul, ol {
   display: grid;
   grid-template-columns: 8fr 1fr 1fr;
   grid-row-gap: 5px;
   grid-column-gap: 10px;
   padding-left: 35px;
   width: auto;
+  margin: 30px;
+}
 
+.group-container {
+  margin-bottom: 20px;
+}
+
+#group-list {
+  align-items: center;
+  width: auto;
+}
+
+.group-li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 30px;
+}
+
+.group-name {
+  flex: 8;
+}
+
+.group-edit {
+  flex: 1;
+}
+
+.group-delete {
+  flex: 1;
 }
 
 .ingredient-li {

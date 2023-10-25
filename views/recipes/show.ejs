@@ -106,7 +106,7 @@
   
   <div class="input-div">
     <% if(user) { %>
-      <form id="add-ingredient-form" method="POST"
+      <form class="add-form" id="add-ingredient-form" method="POST"
         action="/recipes/<%= recipe._id %>/ingredients"  onsubmit="convertQuantity()">
         <input  name="quantity" id="quantity-form" placeholder="Qty."></input>
         <select name="measurement" id="measurement-form">
@@ -128,6 +128,95 @@
       </form>
     <% } %>
   </div>
+
+  <div class="input-div">
+    <% if (user) { %>
+      <form class="add-form" id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
+        <input id="group-form" name="name" placeholder="Group Name"></input>
+        <input type="submit" value="Add Group">
+      </form>
+    <% } %>
+  </div>
+
+  <% if (recipe.groups.length) { %>
+    <div class="instruction-list">
+      <div id="group-container">
+        <% let total = 0 %>
+        <% recipe.groups.forEach(function(r) { %>
+          <div class="group-list">
+            <div class="group-li">
+              <h3 class="group-name"><%= r.name %></h3>
+              <div class="group-edit">
+                <% if (user?._id.equals(r.user)) { %>
+                  <button class="list-edit-button">
+                    <a href="recipes/groups/<%= r._id %>/edit">
+                      Edit
+                    </a>
+                  </button>
+                <% } %>
+              </div>
+              <div class="group-delete">
+                <% if (user?._id.equals(r.user)) { %>
+                  <form action="/groups/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
+                    <button class="x-button" type="submit">X</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+            <ul>
+              <% r.ingredients.forEach(function(r) { %>
+                <li class="ingredient-li">
+                  <span class="ingredient-quantity" data-quantity="<%= r.quantity %>"><%= r.quantity %></span>
+                  <%= r.measurement %>
+                  <%= r.content %>
+                </li>
+                <div>
+                  <% if (user?._id.equals(r.user)) { %>
+                    <button class="list-edit-button">
+                      <a href="/recipes/<%= recipe._id %>/groups/<%= r._id %>/ingredients/<%= r._id %>/edit">
+                        Edit
+                      </a>
+                    </button>
+                  <% } %>
+                </div>
+                <div>
+                  <% if (user?._id.equals(r.user)) { %>
+                    <form action="/recipes/<%= recipe._id %>/groups/<%= r._id %>/ingredients/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
+                      <button class="x-button" type="submit">X</button>
+                    </form>
+                  <% } %>
+                </div>
+              <% }); %>
+            </ul>
+            <div class="input-div">
+              <% if (user) { %>
+                <form class="add-form" id="add-ingredient-form" method="POST"
+                  action="/recipes/<%= recipe._id %>/groups/<%= r._id %>/ingredients" onsubmit="convertQuantity()">
+                  <input name="quantity" id="quantity-form" placeholder="Qty."></input>
+                  <select name="measurement" id="measurement-form">
+                    <option value="" selected disabled>Measurement</option>
+                    <option value="Pinch">Pinch</option>
+                    <option value="Dash">Dash</option>
+                    <option value="Ounce">Ounce</option>
+                    <option value="Teaspoon">Teaspoon</option>
+                    <option value="Tablespoon">Tablespoon</option>
+                    <option value="Pound">Pound</option>
+                    <option value="Fluid Ounce">Fluid Ounce</option>
+                    <option value="Cup">Cup</option>
+                    <option value="Pint">Pint</option>
+                    <option value="Quart">Quart</option>
+                    <option value="Gallon">Gallon</option>
+                  </select>
+                  <input name="content" id="ingredient-form" placeholder="Ingredient Name"></input>
+                  <input type="submit" value="Add Ingredient to Group">
+                </form>
+              <% } %>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  <% } %>
   
   <% if (recipe.steps.length) { %>
     <div class="instruction-list">
@@ -161,47 +250,10 @@
   
   <div class="input-div">
     <% if(user) { %>
-      <form id="add-step-form" method="POST"
+      <form class="add-form" id="add-step-form" method="POST"
         action="/recipes/<%= recipe._id %>/steps">
         <textarea id="step-form" name="content" placeholder="Add New Step"></textarea>
         <input type="submit" value="Add Step">
-      </form>
-    <% } %>
-  </div>
-
-  <% if (recipe.groups.length) { %>
-    <div class="instruction-list">
-      <h2>Groups</h2>
-      <div id="group-list">
-        <% let total = 0 %>
-        <% recipe.groups.forEach(function(r) { %>
-          <h3><%= r.name %></h3>
-          <div>
-            <% if (user?._id.equals(r.user)) { %>
-              <button class="list-edit-button">
-                <a href="recipes/groups/<%= r._id %>/edit">
-                  Edit
-                </a>
-              </button>
-            <% } %>
-          </div>
-          <div>
-            <% if (user?._id.equals(r.user)) { %>
-              <form action="/groups/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
-                <button class="x-button" type="submit">X</button>
-              </form>
-            <% } %>
-          </div>
-        <% }); %>
-      </div>
-    </div>
-  <% } %>
-
-  <div class="input-div">
-    <% if (user) { %>
-      <form id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
-        <input id="group-form" name="name" placeholder="Add Group"></input>
-        <input type="submit" value="Group Name">
       </form>
     <% } %>
   </div>
@@ -393,17 +445,11 @@
   }
 
   function toggleFormsVisibility() {
-    const ingredientForm = document.getElementById("add-ingredient-form");
-    const stepForm = document.getElementById("add-step-form");
-
-    if (ingredientForm.style.visibility === "visible") {
-        ingredientForm.style.visibility = "hidden";
-        stepForm.style.visibility = "hidden";
-    } else {
-        ingredientForm.style.visibility = "visible";
-        stepForm.style.visibility = "visible";
-    }
-}
+    const forms = document.querySelectorAll('.add-form');
+    forms.forEach(form => {
+      form.style.visibility = form.style.visibility === 'hidden' ? 'visible' : 'hidden';
+    });
+  }
 
   function initializeEditState() {
     const editState = getEditState() !== 'false';
@@ -431,6 +477,11 @@
 
     const ingredientForms = document.querySelectorAll('#add-ingredient-form');
     ingredientForms.forEach(function(form) {
+        form.style.visibility = editState ? 'hidden' : 'visible';
+    });
+    
+    const groupForms = document.querySelectorAll('#add-group-form');
+    groupForms.forEach(function(form) {
         form.style.visibility = editState ? 'hidden' : 'visible';
     });
 

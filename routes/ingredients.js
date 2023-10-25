@@ -8,5 +8,10 @@ router.post('/recipes/:id/ingredients', ensureLoggedIn, ingredientsCtrl.create)
 router.get('/recipes/:id/ingredients/:ingredientId/edit', ensureLoggedIn, ingredientsCtrl.edit);
 router.put('/recipes/:id/ingredients/:ingredientId', ensureLoggedIn, ingredientsCtrl.update);
 router.delete('/ingredients/:id', ensureLoggedIn, ingredientsCtrl.delete)
+router.post('/recipes/:id/groups/:groupId/ingredients', ensureLoggedIn, ingredientsCtrl.create);
+router.get('/recipes/:id/groups/:groupId/ingredients/:ingredientId/edit', ensureLoggedIn, ingredientsCtrl.edit);
+router.put('/recipes/:id/groups/:groupId/ingredients/:ingredientId', ensureLoggedIn, ingredientsCtrl.update);
+router.delete('/recipes/:id/groups/:groupId/ingredients/:ingredientId', ensureLoggedIn, ingredientsCtrl.delete);
+
 
 module.exports = router
