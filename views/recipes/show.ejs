@@ -211,6 +211,7 @@
                   <input type="submit" value="Add Ingredient to Group">
                 </form>
               <% } %>
+              <div class="group-divider"></div>
             </div>
           </div>
         <% }); %>
@@ -278,7 +279,7 @@
         quantityElement.style.display = "none"; // Hide the element
         return; // Exit the loop for this element
       } else {
-        quantityElement.style.display = "inline"; // Make sure the element is visible
+        quantityElement.style.display = "inline";
       }
 
       let newQuantity = originalQuantity * scalingFactor; // as a floating-point number
@@ -445,9 +446,9 @@
   }
 
   function toggleFormsVisibility() {
-    const forms = document.querySelectorAll('.add-form');
+    const forms = document.querySelectorAll('.input-div');
     forms.forEach(form => {
-      form.style.visibility = form.style.visibility === 'hidden' ? 'visible' : 'hidden';
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
     });
   }
 
@@ -470,21 +471,10 @@
         form.style.display = editState ? 'none' : 'block';
     });
 
-    const stepForms = document.querySelectorAll('#add-step-form');
-    stepForms.forEach(function(form) {
-        form.style.visibility = editState ? 'hidden' : 'visible';
+    const inputDivs = document.querySelectorAll('.input-div');
+    inputDivs.forEach(function(inputDiv) {
+      inputDiv.style.display = editState ? 'none' : 'block';
     });
-
-    const ingredientForms = document.querySelectorAll('#add-ingredient-form');
-    ingredientForms.forEach(function(form) {
-        form.style.visibility = editState ? 'hidden' : 'visible';
-    });
-    
-    const groupForms = document.querySelectorAll('#add-group-form');
-    groupForms.forEach(function(form) {
-        form.style.visibility = editState ? 'hidden' : 'visible';
-    });
-
   }
 
   window.addEventListener('load', initializeEditState);
