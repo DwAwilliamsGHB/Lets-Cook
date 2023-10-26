@@ -468,7 +468,7 @@ ul, ol {
   grid-column-gap: 10px;
   padding-left: 35px;
   width: auto;
-  margin: 30px;
+  margin: 0px 30px;
 }
 
 .group-container {
@@ -490,7 +490,7 @@ ul, ol {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin: 30px;
+  margin: 0px 30px;
 }
 
 .group-name {
