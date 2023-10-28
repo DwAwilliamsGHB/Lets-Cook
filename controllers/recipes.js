@@ -1,5 +1,6 @@
 const Recipe = require("../models/recipe");
 const Cuisine = require("../models/cuisine");
+const Group = require("../models/group");
 
 module.exports = {
   index,
@@ -27,11 +28,16 @@ async function index(req, res) {
 function show(req, res) {
   Recipe.findById(req.params.id)
     .populate("cuisine")
-    .exec(function (err, recipe) {
+    .populate("groups") // Populate the 'groups' field
+    .exec(async function (err, recipe) {
       if (err || !recipe) {
         return res.status(404).json({ message: 'Recipe not found' });
       }
-      res.render("recipes/show", { title: recipe.dishName, recipe });
+
+      // Fetch groups that belong to the recipe
+      const groups = await Group.find({ recipe: recipe._id }).exec();
+
+      res.render("recipes/show", { title: recipe.dishName, recipe, groups });
     });
 }
 
@@ -68,11 +74,16 @@ function create(req, res) {
 
 function edit(req, res) {
   Recipe.findById(req.params.id)
-    .populate("cuisine") 
-    .exec(function (err, recipe) {
+    .populate("cuisine")
+    .populate("groups") // Populate the 'groups' field
+    .exec(async function (err, recipe) {
       if (err || !recipe) {
         return res.status(404).json({ message: 'Recipe not found' });
       }
+
+      // Fetch groups that belong to the recipe
+      const groups = await Group.find({ recipe: recipe._id }).exec();
+
       Cuisine.find({}, function (err, cuisines) {
         if (err) {
           // Handle error
@@ -80,7 +91,8 @@ function edit(req, res) {
         res.render('recipes/edit', {
           title: 'Edit Recipe',
           recipe,
-          cuisines
+          cuisines,
+          groups
         });
       });
     });

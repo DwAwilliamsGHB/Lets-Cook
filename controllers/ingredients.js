@@ -1,11 +1,12 @@
 const Recipe = require('../models/recipe')
-const Ingredient = require('../models/recipe')
 
 module.exports = {
     create,
     createGroupIngredient,
     edit,
+    editGroupIngredient,
     update,
+    updateGroupIngredient,
     delete: deleteIngredient
 }
 
@@ -66,37 +67,64 @@ function createGroupIngredient(req, res) {
     });
 }
 
-function edit(req, res) {
-    Recipe.findOne({ 'ingredients._id': req.params.ingredientId }, (err, recipe) => {
-        if (err || !recipe) {
-            return res.status(404).json({ message: 'Recipe not found' });
-        }
-        const ingredient = recipe.ingredients.id(req.params.ingredientId); // Find the specific ingredient by ID
-        if (!ingredient) {
-            return res.status(404).json({ message: 'Ingredient not found' });
-        }
+async function edit(req, res, next) {
+    try {
+        const recipe = await Recipe.findById(req.params.id);
+        const ingredient = recipe.ingredients.id(req.params.ingredientId);
         res.render('ingredients/edit', { title: 'Edit Ingredient', recipe, ingredient });
-    });
+    } catch (err) {
+        return next(err);
+    }
 }
 
-function update(req, res) {
-    Recipe.findOneAndUpdate(
-        { 'ingredients._id': req.params.ingredientId },
-        {
-            $set: {
-                'ingredients.$.quantity': req.body.quantity,
-                'ingredients.$.measurement': req.body.measurement,
-                'ingredients.$.content': req.body.content,
-            }
-        },
-        { new: true },
-        (err, recipe) => {
-            if (err || !recipe) {
-                return res.status(404).json({ message: 'Ingredient not found' });
-            }
-            res.redirect(`/recipes/${recipe._id}`);
-        }
-    );
+async function editGroupIngredient(req, res, next) {
+    try {
+        const recipe = await Recipe.findById(req.params.id);
+        const group = recipe.groups.id(req.params.groupId);
+        const ingredient = group.ingredients.id(req.params.ingredientId);
+        res.render('groupIngredients/groupIngredientEdit', { title: 'Edit Ingredient', recipe, group, ingredient });
+    } catch (err) {
+        return next(err);
+    }
+}
+
+async function update(req, res, next) {
+    try {
+        const { id, ingredientId } = req.params;
+        const recipe = await Recipe.findById(id);
+        const ingredient = recipe.ingredients.id(ingredientId);
+
+        // Update the ingredient properties
+        ingredient.quantity = req.body.quantity;
+        ingredient.measurement = req.body.measurement;
+        ingredient.content = req.body.content;
+
+        await recipe.save();
+
+        res.redirect(`/recipes/${id}`);
+    } catch (err) {
+        return next(err);
+    }
+}
+
+async function updateGroupIngredient(req, res, next) {
+    try {
+        const { id, groupId, ingredientId } = req.params;
+        const recipe = await Recipe.findById(id);
+        const group = recipe.groups.id(groupId);
+        const ingredient = group.ingredients.id(ingredientId);
+
+        // Update the ingredient properties
+        ingredient.quantity = req.body.quantity;
+        ingredient.measurement = req.body.measurement;
+        ingredient.content = req.body.content;
+
+        await recipe.save();
+
+        res.redirect(`/recipes/${id}`);
+    } catch (err) {
+        return next(err);
+    }
 }
   
 async function deleteIngredient(req, res, next) {

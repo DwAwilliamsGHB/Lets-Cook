@@ -1,62 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ingredientSchema = new Schema({
-  quantity: {
-    type: Number,
-    default: 0,
-  },
-  measurement: {
-    type: String,
-    enum: ['Pinch', 'Dash', 'Ounce', 'Teaspoon', 'Tablespoon', 'Pound', 'Fluid Ounce', 'Cup', 'Pint', 'Quart', 'Gallon'],
-  },
-  content: {
-    type: String,
-    required: true
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  userName: String,
-  userAvatar: String
-}, {
-  timestamps: true
-})
-
-const stepSchema = new Schema({
-  content: {
-    type: String,
-    required: true
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  userName: String,
-  userAvatar: String
-}, {
-  timestamps: true
-})
-
-const groupSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  ingredients: [ingredientSchema],
-  userName: String,
-  userAvatar: String
-}, {
-  timestamps: true,
-});
+const Ingredient = require("./ingredient");
+const Step = require("./step");
+const Group = require("./group");
 
 const recipeSchema = new Schema({
   dishName: {
@@ -91,9 +38,9 @@ const recipeSchema = new Schema({
     type: Boolean, 
     default: false
   },
-  groups: [groupSchema],
-  ingredients: [ingredientSchema],
-  steps: [stepSchema]
+  groups: [Group.schema],
+  ingredients: [Ingredient.schema],
+  steps: [Step.schema]
 }, {
   timestamps: true
 });

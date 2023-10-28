@@ -9,8 +9,8 @@ router.get('/recipes/:id/ingredients/:ingredientId/edit', ensureLoggedIn, ingred
 router.put('/recipes/:id/ingredients/:ingredientId', ensureLoggedIn, ingredientsCtrl.update);
 router.delete('/ingredients/:id', ensureLoggedIn, ingredientsCtrl.delete)
 router.post('/recipes/:id/groups/:groupId/ingredients', ensureLoggedIn, ingredientsCtrl.createGroupIngredient);
-router.get('/recipes/:id/groups/:id/ingredients/:id/edit', ensureLoggedIn, ingredientsCtrl.edit);
-router.put('/recipes/:id/groups/:groupId/ingredients/:ingredientId', ensureLoggedIn, ingredientsCtrl.update);
+router.get('/recipes/:id/groups/:groupId/ingredients/:ingredientId/groupIngredientEdit', ensureLoggedIn, ingredientsCtrl.editGroupIngredient);
+router.put('/recipes/:id/groups/:groupId/ingredients/:ingredientId', ensureLoggedIn, ingredientsCtrl.updateGroupIngredient);
 router.delete('/recipes/:id/groups/:groupId/ingredients/:ingredientId', ensureLoggedIn, ingredientsCtrl.delete);
 
 
