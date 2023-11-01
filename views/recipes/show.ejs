@@ -133,7 +133,7 @@
     <% if (user) { %>
       <form class="add-form" id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
         <input id="group-form" name="name" placeholder="Group Name"></input>
-        <input type="submit" value="Add Group">
+        <input type="submit" value="Add Ingredient Group">
       </form>
     <% } %>
   </div>
@@ -191,8 +191,8 @@
             <div class="input-div">
               <% if (user) { %>
                 <form class="add-form" id="add-ingredient-form" method="POST"
-                  action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients" onsubmit="convertQuantity()">
-                  <input name="quantity" id="quantity-form" placeholder="Qty."></input>
+                  action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients" onsubmit="convertQuantityGroup()">
+                  <input name="quantity" id="quantity-form" class="quantity-form-group" placeholder="Qty."></input>
                   <select name="measurement" id="measurement-form">
                     <option value="" selected disabled>Measurement</option>
                     <option value="Pinch">Pinch</option>
@@ -340,6 +340,20 @@
     quantityField.value = convertedValue;
 
     // Continue with the form submission
+  }
+
+  function convertQuantityGroup() {
+    const quantityFields = document.querySelectorAll(".quantity-form-group");
+
+    for (const quantityField of quantityFields) {
+      const quantityValue = quantityField.value;
+
+      // Convert .33 to .333 and .66 to .667
+      const convertedValue = quantityValue.replace(/\.33/g, ".333").replace(/\.66/g, ".667");
+      quantityField.value = convertedValue;
+
+      // Continue with the form submission
+    }
   }
 
   let useFractions = true; // By default, start with fractions

@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients/<%= ingredient._id %>?_method=PUT" id="add-ingredient-form" method="POST">
+    <form action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients/<%= ingredient._id %>?_method=PUT" id="add-ingredient-form" method="POST" onsubmit="convertQuantity()">
         <input  name="quantity" id="quantity-form" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
         <select name="measurement" id="measurement-form">
             <option value="" selected disabled>Measurement</option>
@@ -25,3 +25,18 @@
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+    
+    function convertQuantity() {
+        const quantityField = document.getElementById("quantity-form");
+        const quantityValue = quantityField.value;
+    
+        // Convert .33 to .333 and .66 to .667
+        const convertedValue = quantityValue.replace(/\.33/g, ".333").replace(/\.66/g, ".667");
+        quantityField.value = convertedValue;
+    
+        // Continue with the form submission
+    }
+
+</script>
