@@ -438,10 +438,12 @@
       editButtons.forEach((button) => {
             button.style.display = 'none';
         });
+        console.log('Edit state is now inactive.');
     } else {
       editButtons.forEach((button) => {
             button.style.display = 'block';
         });
+        console.log('Edit state is now active.');
     }
   }
 
