@@ -124,7 +124,7 @@
           <option value="Gallon">Gallon</option>
         </select>
         <input  name="content" id="ingredient-form" placeholder="Ingredient Name"></input>
-        <input type="submit" value="Add Ingredient">
+        <input type="submit" value="Add Ingredient" data-processing="false">
       </form>
     <% } %>
   </div>
@@ -133,7 +133,7 @@
     <% if (user) { %>
       <form class="add-form" id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
         <input id="group-form" name="name" placeholder="Group Name"></input>
-        <input type="submit" value="Add Ingredient Group">
+        <input type="submit" value="Add Ingredient Group" data-processing="false">
       </form>
     <% } %>
   </div>
@@ -208,7 +208,7 @@
                     <option value="Gallon">Gallon</option>
                   </select>
                   <input name="content" id="ingredient-form" placeholder="Ingredient Name"></input>
-                  <input type="submit" value="Add Ingredient to Group">
+                  <input type="submit" value="Add Ingredient to Group" data-processing="false">
                 </form>
               <% } %>
               <div class="group-divider"></div>
@@ -254,7 +254,7 @@
       <form class="add-form" id="add-step-form" method="POST"
         action="/recipes/<%= recipe._id %>/steps">
         <textarea id="step-form" name="content" placeholder="Add New Step"></textarea>
-        <input type="submit" value="Add Step">
+        <input type="submit" value="Add Step" data-processing="false">
       </form>
     <% } %>
   </div>
@@ -355,6 +355,19 @@
       // Continue with the form submission
     }
   }
+
+  const formElements = document.querySelectorAll("form");
+  formElements.forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      const submitButton = form.querySelector("[type='submit']");
+      if (submitButton.getAttribute("data-processing") === "true") {
+        event.preventDefault(); // Prevent the form from being submitted again
+      } else {
+        submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+        submitButton.disabled = true; // Disable the button visually
+      }
+    });
+  });
 
   let useFractions = true; // By default, start with fractions
 

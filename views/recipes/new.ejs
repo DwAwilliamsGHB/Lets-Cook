@@ -45,8 +45,25 @@
       <input type="checkbox" name="haveMade" checked>
     </label>
     <br>
-    <button type="submit" class="add-recipe-btn">Add Recipe</button>
+    <button type="submit" class="add-recipe-btn" data-processing="false">Add Recipe</button>
   </form>
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+  
+  const formElements = document.querySelectorAll("form");
+  formElements.forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      const submitButton = form.querySelector("[type='submit']");
+      if (submitButton.getAttribute("data-processing") === "true") {
+        event.preventDefault(); // Prevent the form from being submitted again
+      } else {
+        submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+        submitButton.disabled = true; // Disable the button visually
+      }
+    });
+  });
+
+</script>

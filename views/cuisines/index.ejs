@@ -10,7 +10,22 @@
 
 <form id="add-cuisine-form" action="/cuisines" method="POST">
   <input type="text" name="name" id="cuisine-form" placeholder="Enter cuisine here">
-  <input type="submit" value="Add Cuisine">
+  <input type="submit" value="Add Cuisine" data-processing="false">
 </form>
 
 <%- include('../partials/footer') %>
+
+<script>
+  const formElements = document.querySelectorAll("form");
+  formElements.forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      const submitButton = form.querySelector("[type='submit']");
+      if (submitButton.getAttribute("data-processing") === "true") {
+        event.preventDefault(); // Prevent the form from being submitted again
+      } else {
+        submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+        submitButton.disabled = true; // Disable the button visually
+      }
+    });
+  });
+</script>
