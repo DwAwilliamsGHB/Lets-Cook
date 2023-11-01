@@ -353,15 +353,6 @@
 
   }
 
-  const servingsInput = document.getElementById("servings-input");
-
-  servingsInput.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      event.preventDefault(); // Prevent the Enter key from submitting the form (if it's inside a form)
-      adjustServings(0); // Trigger the adjustment with change = 0
-    }
-  });
-
   function adjustServings(change) {
     const servingsInput = document.getElementById("servings-input");
     const newServings = parseInt(servingsInput.value) + change;
@@ -410,15 +401,12 @@
   function replaceAndToggleEditButtons() {
     replaceEditButtons();
     toggleEditState();
-    toggleFormsVisibility();
   }
   
   function restoreAndToggleEditButton() {
     restoreEditButton();
     toggleEditState();
-    toggleFormsVisibility();
   }
-
 
   function setEditState(editState) {
     Cookies.set('editState', editState);
@@ -429,55 +417,57 @@
   }
 
   function toggleEditState() {
-    const editState = getEditState() === 'true';
+    const editState = getEditState() !== 'false';
     setEditState(!editState);
 
-    const editButtons = document.querySelectorAll('.list-edit-button, .x-form');
+    const editButtons = document.querySelectorAll('.list-edit-button, .x-form, .input-div');
 
     if (!editState) {
       editButtons.forEach((button) => {
-            button.style.display = 'none';
-        });
-        console.log('Edit state is now inactive.');
-    } else {
-      editButtons.forEach((button) => {
             button.style.display = 'block';
         });
-        console.log('Edit state is now active.');
+    } else {
+      editButtons.forEach((button) => {
+            button.style.display = 'none';
+        });
     }
   }
 
-  function toggleFormsVisibility() {
-    const forms = document.querySelectorAll('.input-div');
-    forms.forEach(form => {
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    });
+  function initializeServingsInput() {
+    const servingsInput = document.getElementById("servings-input");
+
+    if (servingsInput) {
+      servingsInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          adjustServings(0);
+        }
+      });
+    }
   }
 
   function initializeEditState() {
-    const editState = getEditState() !== 'false';
+    const editState = getEditState() === 'true';
 
-    if (editState) {
+    if (!editState) {
         restoreEditButton();
     } else {
         replaceEditButtons();
     }
 
-    const editButtons = document.querySelectorAll('.list-edit-button');
-    editButtons.forEach(function(button) {
-        button.style.display = editState ? 'none' : 'block';
-    });
-
-    const xForms = document.querySelectorAll('.x-form');
-    xForms.forEach(function(form) {
-        form.style.display = editState ? 'none' : 'block';
-    });
-
-    const inputDivs = document.querySelectorAll('.input-div');
-    inputDivs.forEach(function(inputDiv) {
-      inputDiv.style.display = editState ? 'none' : 'block';
-    });
+    if (!editState) {
+      const editButtons = document.querySelectorAll('.list-edit-button, .x-form, .input-div');
+      editButtons.forEach((button) => {
+        button.style.display = 'none';
+      });
+    } else {
+      const editButtons = document.querySelectorAll('.list-edit-button, .x-form, .input-div');
+      editButtons.forEach((button) => {
+        button.style.display = 'block';
+      });
+    }
   }
 
+  window.addEventListener('load', initializeServingsInput);
   window.addEventListener('load', initializeEditState);
 </script>

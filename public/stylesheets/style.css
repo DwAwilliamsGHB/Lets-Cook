@@ -401,7 +401,6 @@ hr {
 
 .x-form {
   text-align: right;
-  display: none;
 }
 
 input:focus, select:focus, textarea:focus {
@@ -526,7 +525,6 @@ ul, ol {
   width: 40px;
   margin-top: 1px;
   margin-left: 50px;
-  display: none;
 }
 
 .input-contianer {
