@@ -21,42 +21,44 @@
       <div>Have made before: </div>
       <div><%= recipe.haveMade ? 'Yes' : 'No' %></div>
     </div>
-    <div id="ed-de-div">
-      <div class="edit-button">
-        <button id="editOriginalButton" onclick="replaceAndToggleEditButtons()" id="toggleEditButtons">
-          <img src="/images/edit-icon.png" alt="Edit Icon" class="ed-de-icon"/>
-        </button>
-      </div>
-      <div id="editNewButtons" class="hidden">
-        <div id="confcanc-buttons">
-          <button onclick="restoreAndToggleEditButton()">
+    <% if(user) { %>
+      <div id="ed-de-div">
+        <div class="edit-button">
+          <button id="editOriginalButton" onclick="replaceAndToggleEditButtons()" id="toggleEditButtons">
             <img src="/images/edit-icon.png" alt="Edit Icon" class="ed-de-icon"/>
           </button>
-          <a href="/recipes/<%= recipe._id %>/edit">
-            <button type="submit">
-              <img src="/images/check.png" alt="Check Icon" class="ed-de-icon" id="check-button"/>
-            </button>
-          </a>
         </div>
-      </div>
-      <div class="trash-button">
-        <button id="deleteOriginalButton" onclick="replaceDeleteButtons()">
-          <img src="/images/trash-icon.png" alt="Trash Icon" class="ed-de-icon">
-        </button>
-      </div>
-      <div id="deleteNewButtons" class="hidden">
-        <div id="confcanc-buttons">
-          <button onclick="restoreDeleteButton()">
-            <img src="/images/close.png" alt="Close Icon" class="ed-de-icon" id="close-button">
+        <div id="editNewButtons" class="hidden">
+          <div id="confcanc-buttons">
+            <button onclick="restoreAndToggleEditButton()">
+              <img src="/images/edit-icon.png" alt="Edit Icon" class="ed-de-icon"/>
+            </button>
+            <a href="/recipes/<%= recipe._id %>/edit">
+              <button type="submit">
+                <img src="/images/check.png" alt="Check Icon" class="ed-de-icon" id="check-button"/>
+              </button>
+            </a>
+          </div>
+        </div>
+        <div class="trash-button">
+          <button id="deleteOriginalButton" onclick="replaceDeleteButtons()">
+            <img src="/images/trash-icon.png" alt="Trash Icon" class="ed-de-icon">
           </button>
-          <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST">
-            <button type="submit">
-              <img src="/images/check.png" alt="Check Icon" class="ed-de-icon" id="check-button"/>
+        </div>
+        <div id="deleteNewButtons" class="hidden">
+          <div id="confcanc-buttons">
+            <button onclick="restoreDeleteButton()">
+              <img src="/images/close.png" alt="Close Icon" class="ed-de-icon" id="close-button">
             </button>
-          </form>
+            <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST">
+              <button type="submit">
+                <img src="/images/check.png" alt="Check Icon" class="ed-de-icon" id="check-button"/>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    <% } %>
   </div>
 
   <% if (recipe.ingredients.length) { %>
@@ -104,8 +106,8 @@
     </div>
   <% } %>
   
-  <div class="input-div">
-    <% if(user) { %>
+  <% if(user) { %>
+    <div class="input-div">
       <form class="add-form" id="add-ingredient-form" method="POST"
         action="/recipes/<%= recipe._id %>/ingredients"  onsubmit="convertQuantity()">
         <input  name="quantity" id="quantity-form" placeholder="Qty."></input>
@@ -126,17 +128,18 @@
         <input  name="content" id="ingredient-form" placeholder="Ingredient Name"></input>
         <input type="submit" value="Add Ingredient" data-processing="false">
       </form>
-    <% } %>
-  </div>
+      <div class="group-divider"></div>
+    </div>
+  <% } %>
 
-  <div class="input-div">
-    <% if (user) { %>
+  <% if (user) { %>
+    <div class="input-div">
       <form class="add-form" id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
         <input id="group-form" name="name" placeholder="Group Name"></input>
         <input type="submit" value="Add Ingredient Group" data-processing="false">
       </form>
-    <% } %>
-  </div>
+    </div>
+  <% } %>
 
   <% if (recipe.groups.length) { %>
     <div class="instruction-list">
@@ -188,8 +191,8 @@
                 </div>
               <% }); %>
             </ul>
-            <div class="input-div">
-              <% if (user) { %>
+            <% if (user) { %>
+              <div class="input-div">
                 <form class="add-form" id="add-ingredient-form" method="POST"
                   action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients" onsubmit="convertQuantityGroup()">
                   <input name="quantity" id="quantity-form" class="quantity-form-group" placeholder="Qty."></input>
@@ -210,9 +213,9 @@
                   <input name="content" id="ingredient-form" placeholder="Ingredient Name"></input>
                   <input type="submit" value="Add Ingredient to Group" data-processing="false">
                 </form>
-              <% } %>
-              <div class="group-divider"></div>
-            </div>
+                <div class="group-divider"></div>
+              </div>
+            <% } %>
           </div>
         <% }); %>
       </div>
@@ -249,15 +252,15 @@
     </div>
   <% } %>
   
-  <div class="input-div">
-    <% if(user) { %>
+  <% if(user) { %>
+    <div class="input-div">
       <form class="add-form" id="add-step-form" method="POST"
         action="/recipes/<%= recipe._id %>/steps">
         <textarea id="step-form" name="content" placeholder="Add New Step"></textarea>
         <input type="submit" value="Add Step" data-processing="false">
       </form>
-    <% } %>
-  </div>
+    </div>
+  <% } %>
 
 </div>
 <%- include('../partials/footer') %>
@@ -495,6 +498,26 @@
     }
   }
 
+  // Function to save the scroll position for the current recipe page
+  function saveScrollPosition() {
+    const scrollPosition = window.scrollY;
+    localStorage.setItem('recipeScrollPosition', scrollPosition);
+  }
+
+  // Function to retrieve and set the saved scroll position
+  function setScrollPosition() {
+    const scrollPosition = localStorage.getItem('recipeScrollPosition');
+    if (scrollPosition) {
+      window.scrollTo(0, scrollPosition);
+    }
+  }
+
+  // Save the scroll position when the page unloads
+  window.addEventListener('beforeunload', saveScrollPosition);
+
+  // Set the scroll position when the page loads
+  window.addEventListener('load', setScrollPosition);
+  
   window.addEventListener('load', initializeServingsInput);
   window.addEventListener('load', initializeEditState);
 </script>

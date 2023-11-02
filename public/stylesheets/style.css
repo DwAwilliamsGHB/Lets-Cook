@@ -23,7 +23,9 @@ h1 {
 }
 
 body > nav {
-  grid-area: nav;
+  position: fixed; /* Add this line to make the navigation bar fixed */
+  width: 100%;
+  height: 6.5%; /* Make the navigation bar span the entire width */
   background-color: #292b2f;
   color: red;
   display: flex;
@@ -48,7 +50,6 @@ body > main {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  overflow-y: scroll;
 }
 
 body > main h1:first-child {
