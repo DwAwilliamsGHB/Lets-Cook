@@ -263,7 +263,6 @@
   <% } %>
 
 </div>
-<%- include('../partials/footer') %>
 
 <script>
 
@@ -499,25 +498,30 @@
   }
 
   // Function to save the scroll position for the current recipe page
-  function saveScrollPosition() {
+  function saveScrollPosition(recipeId) {
     const scrollPosition = window.scrollY;
-    localStorage.setItem('recipeScrollPosition', scrollPosition);
+    sessionStorage.setItem(`recipeScrollPosition_${recipeId}`, scrollPosition);
   }
 
   // Function to retrieve and set the saved scroll position
-  function setScrollPosition() {
-    const scrollPosition = localStorage.getItem('recipeScrollPosition');
+  function setScrollPosition(recipeId) {
+    const scrollPosition = sessionStorage.getItem(`recipeScrollPosition_${recipeId}`);
     if (scrollPosition) {
       window.scrollTo(0, scrollPosition);
     }
   }
 
+  // Get the current recipe's ID from your template (replace 'recipeId' with the actual variable)
+  const currentRecipeId = '<%= recipe._id %>'; 
+
   // Save the scroll position when the page unloads
-  window.addEventListener('beforeunload', saveScrollPosition);
+  window.addEventListener('beforeunload', () => saveScrollPosition(currentRecipeId));
 
   // Set the scroll position when the page loads
-  window.addEventListener('load', setScrollPosition);
+  window.addEventListener('load', () => setScrollPosition(currentRecipeId));
   
   window.addEventListener('load', initializeServingsInput);
   window.addEventListener('load', initializeEditState);
 </script>
+
+<%- include('../partials/footer') %>
