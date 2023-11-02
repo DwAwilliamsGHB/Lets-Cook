@@ -30,11 +30,11 @@
     
     function convertQuantity() {
         const quantityField = document.getElementById("quantity-form");
-        const quantityValue = quantityField.value;
+        let quantityValue = quantityField.value;
     
         // Convert .33 to .333 and .66 to .667
-        const convertedValue = quantityValue.replace(/\.33/g, ".333").replace(/\.66/g, ".667");
-        quantityField.value = convertedValue;
+        quantityValue = quantityValue.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667");
+        quantityField.value = quantityValue;
     
         // Continue with the form submission
     }
