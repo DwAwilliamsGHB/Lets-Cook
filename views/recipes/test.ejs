@@ -1,0 +1,11 @@
+<% if (user) { %>
+    <div class="input-div">
+      <form id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
+        <input id="group-form" name="name" placeholder="Group Name"></input>
+        <input type="submit" value="Add Ingredient Group" data-processing="false">
+      </form>
+      <div class="error-message-container">
+        <span class="error-message" id="group-name-error"></span>
+      </div>
+    </div>
+  <% } %>

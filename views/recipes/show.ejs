@@ -238,22 +238,22 @@
       <h2>Instructions</h2>
         <ol>
           <% let total = 0 %>
-          <% recipe.steps.forEach(function(r) { %>
+          <% recipe.steps.forEach(function(step) { %>
                 <li class="step-li">
-                  <%= r.content %>
+                  <%= step.content %>
                 </li>
                 <div>
-                  <% if (user?._id.equals(r.user)) { %>
+                  <% if (user?._id.equals(step.user)) { %>
                     <button class="list-edit-button">
-                      <a href="recipes/steps/<%= r._id %>/edit">
+                      <a href="recipes/steps/<%= step._id %>/edit">
                         Edit
                       </a>
                     </button>
                   <% } %>
                 </div>
                 <div>
-                  <% if (user?._id.equals(r.user)) { %>
-                    <form action="/steps/<%= r._id %>?_method=DELETE" method="POST" class="x-form">
+                  <% if (user?._id.equals(step.user)) { %>
+                    <form action="/steps/<%= step._id %>?_method=DELETE" method="POST" class="x-form">
                       <button class="x-button" type="submit">X</button>
                     </form>
                   <% } %>
@@ -273,6 +273,7 @@
       <div class="error-message-container">
         <span class="error-message" id="step-content-error"></span>
       </div>
+      <div class="group-divider"></div>
     </div>
   <% } %>
 
