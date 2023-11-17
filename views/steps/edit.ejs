@@ -6,6 +6,58 @@
         <input type="hidden" name="_method" value="PUT">
         <input type="submit" value="Update Step">
     </form>
+    <div class="error-message-container">
+        <span class="error-message" id="step-content-error"></span>
+    </div>
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+
+    const formElements = document.querySelectorAll("form");
+    formElements.forEach((form) => {
+        form.addEventListener("submit", (event) => {
+            const submitButton = form.querySelector("[type='submit']");
+
+            // Dynamically get the validation function based on the form's context
+            const validationFunction = getValidationFunction(form);
+
+            if (validationFunction && !validationFunction()) {
+                event.preventDefault(); // Prevent the form from being submitted again
+                submitButton.removeAttribute("data-processing"); // Re-enable data-processing attribute
+                submitButton.disabled = false; // Re-enable the button visually
+            } else {
+                submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+                submitButton.disabled = true; // Disable the button visually
+            }
+        });
+    });
+
+    function getValidationFunction(form) {
+        if (form.id === "add-step-form") {
+            return validateStepForm;
+        }
+        return () => true;
+    }
+
+    function validateStepForm() {
+        const stepContentField = document.getElementById("step-form");
+        const stepContentError = document.getElementById("step-content-error");
+
+        // Reset error message
+        stepContentError.textContent = "";
+
+        let isValid = true;
+
+        // Validate step content (must not be empty)
+        const stepContentValue = stepContentField.value.trim();
+        if (stepContentValue === "") {
+        stepContentError.textContent = "Please enter step content.";
+        isValid = false;
+        }
+
+        return isValid;
+    }
+
+</script>

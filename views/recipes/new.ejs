@@ -1,10 +1,13 @@
 <%- include('../partials/header') %>
 
 <div class="form-container">
-  <form action="/recipes" method="POST" class="form-container">
+  <form action="/recipes" method="POST" class="form-container" id="add-recipe-form">
     <label>Dish Name:
       <input type="text" name="dishName">
     </label>
+    <div class="error-message-container">
+      <span class="error-message" id="dishName-error"></span>
+    </div>
     <br>
     <label for="cuisine">Cuisine:
       <select id="cuisine" name="cuisine">
@@ -14,9 +17,13 @@
         <% }); %>    
       </select>
     </label>
+    <div class="error-message-container">
+      <span class="error-message" id="cuisine-error"></span>
+    </div>
     <br>
-    <label>Type of Food:
+    <label>Type of Dish:
       <select name="foodType">
+        <option value="" selected disabled>Pick a dish type</option>
         <option value="Appetizer">Appetizer</option>
         <option value="Side-Dish">Side Dish</option>
         <option value="Main Dish">Main Dish</option>
@@ -24,28 +31,36 @@
         <option value="Full Course">Full Course</option>
       </select>
     </label>
+    <div class="error-message-container">
+      <span class="error-message" id="foodType-error"></span>
+    </div>
     <br>
     <label>Servings:
       <input type="number" name="serving">
     </label>
+    <div class="error-message-container">
+      <span class="error-message" id="serving-error"></span>
+    </div>
     <br>
     <label>Prep Time:
       <input type="number" name="prepTime">
     </label>
+    <div class="error-message-container">
+      <span class="error-message" id="prepTime-error"></span>
+    </div>
     <br>
     <label>Cook Time:
       <input type="number" name="cookTime">
     </label>
-    <br>
-    <label>Total Time:
-      <input type="number" name="totalTime">
-    </label>
+    <div class="error-message-container">
+      <span class="error-message" id="cookTime-error"></span>
+    </div>
     <br>
     <label>Have made before:
       <input type="checkbox" name="haveMade" checked>
     </label>
     <br>
-    <button type="submit" class="add-recipe-btn" data-processing="false">Add Recipe</button>
+    <input type="submit" data-processing="false" value="Add Recipe"></input>
   </form>
 </div>
 
@@ -55,9 +70,11 @@
   
   const formElements = document.querySelectorAll("form");
   formElements.forEach((form) => {
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       const submitButton = form.querySelector("[type='submit']");
-      if (submitButton.getAttribute("data-processing") === "true") {
+      const validationFunction = getValidationFunction(form);
+
+      if (validationFunction && !(await validationFunction())) {
         event.preventDefault(); // Prevent the form from being submitted again
       } else {
         submitButton.setAttribute("data-processing", "true"); // Disable the submit button
@@ -65,5 +82,99 @@
       }
     });
   });
+
+  function getValidationFunction(form) {
+      if (form.id === "add-recipe-form") {
+          return validateRecipeForm;
+      }
+      return () => true;
+  }
+
+  async function validateRecipeForm() {
+    const dishNameField = document.querySelector("input[name='dishName']");
+    const cuisineField = document.getElementById("cuisine");
+    const foodTypeField = document.querySelector("select[name='foodType']");
+    const servingField = document.querySelector("input[name='serving']");
+    const prepTimeField = document.querySelector("input[name='prepTime']");
+    const cookTimeField = document.querySelector("input[name='cookTime']");
+
+    const dishNameError = document.getElementById("dishName-error");
+    const cuisineError = document.getElementById("cuisine-error");
+    const foodTypeError = document.getElementById("foodType-error");
+    const servingError = document.getElementById("serving-error");
+    const prepTimeError = document.getElementById("prepTime-error");
+    const cookTimeError = document.getElementById("cookTime-error");
+
+    // Reset error messages
+    dishNameError.textContent = "";
+    cuisineError.textContent = "";
+    foodTypeError.textContent = "";
+    servingError.textContent = "";
+    prepTimeError.textContent = "";
+    cookTimeError.textContent = "";
+
+    let isValid = true;
+
+    // Validate Dish Name (must not be empty)
+    const dishNameValue = dishNameField.value.trim();
+    if (dishNameValue === "") {
+      dishNameError.textContent = "Please enter a dish name.";
+      isValid = false;
+    }
+
+    // Validate Cuisine (must be selected)
+    const cuisineValue = cuisineField.value.trim();
+    if (cuisineValue === "") {
+      cuisineError.textContent = "Please select a cuisine.";
+      isValid = false;
+    }
+
+    // Validate Food Type (must be selected)
+    const foodTypeValue = foodTypeField.value.trim();
+    if (foodTypeValue === "") {
+      foodTypeError.textContent = "Please select a food type.";
+      isValid = false;
+    }
+
+    // Validate Servings (must be a positive whole number)
+    const servingValue = servingField.value.trim();
+    if (servingValue !== "") {
+      const servingNumber = Number(servingValue);
+      if (!Number.isInteger(servingNumber) || servingNumber <= 0) {
+        servingError.textContent = "Please enter a valid positive whole number for servings.";
+        isValid = false;
+      }
+    } else {
+      servingError.textContent = "Please enter a value for servings.";
+      isValid = false;
+    }
+
+    const prepTimeValue = prepTimeField.value.trim();
+    if (prepTimeValue !== "") {
+      const prepTimeNumber = Number(prepTimeValue);
+      if (!Number.isInteger(prepTimeNumber) || prepTimeNumber < 0) {
+        prepTimeError.textContent = "Please enter a valid positive whole number or zero for prep time.";
+        isValid = false;
+      }
+    } else {
+      // If left empty, set the default value from the model
+      prepTimeField.value = "0";
+    }
+
+    // Validate Cook Time (must be a positive whole number or zero)
+    const cookTimeValue = cookTimeField.value.trim();
+    if (cookTimeValue !== "") {
+      const cookTimeNumber = Number(cookTimeValue);
+      if (!Number.isInteger(cookTimeNumber) || cookTimeNumber < 0) {
+        cookTimeError.textContent = "Please enter a valid positive whole number or zero for cook time.";
+        isValid = false;
+      }
+    } else {
+      // If left empty, set the default value from the model
+      cookTimeField.value = "0";
+    }
+
+    return isValid;
+  }
 
 </script>

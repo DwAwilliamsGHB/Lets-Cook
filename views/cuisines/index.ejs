@@ -12,20 +12,56 @@
   <input type="text" name="name" id="cuisine-form" placeholder="Enter cuisine here">
   <input type="submit" value="Add Cuisine" data-processing="false">
 </form>
+<div class="error-message-container">
+  <span class="error-message" id="cuisine-name-error"></span>
+</div>
 
 <%- include('../partials/footer') %>
 
 <script>
+
   const formElements = document.querySelectorAll("form");
   formElements.forEach((form) => {
-    form.addEventListener("submit", (event) => {
-      const submitButton = form.querySelector("[type='submit']");
-      if (submitButton.getAttribute("data-processing") === "true") {
-        event.preventDefault(); // Prevent the form from being submitted again
-      } else {
-        submitButton.setAttribute("data-processing", "true"); // Disable the submit button
-        submitButton.disabled = true; // Disable the button visually
-      }
-    });
+      form.addEventListener("submit", (event) => {
+          const submitButton = form.querySelector("[type='submit']");
+
+          // Dynamically get the validation function based on the form's context
+          const validationFunction = getValidationFunction(form);
+
+          if (validationFunction && !validationFunction()) {
+              event.preventDefault(); // Prevent the form from being submitted again
+              submitButton.removeAttribute("data-processing"); // Re-enable data-processing attribute
+              submitButton.disabled = false; // Re-enable the button visually
+          } else {
+              submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+              submitButton.disabled = true; // Disable the button visually
+          }
+      });
   });
+
+  function getValidationFunction(form) {
+      if (form.id === "add-cuisine-form") {
+          return validateCuisineForm;
+      }
+      return () => true;
+  }
+
+  function validateCuisineForm() {
+    const cuisineNameField = document.getElementById("cuisine-form");
+    const cuisineNameError = document.getElementById("cuisine-name-error");
+
+    // Reset error message
+    cuisineNameError.textContent = "";
+
+    let isValid = true;
+
+    const cuisineNameValue = cuisineNameField.value.trim();
+    if (cuisineNameValue === "") {
+      cuisineNameError.textContent = "Please enter a cuisine name.";
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
 </script>

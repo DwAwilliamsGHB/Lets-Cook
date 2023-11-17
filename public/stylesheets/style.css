@@ -75,10 +75,9 @@ nav > a.active {
 }
 
 #add-ingredient-form *,
+.add-ingredient-form-group *,
 #add-cuisine-form * {
   font-size: 20px;
-  padding: 5px;
-  border-radius: 5px;
 }
 
 form {
@@ -126,10 +125,6 @@ input[type="number"]::-webkit-outer-spin-button {
 .form-container button {
   margin-top: 10px;
   background-color: #eeeeee;
-}
-
-.add-recipe-btn:hover {
-  background-color: #e2e2e2;
 }
 
 label, input {
@@ -192,6 +187,7 @@ h3 {
 }
 
 #add-ingredient-form,
+.add-ingredient-form-group,
 #add-cuisine-form {
   display: flex;
   flex-direction: row;
@@ -280,7 +276,7 @@ hr {
   grid-gap: 1rem;
   margin-bottom: 20px;
   font-size: 20px;
-  width: 400px;
+  width: 60%;
   padding-left: 30px;
 }
 
@@ -321,12 +317,21 @@ hr {
   grid-gap: 15px;
 }
 
-#add-ingredient-form input[type="submit"], #add-step-form input[type="submit"], #add-group-form input[type="submit"] {
+#add-ingredient-form input[type="submit"], .add-ingredient-form-group input[type="submit"], #add-step-form input[type="submit"], #add-group-form input[type="submit"] {
   color: white;
   font-size: 20px;
   background-color: #444444;
   border: 1px solid #444444;
   border-radius: 0px 5px 5px 0px;
+  padding: 7px 20px;
+}
+
+#add-recipe-form input[type="submit"] {
+  color: white;
+  font-size: 20px;
+  background-color: #444444;
+  border: 1px solid #444444;
+  border-radius: 5px;
   padding: 7px 20px;
 }
 
@@ -380,7 +385,7 @@ hr {
   width: 60px;
 }
 
-#add-ingredient-form {
+#add-ingredient-form, .add-ingredient-form-group {
   display: grid;
   grid-template-columns: 1fr 2fr 5fr 2fr;
   width: 800px;
@@ -416,7 +421,7 @@ input:focus, select:focus, textarea:focus {
   font-size: 20px;
 }
 
-#ingredient-form, #measurement-form {
+#ingredient-form, .ingredient-form-group-class, #measurement-form {
   border-radius: 0px;
   border: 1px solid #444444;
   padding: 7px 10px;
@@ -433,7 +438,7 @@ select {
   padding-right: 20px;
 }
 
-#quantity-form {
+#quantity-form, .quantity-form-group-class {
   text-align: center;
   width: 100px;
   border-radius: 5px 0px 0px 5px;
@@ -542,4 +547,22 @@ ul, ol {
   align-items: center;
   margin: 20px 0px;
   padding: 20px;
+}
+
+.error-message {
+  display: none;
+  color: red;
+  font-size: 14px;
+}
+
+.error-message:not(:empty) {
+  display: block;
+  margin-top: 5px; /* Adjust the margin as needed */
+}
+
+.error-message-container {
+  margin: 5px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
 }

@@ -5,7 +5,7 @@
     <tr>
       <th>Dish Name</th>
       <th>Cuisine</th>
-      <th>Type of Food</th>
+      <th>Type of Dish</th>
       <th>Servings</th>
       <th>Total Time</th>
       <th>Made Before</th>
@@ -15,7 +15,8 @@
     <% recipes.forEach(function(g) { %>
       <tr>
         <td><a href="/recipes/<%= g._id %>" class="recipe-name"><%= g.dishName %></a></td>
-        <td><%= g.cuisine ? g.cuisine.name : '' %></td> <!-- Add the conditional check here -->        <td><%= g.foodType %></td>
+        <td><%= g.cuisine ? g.cuisine.name : '' %></td> <!-- Add the conditional check here -->        
+        <td><%= g.foodType %></td>
         <td><%= g.serving %></td>
         <td><%= g.totalTime %></td>
         <td><%= g.haveMade ? 'Yes' : 'No' %></td>

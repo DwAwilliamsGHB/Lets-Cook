@@ -1,15 +1,15 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients/<%= ingredient._id %>?_method=PUT" id="add-ingredient-form" method="POST" onsubmit="convertQuantity()">
-        <input  name="quantity" id="quantity-form" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
+    <form action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients/<%= ingredient._id %>?_method=PUT" class="add-ingredient-form-group" id="add-ingredient-form-group" method="POST" onsubmit="convertQuantity()">
+        <input  name="quantity" id="quantity-form-group" class="quantity-form-group-class" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
         <select name="measurement" id="measurement-form">
             <option value="" selected disabled>Measurement</option>
             <option value="Pinch" <%= ingredient.measurement === 'Pinch' ? 'selected' : '' %>>Pinch</option>
             <option value="Dash" <%= ingredient.measurement === 'Dash' ? 'selected' : '' %>>Dash</option>
-            <option value="Ounce" <%= ingredient.measurement === 'Ounce' ? 'selected' : '' %>>Ounce</option>
             <option value="Teaspoon" <%= ingredient.measurement === 'Teaspoon' ? 'selected' : '' %>>Teaspoon</option>
             <option value="Tablespoon" <%= ingredient.measurement === 'Tablespoon' ? 'selected' : '' %>>Tablespoon</option>
+            <option value="Ounce" <%= ingredient.measurement === 'Ounce' ? 'selected' : '' %>>Ounce</option>
             <option value="Pound" <%= ingredient.measurement === 'Pound' ? 'selected' : '' %>>Pound</option>
             <option value="Fluid Ounce" <%= ingredient.measurement === 'Fluid Ounce' ? 'selected' : '' %>>Fluid Ounce</option>
             <option value="Cup" <%= ingredient.measurement === 'Cup' ? 'selected' : '' %>>Cup</option>
@@ -17,11 +17,15 @@
             <option value="Quart" <%= ingredient.measurement === 'Quart' ? 'selected' : '' %>>Quart</option>
             <option value="Gallon" <%= ingredient.measurement === 'Gallon' ? 'selected' : '' %>>Gallon</option>
         </select>
-        <input  name="content" id="ingredient-form" placeholder="Ingredient Name" value="<%= ingredient.content %>"></input>
+        <input  name="content" id="ingredient-form-group" class="ingredient-form-group-class" placeholder="Ingredient Name" value="<%= ingredient.content %>"></input>
         <input type="hidden" name="_method" value="PUT">
-        <input type="submit" value="Update Ingredient">
+        <input type="submit" value="Update Ingredient" data-processing="false">
       <br>
     </form>
+    <div class="error-message-container">
+        <span class="error-message" id="quantity-error-group"></span>
+        <span class="error-message" id="content-error-group"></span>
+    </div>
 </div>
 
 <%- include('../partials/footer') %>
@@ -29,7 +33,7 @@
 <script>
     
     function convertQuantity() {
-        const quantityField = document.getElementById("quantity-form");
+        const quantityField = document.getElementById("quantity-form-group");
         let quantityValue = quantityField.value;
     
         // Convert .33 to .333 and .66 to .667
@@ -37,6 +41,63 @@
         quantityField.value = quantityValue;
     
         // Continue with the form submission
+    }
+
+    const formElements = document.querySelectorAll("form");
+    formElements.forEach((form) => {
+        form.addEventListener("submit", (event) => {
+            const submitButton = form.querySelector("[type='submit']");
+
+            // Dynamically get the validation function based on the form's context
+            const validationFunction = getValidationFunction(form);
+
+            if (validationFunction && !validationFunction()) {
+                event.preventDefault(); // Prevent the form from being submitted again
+                submitButton.removeAttribute("data-processing"); // Re-enable data-processing attribute
+                submitButton.disabled = false; // Re-enable the button visually
+            } else {
+                submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+                submitButton.disabled = true; // Disable the button visually
+            }
+        });
+    });
+
+    function getValidationFunction(form) {
+        if (form.id === "add-ingredient-form-group") {
+            return validateForm;
+        }
+        return () => true;
+    }
+
+    function validateForm() {
+        const quantityField = document.getElementById("quantity-form-group");
+        const contentField = document.getElementById("ingredient-form-group");
+        const quantityError = document.getElementById("quantity-error-group");
+        const contentError = document.getElementById("content-error-group");
+
+        // Reset error messages
+        quantityError.textContent = "";
+        contentError.textContent = "";
+
+        let isValid = true;
+
+        // Validate quantity (if filled, it must be a decimal number)
+        const quantityValue = quantityField.value.trim();
+        if (quantityValue !== "") {
+        if (isNaN(quantityValue) || parseFloat(quantityValue) <= 0 || !/^(0?\.)?\d+(\.\d+)?$/.test(quantityValue)) {
+            quantityError.textContent = "Please enter a valid positive decimal number (ex: .33 or 1.5 or 2).";
+            isValid = false;
+        }
+        }
+
+        // Validate content (must not be empty)
+        const contentValue = contentField.value.trim();
+        if (contentValue === "") {
+        contentError.textContent = "Please enter an ingredient name.";
+        isValid = false;
+        }
+
+        return isValid;
     }
 
 </script>

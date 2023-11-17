@@ -8,7 +8,7 @@ const ingredientSchema = new Schema({
     },
     measurement: {
       type: String,
-      enum: ['Pinch', 'Dash', 'Ounce', 'Teaspoon', 'Tablespoon', 'Pound', 'Fluid Ounce', 'Cup', 'Pint', 'Quart', 'Gallon'],
+      enum: ['Pinch', 'Dash', 'Teaspoon', 'Tablespoon', 'Ounce', 'Pound', 'Fluid Ounce', 'Cup', 'Pint', 'Quart', 'Gallon'],
     },
     content: {
       type: String,

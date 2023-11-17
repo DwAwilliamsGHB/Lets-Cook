@@ -1,10 +1,13 @@
 <%- include('../partials/header') %>
 
 <div class="form-container">
-  <form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST" autocomplete="off">
+  <form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST" autocomplete="off" class="form-container" id="add-recipe-form">
     <label>Dish Name:
       <input type="text" name="dishName" value="<%= recipe.dishName %>">
     </label>
+    <div class="error-message-container">
+      <span class="error-message" id="dishName-error"></span>
+    </div>
     <br>
     <label>Cuisine:
       <select name="cuisine">
@@ -14,7 +17,7 @@
       </select>
     </label>
     <br>
-    <label>Type of Food:
+    <label>Type of Dish:
       <select name="foodType">
         <option value="Appetizer" <%= recipe.foodType === 'Appetizer' ? 'selected' : '' %>>Appetizer</option>
         <option value="Side-Dish" <%= recipe.foodType === 'Side-Dish' ? 'selected' : '' %>>Side Dish</option>
@@ -27,25 +30,122 @@
     <label>Servings:
       <input type="number" name="serving" value="<%= recipe.serving %>">
     </label>
+    <div class="error-message-container">
+      <span class="error-message" id="serving-error"></span>
+    </div>
     <br>
     <label>Prep Time:
       <input type="number" name="prepTime" value="<%= recipe.prepTime %>">
     </label>
+    <div class="error-message-container">
+      <span class="error-message" id="prepTime-error"></span>
+    </div>
     <br>
     <label>Cook Time:
       <input type="number" name="cookTime" value="<%= recipe.cookTime %>">
     </label>
-    <br>
-    <label>Total Time:
-      <input type="number" name="totalTime" value="<%= recipe.totalTime %>">
-    </label>
+    <div class="error-message-container">
+      <span class="error-message" id="cookTime-error"></span>
+    </div>
     <br>
     <label>Have made before:
       <input type="checkbox" name="haveMade" <%= recipe.haveMade ? 'checked' : '' %>>
     </label>
     <br>
-    <button type="submit">Update Recipe</button>
+    <input type="submit" value="Update Recipe" data-processing="false"></input>
   </form>
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+
+  const formElements = document.querySelectorAll("form");
+  formElements.forEach((form) => {
+    form.addEventListener("submit", async (event) => {
+      const submitButton = form.querySelector("[type='submit']");
+      const validationFunction = getValidationFunction(form);
+
+      if (validationFunction && !(await validationFunction())) {
+        event.preventDefault(); // Prevent the form from being submitted again
+      } else {
+        submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+        submitButton.disabled = true; // Disable the button visually
+      }
+    });
+  });
+
+  function getValidationFunction(form) {
+      if (form.id === "add-recipe-form") {
+          return validateRecipeForm;
+      }
+      return () => true;
+  }
+
+  async function validateRecipeForm() {
+    const dishNameField = document.querySelector("input[name='dishName']");
+    const servingField = document.querySelector("input[name='serving']");
+    const prepTimeField = document.querySelector("input[name='prepTime']");
+    const cookTimeField = document.querySelector("input[name='cookTime']");
+
+    const dishNameError = document.getElementById("dishName-error");
+    const servingError = document.getElementById("serving-error");
+    const prepTimeError = document.getElementById("prepTime-error");
+    const cookTimeError = document.getElementById("cookTime-error");
+
+    // Reset error messages
+    dishNameError.textContent = "";
+    servingError.textContent = "";
+    prepTimeError.textContent = "";
+    cookTimeError.textContent = "";
+
+    let isValid = true;
+
+    // Validate Dish Name (must not be empty)
+    const dishNameValue = dishNameField.value.trim();
+    if (dishNameValue === "") {
+      dishNameError.textContent = "Please enter a dish name.";
+      isValid = false;
+    }
+
+    const servingValue = servingField.value.trim();
+    if (servingValue !== "") {
+      const servingNumber = Number(servingValue);
+      if (!Number.isInteger(servingNumber) || servingNumber <= 0) {
+        servingError.textContent = "Please enter a valid positive whole number for servings.";
+        isValid = false;
+      }
+    } else {
+      servingError.textContent = "Please enter a value for servings.";
+      isValid = false;
+    }
+
+    const prepTimeValue = prepTimeField.value.trim();
+    if (prepTimeValue !== "") {
+      const prepTimeNumber = Number(prepTimeValue);
+      if (!Number.isInteger(prepTimeNumber) || prepTimeNumber < 0) {
+        prepTimeError.textContent = "Please enter a valid positive whole number or zero for prep time.";
+        isValid = false;
+      }
+    } else {
+      // If left empty, set the default value from the model
+      prepTimeField.value = "0";
+    }
+
+    // Validate Cook Time (must be a positive whole number or zero)
+    const cookTimeValue = cookTimeField.value.trim();
+    if (cookTimeValue !== "") {
+      const cookTimeNumber = Number(cookTimeValue);
+      if (!Number.isInteger(cookTimeNumber) || cookTimeNumber < 0) {
+        cookTimeError.textContent = "Please enter a valid positive whole number or zero for cook time.";
+        isValid = false;
+      }
+    } else {
+      // If left empty, set the default value from the model
+      cookTimeField.value = "0";
+    }
+
+    return isValid;
+  }
+
+</script>

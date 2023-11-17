@@ -8,14 +8,14 @@
           <%= recipe.cuisine.name %>
         <% } %>
       </div>
-      <div>Type of Food: </div>
+      <div>Type of Dish: </div>
       <div><%= recipe.foodType %></div>
       <div>Servings: </div>
       <div><%= recipe.serving %></div>
       <div>Prep Time: </div>
-      <div><%= recipe.prepTime %></div>
+      <div><%= recipe.formattedPrepTime %></div>
       <div>Cook Time: </div>
-      <div><%= recipe.cookTime %></div>
+      <div><%= recipe.formattedCookTime %></div>
       <div>Total Time: </div>
       <div><%= recipe.totalTime %></div>
       <div>Have made before: </div>
@@ -108,16 +108,16 @@
   
   <% if(user) { %>
     <div class="input-div">
-      <form class="add-form" id="add-ingredient-form" method="POST"
+      <form id="add-ingredient-form" method="POST"
         action="/recipes/<%= recipe._id %>/ingredients"  onsubmit="convertQuantity()">
         <input  name="quantity" id="quantity-form" placeholder="Qty."></input>
         <select name="measurement" id="measurement-form">
           <option value="" selected disabled>Measurement</option>
           <option value="Pinch">Pinch</option>
           <option value="Dash">Dash</option>
-          <option value="Ounce">Ounce</option>
           <option value="Teaspoon">Teaspoon</option>
           <option value="Tablespoon">Tablespoon</option>
+          <option value="Ounce">Ounce</option>
           <option value="Pound">Pound</option>
           <option value="Fluid Ounce">Fluid Ounce</option>
           <option value="Cup">Cup</option>
@@ -128,16 +128,23 @@
         <input  name="content" id="ingredient-form" placeholder="Ingredient Name"></input>
         <input type="submit" value="Add Ingredient" data-processing="false">
       </form>
+      <div class="error-message-container">
+        <span class="error-message" id="quantity-error"></span>
+        <span class="error-message" id="content-error"></span>
+      </div>
       <div class="group-divider"></div>
     </div>
   <% } %>
 
   <% if (user) { %>
     <div class="input-div">
-      <form class="add-form" id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
+      <form id="add-group-form" method="POST" action="/recipes/<%= recipe._id %>/groups">
         <input id="group-form" name="name" placeholder="Group Name"></input>
         <input type="submit" value="Add Ingredient Group" data-processing="false">
       </form>
+      <div class="error-message-container">
+        <span class="error-message" id="group-name-error"></span>
+      </div>
     </div>
   <% } %>
 
@@ -193,16 +200,16 @@
             </ul>
             <% if (user) { %>
               <div class="input-div">
-                <form class="add-form" id="add-ingredient-form" method="POST"
-                  action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients" onsubmit="convertQuantityGroup()">
-                  <input name="quantity" id="quantity-form" class="quantity-form-group" placeholder="Qty."></input>
+                <form class="add-ingredient-form-group" id="add-ingredient-form-group-<%= group._id %>" method="POST"
+                  action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients" onsubmit="convertQuantityGroup(); return validateFormGroup('<%= group._id %>')">
+                  <input name="quantity" id="quantity-form-group-<%= group._id %>" class="quantity-form-group-class" placeholder="Qty."></input>
                   <select name="measurement" id="measurement-form">
                     <option value="" selected disabled>Measurement</option>
                     <option value="Pinch">Pinch</option>
                     <option value="Dash">Dash</option>
-                    <option value="Ounce">Ounce</option>
                     <option value="Teaspoon">Teaspoon</option>
                     <option value="Tablespoon">Tablespoon</option>
+                    <option value="Ounce">Ounce</option>
                     <option value="Pound">Pound</option>
                     <option value="Fluid Ounce">Fluid Ounce</option>
                     <option value="Cup">Cup</option>
@@ -210,9 +217,13 @@
                     <option value="Quart">Quart</option>
                     <option value="Gallon">Gallon</option>
                   </select>
-                  <input name="content" id="ingredient-form" placeholder="Ingredient Name"></input>
+                  <input name="content" id="ingredient-form-group-<%= group._id %>" class="ingredient-form-group-class" placeholder="Ingredient Name"></input>
                   <input type="submit" value="Add Ingredient to Group" data-processing="false">
                 </form>
+                <div class="error-message-container">
+                  <span class="error-message" class="quantity-error-group-class" id="quantity-error-group-<%= group._id %>"></span>
+                  <span class="error-message" class="content-error-group-class" id="content-error-group-<%= group._id %>"></span>
+                </div>
                 <div class="group-divider"></div>
               </div>
             <% } %>
@@ -224,7 +235,7 @@
   
   <% if (recipe.steps.length) { %>
     <div class="instruction-list">
-      <h2>Steps</h2>
+      <h2>Instructions</h2>
         <ol>
           <% let total = 0 %>
           <% recipe.steps.forEach(function(r) { %>
@@ -254,11 +265,14 @@
   
   <% if(user) { %>
     <div class="input-div">
-      <form class="add-form" id="add-step-form" method="POST"
+      <form id="add-step-form" method="POST"
         action="/recipes/<%= recipe._id %>/steps">
         <textarea id="step-form" name="content" placeholder="Add New Step"></textarea>
         <input type="submit" value="Add Step" data-processing="false">
       </form>
+      <div class="error-message-container">
+        <span class="error-message" id="step-content-error"></span>
+      </div>
     </div>
   <% } %>
 
@@ -345,7 +359,7 @@
   }
 
   function convertQuantityGroup() {
-    const quantityFields = document.querySelectorAll(".quantity-form-group");
+    const quantityFields = document.querySelectorAll(".quantity-form-group-class");
 
     quantityFields.forEach((quantityField) => {
       let quantityValue = quantityField.value;
@@ -362,7 +376,11 @@
   formElements.forEach((form) => {
     form.addEventListener("submit", (event) => {
       const submitButton = form.querySelector("[type='submit']");
-      if (submitButton.getAttribute("data-processing") === "true") {
+      
+      // Dynamically get the validation function based on the form's context
+      const validationFunction = getValidationFunction(form);
+
+      if (validationFunction && !validationFunction()) {
         event.preventDefault(); // Prevent the form from being submitted again
       } else {
         submitButton.setAttribute("data-processing", "true"); // Disable the submit button
@@ -370,6 +388,126 @@
       }
     });
   });
+
+  // Function to get the appropriate validation function based on the form's context
+  function getValidationFunction(form) {
+    // Identify the form context based on its elements, IDs, or other attributes
+    if (form.id === "add-ingredient-form") {
+      return validateForm;
+    } else if (form.id.startsWith("add-ingredient-form-group-")) {
+      // Extract the groupId from the form's ID
+      const groupId = form.id.split("-").pop();
+      return () => validateFormGroup(groupId);
+    } else if (form.id === "add-group-form") {
+      return validateGroupForm;
+    } else if (form.id === "add-step-form") {
+      return validateStepForm;
+    }
+
+    // Return a default function if the form context is not recognized
+    return () => true;
+  }
+
+  
+  function validateForm() {
+    const quantityField = document.getElementById("quantity-form");
+    const contentField = document.getElementById("ingredient-form");
+    const quantityError = document.getElementById("quantity-error");
+    const contentError = document.getElementById("content-error");
+
+    // Reset error messages
+    quantityError.textContent = "";
+    contentError.textContent = "";
+
+    let isValid = true;
+
+    // Validate quantity (if filled, it must be a decimal number)
+    const quantityValue = quantityField.value.trim();
+    if (quantityValue !== "") {
+      if (isNaN(quantityValue) || parseFloat(quantityValue) <= 0 || !/^(0?\.)?\d+(\.\d+)?$/.test(quantityValue)) {
+        quantityError.textContent = "Please enter a valid positive decimal number (ex: .33 or 1.5 or 2).";
+        isValid = false;
+      }
+    }
+
+    // Validate content (must not be empty)
+    const contentValue = contentField.value.trim();
+    if (contentValue === "") {
+      contentError.textContent = "Please enter an ingredient name.";
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  function validateFormGroup(groupId) {
+    const quantityField = document.getElementById(`quantity-form-group-${groupId}`);
+    const contentField = document.getElementById(`ingredient-form-group-${groupId}`);
+    const quantityError = document.getElementById(`quantity-error-group-${groupId}`);
+    const contentError = document.getElementById(`content-error-group-${groupId}`);
+
+    // Reset error messages
+    quantityError.textContent = "";
+    contentError.textContent = "";
+
+    let isValid = true;
+
+    // Validate quantity (if filled, it must be a decimal number)
+    const quantityValue = quantityField.value.trim();
+    if (quantityValue !== "") {
+      if (isNaN(quantityValue) || parseFloat(quantityValue) <= 0 || !/^(0?\.)?\d+(\.\d+)?$/.test(quantityValue)) {
+        quantityError.textContent = "Please enter a valid positive decimal number (ex: .33 or 1.5 or 2).";
+        isValid = false;
+      }
+    }
+
+    // Validate content (must not be empty)
+    const contentValue = contentField.value.trim();
+    if (contentValue === "") {
+      contentError.textContent = "Please enter an ingredient name.";
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  function validateGroupForm() {
+    const groupNameField = document.getElementById("group-form");
+    const groupNameError = document.getElementById("group-name-error");
+
+    // Reset error message
+    groupNameError.textContent = "";
+
+    let isValid = true;
+
+    // Validate group name (must not be empty)
+    const groupNameValue = groupNameField.value.trim();
+    if (groupNameValue === "") {
+      groupNameError.textContent = "Please enter a group name.";
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  function validateStepForm() {
+    const stepContentField = document.getElementById("step-form");
+    const stepContentError = document.getElementById("step-content-error");
+
+    // Reset error message
+    stepContentError.textContent = "";
+
+    let isValid = true;
+
+    // Validate step content (must not be empty)
+    const stepContentValue = stepContentField.value.trim();
+    if (stepContentValue === "") {
+      stepContentError.textContent = "Please enter step content.";
+      isValid = false;
+    }
+
+    return isValid;
+  }
 
   let useFractions = true; // By default, start with fractions
 

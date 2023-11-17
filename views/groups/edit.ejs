@@ -6,6 +6,59 @@
         <input type="hidden" name="_method" value="PUT">
         <input type="submit" value="Update Group">
     </form>
+    <div class="error-message-container">
+        <span class="error-message" id="group-name-error"></span>
+    </div>
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+
+    const formElements = document.querySelectorAll("form");
+    formElements.forEach((form) => {
+        form.addEventListener("submit", (event) => {
+            const submitButton = form.querySelector("[type='submit']");
+
+            // Dynamically get the validation function based on the form's context
+            const validationFunction = getValidationFunction(form);
+
+            if (validationFunction && !validationFunction()) {
+                event.preventDefault(); // Prevent the form from being submitted again
+                submitButton.removeAttribute("data-processing"); // Re-enable data-processing attribute
+                submitButton.disabled = false; // Re-enable the button visually
+            } else {
+                submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+                submitButton.disabled = true; // Disable the button visually
+            }
+        });
+    });
+
+    function getValidationFunction(form) {
+        if (form.id === "add-group-form") {
+            return validateGroupForm;
+        }
+        return () => true;
+    }
+
+    function validateGroupForm() {
+    const groupNameField = document.getElementById("group-form");
+    const groupNameError = document.getElementById("group-name-error");
+
+    // Reset error message
+    groupNameError.textContent = "";
+
+    let isValid = true;
+
+    // Validate group name (must not be empty)
+    const groupNameValue = groupNameField.value.trim();
+    if (groupNameValue === "") {
+      groupNameError.textContent = "Please enter a group name.";
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+
+</script>

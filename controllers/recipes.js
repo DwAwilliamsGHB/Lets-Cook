@@ -109,7 +109,6 @@ function update(req, res) {
     recipe.serving = req.body.serving;
     recipe.prepTime = req.body.prepTime;
     recipe.cookTime = req.body.cookTime;
-    recipe.totalTime = req.body.totalTime;
     recipe.cuisine = req.body.cuisine;
     recipe.haveMade = !!req.body.haveMade;
   
