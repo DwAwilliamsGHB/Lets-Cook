@@ -22,7 +22,7 @@
     </div>
     <br>
     <label>Type of Dish:
-      <select name="foodType">
+      <select name="dishType">
         <option value="" selected disabled>Pick a dish type</option>
         <option value="Appetizer">Appetizer</option>
         <option value="Side-Dish">Side Dish</option>
@@ -32,7 +32,7 @@
       </select>
     </label>
     <div class="error-message-container">
-      <span class="error-message" id="foodType-error"></span>
+      <span class="error-message" id="dishType-error"></span>
     </div>
     <br>
     <label>Servings:
@@ -93,14 +93,14 @@
   async function validateRecipeForm() {
     const dishNameField = document.querySelector("input[name='dishName']");
     const cuisineField = document.getElementById("cuisine");
-    const foodTypeField = document.querySelector("select[name='foodType']");
+    const dishTypeField = document.querySelector("select[name='dishType']");
     const servingField = document.querySelector("input[name='serving']");
     const prepTimeField = document.querySelector("input[name='prepTime']");
     const cookTimeField = document.querySelector("input[name='cookTime']");
 
     const dishNameError = document.getElementById("dishName-error");
     const cuisineError = document.getElementById("cuisine-error");
-    const foodTypeError = document.getElementById("foodType-error");
+    const dishTypeError = document.getElementById("dishType-error");
     const servingError = document.getElementById("serving-error");
     const prepTimeError = document.getElementById("prepTime-error");
     const cookTimeError = document.getElementById("cookTime-error");
@@ -108,7 +108,7 @@
     // Reset error messages
     dishNameError.textContent = "";
     cuisineError.textContent = "";
-    foodTypeError.textContent = "";
+    dishTypeError.textContent = "";
     servingError.textContent = "";
     prepTimeError.textContent = "";
     cookTimeError.textContent = "";
@@ -129,10 +129,10 @@
       isValid = false;
     }
 
-    // Validate Food Type (must be selected)
-    const foodTypeValue = foodTypeField.value.trim();
-    if (foodTypeValue === "") {
-      foodTypeError.textContent = "Please select a food type.";
+    // Validate Dish Type (must be selected)
+    const dishTypeValue = dishTypeField.value.trim();
+    if (dishTypeValue === "") {
+      dishTypeError.textContent = "Please select a dish type.";
       isValid = false;
     }
 

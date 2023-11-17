@@ -105,7 +105,7 @@ function update(req, res) {
     }
   
     recipe.dishName = req.body.dishName;
-    recipe.foodType = req.body.foodType;
+    recipe.dishType = req.body.dishType;
     recipe.serving = req.body.serving;
     recipe.prepTime = req.body.prepTime;
     recipe.cookTime = req.body.cookTime;

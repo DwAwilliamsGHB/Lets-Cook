@@ -10,7 +10,7 @@ const recipeSchema = new Schema({
     type: String,
     required: true
   },
-  foodType: {
+  dishType: {
     type: String,
     enum: ['Appetizer', 'Main Dish', 'Side Dish', 'Dessert', 'Full Course']
   },
