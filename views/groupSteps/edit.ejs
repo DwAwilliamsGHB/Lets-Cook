@@ -1,0 +1,62 @@
+<%- include('../partials/header') %>
+
+<div class="input-div">
+    <form action="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/steps/<%= step._id %>?_method=PUT" class="add-group-step-form" id="add-group-step-form" method="POST">
+        <textarea id="content-form-group-step" name="content" class="content-form-group-step" placeholder="Add New Step"><%= step.content %></textarea>
+        <input type="hidden" name="_method" value="PUT">
+        <input type="submit" value="Update Step" data-processing="false">
+        <br>
+    </form>
+    <div class="error-message-container">
+        <span class="error-message" id="content-error-group-step"></span>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+
+    const form = document.getElementById("add-group-step-form");
+    form.addEventListener("submit", (event) => {
+        const submitButton = form.querySelector("[type='submit']");
+
+        // Dynamically get the validation function based on the form's context
+        const validationFunction = getValidationFunction(form);
+
+        if (validationFunction && !validationFunction()) {
+            event.preventDefault(); // Prevent the form from being submitted again
+            submitButton.removeAttribute("data-processing"); // Re-enable data-processing attribute
+            submitButton.disabled = false; // Re-enable the button visually
+        } else {
+            submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+            submitButton.disabled = true; // Disable the button visually
+        }
+    });
+
+    function getValidationFunction(form) {
+        if (form.id === "add-group-step-form") {
+            return validateGroupStepForm;
+        }
+        return () => true;
+    }
+
+    function validateGroupStepForm(stepGroupId) {
+        const contentField = document.getElementById(`content-form-group-step`);
+        const contentError = document.getElementById(`content-error-group-step`);
+
+        // Reset error messages
+        contentError.textContent = "";
+
+        let isValid = true;
+
+        // Validate content (must not be empty)
+        const contentValue = contentField.value.trim();
+        if (contentValue === "") {
+        contentError.textContent = "Please enter step content.";
+        isValid = false;
+        }
+
+        return isValid;
+    }
+
+</script>

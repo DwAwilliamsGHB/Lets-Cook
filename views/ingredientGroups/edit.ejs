@@ -1,13 +1,13 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/groups/<%= group._id %>?_method=PUT" id="add-group-form" method="POST">
-        <input id="group-form" name="name" placeholder="Group Name" value="<%= group.name %>"></input>
+    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>?_method=PUT" id="add-ingredient-group-form" method="POST">
+        <input id="name-form-ingredient-group" name="name" placeholder="Group Name" value="<%= ingredientGroup.name %>"></input>
         <input type="hidden" name="_method" value="PUT">
         <input type="submit" value="Update Group">
     </form>
     <div class="error-message-container">
-        <span class="error-message" id="group-name-error"></span>
+        <span class="error-message" id="name-error-ingredient-group-"></span>
     </div>
 </div>
 
@@ -35,30 +35,30 @@
     });
 
     function getValidationFunction(form) {
-        if (form.id === "add-group-form") {
-            return validateGroupForm;
+        if (form.id === "add-ingredient-group-form") {
+            return validateIngredientGroupForm;
         }
         return () => true;
     }
 
-    function validateGroupForm() {
-    const groupNameField = document.getElementById("group-form");
-    const groupNameError = document.getElementById("group-name-error");
+    function validateIngredientGroupForm() {
+        const ingredientGroupNameField = document.getElementById("name-form-ingredient-group");
+        const ingredientGroupNameError = document.getElementById("name-error-ingredient-group");
 
-    // Reset error message
-    groupNameError.textContent = "";
+        // Reset error message
+        ingredientGroupNameError.textContent = "";
 
-    let isValid = true;
+        let isValid = true;
 
-    // Validate group name (must not be empty)
-    const groupNameValue = groupNameField.value.trim();
-    if (groupNameValue === "") {
-      groupNameError.textContent = "Please enter a group name.";
-      isValid = false;
+        // Validate ingredientGroup name (must not be empty)
+        const ingredientGroupNameValue = ingredientGroupNameField.value.trim();
+        if (ingredientGroupNameValue === "") {
+        ingredientGroupNameError.textContent = "Please enter a group name.";
+        isValid = false;
+        }
+
+        return isValid;
     }
-
-    return isValid;
-  }
 
 
 </script>

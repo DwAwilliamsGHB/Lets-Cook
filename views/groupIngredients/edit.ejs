@@ -1,8 +1,8 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/groups/<%= group._id %>/ingredients/<%= ingredient._id %>?_method=PUT" class="add-ingredient-form-group" id="add-ingredient-form-group" method="POST" onsubmit="convertQuantity()">
-        <input  name="quantity" id="quantity-form-group" class="quantity-form-group-class" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
+    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients/<%= ingredient._id %>?_method=PUT" class="add-group-ingredient-form" id="add-group-ingredient-form" method="POST" onsubmit="convertQuantity()">
+        <input  name="quantity" id="quantity-form-group-ingredient" class="quantity-form-group-ingredient" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
         <select name="measurement" id="measurement-form">
             <option value="" selected disabled>Measurement</option>
             <option value="Pinch" <%= ingredient.measurement === 'Pinch' ? 'selected' : '' %>>Pinch</option>
@@ -17,14 +17,14 @@
             <option value="Quart" <%= ingredient.measurement === 'Quart' ? 'selected' : '' %>>Quart</option>
             <option value="Gallon" <%= ingredient.measurement === 'Gallon' ? 'selected' : '' %>>Gallon</option>
         </select>
-        <input  name="content" id="ingredient-form-group" class="ingredient-form-group-class" placeholder="Ingredient Name" value="<%= ingredient.content %>"></input>
+        <input  name="content" id="content-form-group-ingredient" class="content-form-group-ingredient" placeholder="Ingredient Name" value="<%= ingredient.content %>"></input>
         <input type="hidden" name="_method" value="PUT">
         <input type="submit" value="Update Ingredient" data-processing="false">
       <br>
     </form>
     <div class="error-message-container">
-        <span class="error-message" id="quantity-error-group"></span>
-        <span class="error-message" id="content-error-group"></span>
+        <span class="error-message" id="quantity-error-group-ingredient"></span>
+        <span class="error-message" id="content-error-group-ingredient"></span>
     </div>
 </div>
 
@@ -33,7 +33,7 @@
 <script>
     
     function convertQuantity() {
-        const quantityField = document.getElementById("quantity-form-group");
+        const quantityField = document.getElementById("quantity-form-group-ingredient");
         let quantityValue = quantityField.value;
     
         // Convert .33 to .333 and .66 to .667
@@ -63,17 +63,17 @@
     });
 
     function getValidationFunction(form) {
-        if (form.id === "add-ingredient-form-group") {
-            return validateForm;
+        if (form.id === "add-group-ingredient-form") {
+            return validateGroupIngredientForm;
         }
         return () => true;
     }
 
-    function validateForm() {
-        const quantityField = document.getElementById("quantity-form-group");
-        const contentField = document.getElementById("ingredient-form-group");
-        const quantityError = document.getElementById("quantity-error-group");
-        const contentError = document.getElementById("content-error-group");
+    function validateGroupIngredientForm() {
+        const quantityField = document.getElementById("quantity-form-group-ingredient");
+        const contentField = document.getElementById("content-form-group-ingredient");
+        const quantityError = document.getElementById("quantity-error-group-ingredient");
+        const contentError = document.getElementById("content-error-group-ingredient");
 
         // Reset error messages
         quantityError.textContent = "";

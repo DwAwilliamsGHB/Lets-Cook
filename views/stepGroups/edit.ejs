@@ -1,0 +1,61 @@
+<%- include('../partials/header') %>
+
+<div class="input-div">
+    <form action="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>?_method=PUT" id="add-step-group-form" method="POST">
+        <input id="name-form-step-group" name="name" placeholder="Group Name" value="<%= stepGroup.name %>"></input>
+        <input type="hidden" name="_method" value="PUT">
+        <input type="submit" value="Update Group">
+    </form>
+    <div class="error-message-container">
+        <span class="error-message" id="name-error-step-group"></span>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+
+    const form = document.getElementById("add-step-group-form");
+    form.addEventListener("submit", (event) => {
+        const submitButton = form.querySelector("[type='submit']");
+
+        // Dynamically get the validation function based on the form's context
+        const validationFunction = getValidationFunction(form);
+
+        if (validationFunction && !validationFunction()) {
+            event.preventDefault(); // Prevent the form from being submitted again
+            submitButton.removeAttribute("data-processing"); // Re-enable data-processing attribute
+            submitButton.disabled = false; // Re-enable the button visually
+        } else {
+            submitButton.setAttribute("data-processing", "true"); // Disable the submit button
+            submitButton.disabled = true; // Disable the button visually
+        }
+    });
+
+    function getValidationFunction(form) {
+        if (form.id === "add-step-group-form") {
+            return validateStepGroupForm;
+        }
+        return () => true;
+    }
+
+    function validateStepGroupForm() {
+        const stepGroupNameField = document.getElementById("name-form-step-group");
+        const stepGroupNameError = document.getElementById("name-error-step-group");
+
+        // Reset error message
+        stepGroupNameError.textContent = "";
+
+        let isValid = true;
+
+        // Validate stepGroup name (must not be empty)
+        const stepGroupNameValue = stepGroupNameField.value.trim();
+        if (stepGroupNameValue === "") {
+            stepGroupNameError.textContent = "Please enter a group name.";
+            isValid = false;
+        }
+
+        return isValid;
+    }
+    
+</script>

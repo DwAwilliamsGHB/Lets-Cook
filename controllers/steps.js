@@ -2,9 +2,12 @@ const Recipe = require('../models/recipe')
 
 module.exports = {
     create,
+    groupStepCreate,
     edit,
+    groupStepEdit,
     update,
-    delete: deleteStep
+    groupStepUpdate,
+    delete: stepDelete,
 }
 
 function create(req, res) {
@@ -21,6 +24,32 @@ function create(req, res) {
     })
 }
 
+function groupStepCreate(req, res) {
+    Recipe.findOne({ _id: req.params.id, 'stepGroups._id': req.params.stepGroupId }, function(err, recipe) {
+        if (err || !recipe) {
+            return res.status(404).json({ message: 'Recipe or Step Group not found' });
+        }
+
+        const step = {
+            user: req.user._id,
+            userName: req.user.name,
+            userAvatar: req.user.avatar,
+            content: req.body.content
+        };
+
+        const stepGroup = recipe.stepGroups.id(req.params.stepGroupId);
+        stepGroup.steps.push(step);
+
+        recipe.save(function(err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Failed to add step to group' });
+            }
+            res.redirect(`/recipes/${recipe._id}`);
+        });
+    });
+}
+
 function edit(req, res) {
     Recipe.findOne({ 'steps._id': req.params.stepId }, (err, recipe) => {
         if (err || !recipe) {
@@ -31,6 +60,19 @@ function edit(req, res) {
             return res.status(404).json({ message: 'Step not found' });
         }
         res.render('steps/edit', { title: 'Edit Step', recipe, step });
+    });
+}
+
+function groupStepEdit(req, res, next) {
+    Recipe.findOne({ 'stepGroups._id': req.params.stepGroupId }, (err, recipe) => {
+        if (err || !recipe) {
+            return res.status(404).json({ message: 'Recipe not found' });
+        }
+
+        const stepGroup = recipe.stepGroups.id(req.params.stepGroupId);
+        const step = stepGroup.steps.id(req.params.stepId);
+
+        res.render('groupSteps/edit', { title: 'Edit Step', recipe, stepGroup, step });
     });
 }
 
@@ -52,14 +94,44 @@ function update(req, res) {
     );
 }
 
-async function deleteStep(req, res, next) {
+async function groupStepUpdate(req, res, next) {
     try {
-        const recipe = await Recipe.findOne({'steps._id': req.params.id})
-        if (!recipe) return res.redirect('/recipes')
-        recipe.steps.remove(req.params.id)
-        await recipe.save()
-        res.redirect(`/recipes/${recipe._id}`)
-    } catch(err) {
-        return next(err)
+        const { id, stepGroupId, stepId } = req.params;
+        const recipe = await Recipe.findById(id);
+        const stepGroup = recipe.stepGroups.id(stepGroupId);
+        const step = stepGroup.steps.id(stepId);
+
+        step.content = req.body.content;
+
+        await recipe.save();
+
+        res.redirect(`/recipes/${id}`);
+    } catch (err) {
+        return next(err);
+    }
+}
+
+async function stepDelete(req, res, next) {
+    try {
+        const { id, stepGroupId, stepId } = req.params;
+        let recipe;
+
+        if (stepGroupId) {
+            // If stepGroupId is present, it's a groupStep deletion
+            recipe = await Recipe.findOne({ 'stepGroups._id': stepGroupId });
+            if (!recipe) return res.redirect('/recipes');
+            const stepGroup = recipe.stepGroups.id(stepGroupId);
+            stepGroup.steps.remove(stepId);
+        } else {
+            // Otherwise, it's a regular step deletion
+            recipe = await Recipe.findOne({ 'steps._id': id });
+            if (!recipe) return res.redirect('/recipes');
+            recipe.steps.remove(id);
+        }
+
+        await recipe.save();
+        res.redirect(`/recipes/${recipe._id}`);
+    } catch (err) {
+        return next(err);
     }
 }

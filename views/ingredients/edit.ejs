@@ -2,7 +2,7 @@
 
 <div class="input-div">
     <form action="/recipes/<%= recipe._id %>/ingredients/<%= ingredient._id %>?_method=PUT" id="add-ingredient-form" method="POST" onsubmit="convertQuantity()">
-        <input  name="quantity" id="quantity-form" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
+        <input  name="quantity" id="quantity-form-ingredient" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
         <select name="measurement" id="measurement-form">
             <option value="" selected disabled>Measurement</option>
             <option value="Pinch" <%= ingredient.measurement === 'Pinch' ? 'selected' : '' %>>Pinch</option>
@@ -17,14 +17,14 @@
             <option value="Quart" <%= ingredient.measurement === 'Quart' ? 'selected' : '' %>>Quart</option>
             <option value="Gallon" <%= ingredient.measurement === 'Gallon' ? 'selected' : '' %>>Gallon</option>
         </select>
-        <input  name="content" id="ingredient-form" placeholder="Ingredient Name" value="<%= ingredient.content %>"></input>
+        <input  name="content" id="content-form-ingredient" placeholder="Ingredient Name" value="<%= ingredient.content %>"></input>
         <input type="hidden" name="_method" value="PUT">
         <input type="submit" value="Update Ingredient">
       <br>
     </form>
     <div class="error-message-container">
-        <span class="error-message" id="quantity-error"></span>
-        <span class="error-message" id="content-error"></span>
+        <span class="error-message" id="quantity-error-ingredient"></span>
+        <span class="error-message" id="content-error-ingredient"></span>
     </div>
 </div>
 
@@ -33,7 +33,7 @@
 <script>
     
     function convertQuantity() {
-        const quantityField = document.getElementById("quantity-form");
+        const quantityField = document.getElementById("quantity-form-ingredient");
         let quantityValue = quantityField.value;
     
         // Convert .33 to .333 and .66 to .667
@@ -64,16 +64,16 @@
 
     function getValidationFunction(form) {
         if (form.id === "add-ingredient-form") {
-            return validateForm;
+            return validateIngredientForm;
         }
         return () => true;
     }
 
-    function validateForm() {
-        const quantityField = document.getElementById("quantity-form");
-        const contentField = document.getElementById("ingredient-form");
-        const quantityError = document.getElementById("quantity-error");
-        const contentError = document.getElementById("content-error");
+    function validateIngredientForm() {
+        const quantityField = document.getElementById("quantity-form-ingredient");
+        const contentField = document.getElementById("content-form-ingredient");
+        const quantityError = document.getElementById("quantity-error-ingredient");
+        const contentError = document.getElementById("content-error-ingredient");
 
         // Reset error messages
         quantityError.textContent = "";

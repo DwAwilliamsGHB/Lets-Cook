@@ -13,8 +13,9 @@ require('./config/passport');
 
 var indexRouter = require('./routes/index');
 var recipesRouter = require('./routes/recipes');
-var groupsRouter = require('./routes/groups');
+var ingredientGroupsRouter = require('./routes/ingredientGroups');
 var ingredientsRouter = require('./routes/ingredients');
+var stepGroupsRouter = require('./routes/stepGroups')
 var stepsRouter = require('./routes/steps');
 var cuisinesRouter = require('./routes/cuisines');
 
@@ -45,8 +46,9 @@ app.use(function(req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/recipes', recipesRouter);
-app.use('/', groupsRouter);
+app.use('/', ingredientGroupsRouter);
 app.use('/', ingredientsRouter);
+app.use('/', stepGroupsRouter);
 app.use('/', stepsRouter);
 app.use('/', cuisinesRouter);
 

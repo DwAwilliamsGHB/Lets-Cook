@@ -75,7 +75,7 @@ nav > a.active {
 }
 
 #add-ingredient-form *,
-.add-ingredient-form-group *,
+.add-group-ingredient-form *,
 #add-cuisine-form * {
   font-size: 20px;
 }
@@ -187,7 +187,7 @@ h3 {
 }
 
 #add-ingredient-form,
-.add-ingredient-form-group,
+.add-group-ingredient-form,
 #add-cuisine-form {
   display: flex;
   flex-direction: row;
@@ -204,7 +204,7 @@ h3 {
   padding: 10px 20px;
 }
 
-#cuisine-form {
+#name-form-cuisine {
   border: 1px solid #444444;
   border-radius: 5px 0px 0px 5px;
   padding: 10px 20px;
@@ -317,7 +317,12 @@ hr {
   grid-gap: 15px;
 }
 
-#add-ingredient-form input[type="submit"], .add-ingredient-form-group input[type="submit"], #add-step-form input[type="submit"], #add-group-form input[type="submit"] {
+#add-ingredient-form input[type="submit"],
+.add-group-ingredient-form input[type="submit"],
+#add-step-form input[type="submit"],
+.add-group-step-form input[type="submit"],
+#add-ingredient-group-form input[type="submit"],
+#add-step-group-form input[type="submit"] {
   color: white;
   font-size: 20px;
   background-color: #444444;
@@ -385,19 +390,20 @@ hr {
   width: 60px;
 }
 
-#add-ingredient-form, .add-ingredient-form-group {
+#add-ingredient-form, .add-group-ingredient-form {
   display: grid;
   grid-template-columns: 1fr 2fr 5fr 2fr;
   width: 800px;
 }
 
-#add-step-form {
+#add-step-form, .add-group-step-form {
   display: grid;
   grid-template-columns: 9fr 1fr;
   vertical-align: top;
 }
 
-#add-group-form {
+#add-ingredient-group-form, 
+#add-step-group-form {
   display: grid;
   grid-template-columns: 3fr 1fr;
   vertical-align: top;
@@ -414,14 +420,15 @@ input:focus, select:focus, textarea:focus {
   background-color: rgb(232, 240, 254)
 }
 
-#group-form {
+#name-form-ingredient-group, 
+#name-form-step-group {
   border-radius: 5px 0px 0px 5px;
   border: 1px solid #444444;
   padding: 7px 10px;
   font-size: 20px;
 }
 
-#ingredient-form, .ingredient-form-group-class, #measurement-form {
+#content-form-ingredient, .content-form-group-ingredient, #measurement-form {
   border-radius: 0px;
   border: 1px solid #444444;
   padding: 7px 10px;
@@ -438,7 +445,7 @@ select {
   padding-right: 20px;
 }
 
-#quantity-form, .quantity-form-group-class {
+#quantity-form-ingredient, .quantity-form-group-ingredient {
   text-align: center;
   width: 100px;
   border-radius: 5px 0px 0px 5px;
@@ -448,7 +455,7 @@ select {
   padding: 7px;
 }
 
-#step-form {
+#content-form-step, .content-form-group-step {
   border-radius: 5px 0px 0px 5px;
   border: 1px solid #444444;
   height: 100px;
@@ -499,7 +506,7 @@ ul, ol {
   margin: 0px 30px;
 }
 
-.group-name {
+.ingredient-group-name, .step-group-name {
   flex: 8;
 }
 

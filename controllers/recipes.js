@@ -1,6 +1,7 @@
 const Recipe = require("../models/recipe");
 const Cuisine = require("../models/cuisine");
-const Group = require("../models/group");
+const ingredientGroup = require("../models/ingredientGroup");
+const stepGroup = require("../models/stepGroup");
 
 module.exports = {
   index,
@@ -28,16 +29,17 @@ async function index(req, res) {
 function show(req, res) {
   Recipe.findById(req.params.id)
     .populate("cuisine")
-    .populate("groups") // Populate the 'groups' field
+    .populate("ingredientGroups")
+    .populate("stepGroups") 
     .exec(async function (err, recipe) {
       if (err || !recipe) {
         return res.status(404).json({ message: 'Recipe not found' });
       }
 
-      // Fetch groups that belong to the recipe
-      const groups = await Group.find({ recipe: recipe._id }).exec();
+      const ingredientGroups = await ingredientGroup.find({ recipe: recipe._id }).exec();
+      const stepGroups = await stepGroup.find({ recipe: recipe._id }).exec();
 
-      res.render("recipes/show", { title: recipe.dishName, recipe, groups });
+      res.render("recipes/show", { title: recipe.dishName, recipe, ingredientGroups, stepGroups });
     });
 }
 
@@ -75,14 +77,15 @@ function create(req, res) {
 function edit(req, res) {
   Recipe.findById(req.params.id)
     .populate("cuisine")
-    .populate("groups") // Populate the 'groups' field
+    .populate("ingredientGroups")
+    .populate("stepGroups") 
     .exec(async function (err, recipe) {
       if (err || !recipe) {
         return res.status(404).json({ message: 'Recipe not found' });
       }
 
-      // Fetch groups that belong to the recipe
-      const groups = await Group.find({ recipe: recipe._id }).exec();
+      const ingredientGroups = await ingredientGroup.find({ recipe: recipe._id }).exec();
+      const stepGroups = await stepGroup.find({ recipe: recipe._id }).exec();
 
       Cuisine.find({}, function (err, cuisines) {
         if (err) {
@@ -92,7 +95,8 @@ function edit(req, res) {
           title: 'Edit Recipe',
           recipe,
           cuisines,
-          groups
+          ingredientGroups,
+          stepGroups
         });
       });
     });

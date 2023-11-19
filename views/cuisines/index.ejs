@@ -9,11 +9,11 @@
   </div>
 
 <form id="add-cuisine-form" action="/cuisines" method="POST">
-  <input type="text" name="name" id="cuisine-form" placeholder="Enter cuisine here">
+  <input type="text" name="name" id="name-form-cuisine" placeholder="Enter cuisine here">
   <input type="submit" value="Add Cuisine" data-processing="false">
 </form>
 <div class="error-message-container">
-  <span class="error-message" id="cuisine-name-error"></span>
+  <span class="error-message" id="name-error-cuisine"></span>
 </div>
 
 <%- include('../partials/footer') %>
@@ -47,8 +47,8 @@
   }
 
   function validateCuisineForm() {
-    const cuisineNameField = document.getElementById("cuisine-form");
-    const cuisineNameError = document.getElementById("cuisine-name-error");
+    const cuisineNameField = document.getElementById("name-form-cuisine");
+    const cuisineNameError = document.getElementById("name-error-cuisine");
 
     // Reset error message
     cuisineNameError.textContent = "";

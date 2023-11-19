@@ -4,7 +4,7 @@ module.exports = {
     create,
     edit,
     update,
-    delete: deleteGroup
+    delete: stepGroupDelete
 };
 
 function create(req, res) {
@@ -18,11 +18,11 @@ function create(req, res) {
         req.body.userName = req.user.name;
         req.body.userAvatar = req.user.avatar;
 
-        recipe.groups.push(req.body);
+        recipe.stepGroups.push(req.body);
         recipe.save((err) => {
             if (err) {
                 console.error(err);
-                return res.status(500).json({ error: 'Failed to create a group' });
+                return res.status(500).json({ error: 'Failed to create a step group' });
             }
             res.redirect(`/recipes/${recipe._id}`);
         });
@@ -30,33 +30,33 @@ function create(req, res) {
 }
 
 function edit(req, res) {
-    Recipe.findOne({ 'groups._id': req.params.groupId }, (err, recipe) => {
+    Recipe.findOne({ 'stepGroups._id': req.params.stepGroupId }, (err, recipe) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Failed to find the group' });
+            return res.status(500).json({ error: 'Failed to find the step group' });
         }
 
         if (!recipe) {
             return res.status(404).json({ message: 'Recipe not found' });
         }
 
-        const group = recipe.groups.id(req.params.groupId);
+        const stepGroup = recipe.stepGroups.id(req.params.stepGroupId);
 
-        if (!group) {
-            return res.status(404).json({ message: 'Group not found' });
+        if (!stepGroup) {
+            return res.status(404).json({ message: 'Step Group not found' });
         }
 
-        res.render('groups/edit', { title: 'Edit Group', recipe, group });
+        res.render('stepGroups/edit', { title: 'Edit Step Group', recipe, stepGroup });
     });
 }
 
 function update(req, res) {
     Recipe.findOneAndUpdate(
-        { 'groups._id': req.params.groupId },
+        { 'stepGroups._id': req.params.stepGroupId },
         {
             $set: {
-                'groups.$.name': req.body.name,
-                'groups.$.description': req.body.description
+                'stepGroups.$.name': req.body.name,
+                'stepGroups.$.description': req.body.description
                 // Add more fields as needed
             }
         },
@@ -64,7 +64,7 @@ function update(req, res) {
         (err, recipe) => {
             if (err) {
                 console.error(err);
-                return res.status(500).json({ error: 'Failed to update the group' });
+                return res.status(500).json({ error: 'Failed to update the step group' });
             }
 
             if (!recipe) {
@@ -76,15 +76,15 @@ function update(req, res) {
     );
 }
 
-async function deleteGroup(req, res, next) {
+async function stepGroupDelete(req, res, next) {
     try {
-        const recipe = await Recipe.findOne({ 'groups._id': req.params.groupId });
+        const recipe = await Recipe.findOne({ 'stepGroups._id': req.params.stepGroupId });
 
         if (!recipe) {
             return res.redirect('/recipes');
         }
 
-        recipe.groups.remove(req.params.groupId);
+        recipe.stepGroups.remove(req.params.stepGroupId);
         await recipe.save();
         res.redirect(`/recipes/${recipe._id}`);
     } catch (err) {

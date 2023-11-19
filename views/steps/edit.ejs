@@ -2,12 +2,12 @@
 
 <div class="input-div">
     <form action="/recipes/<%= recipe._id %>/steps/<%= step._id %>?_method=PUT" id="add-step-form" method="POST">
-        <textarea id="step-form" name="content" placeholder="Add New Step"><%= step.content %></textarea>
+        <textarea id="content-form-step" name="content" placeholder="Add New Step"><%= step.content %></textarea>
         <input type="hidden" name="_method" value="PUT">
         <input type="submit" value="Update Step">
     </form>
     <div class="error-message-container">
-        <span class="error-message" id="step-content-error"></span>
+        <span class="error-message" id="content-error-step"></span>
     </div>
 </div>
 
@@ -42,8 +42,8 @@
     }
 
     function validateStepForm() {
-        const stepContentField = document.getElementById("step-form");
-        const stepContentError = document.getElementById("step-content-error");
+        const stepContentField = document.getElementById("content-form-step");
+        const stepContentError = document.getElementById("content-error-step");
 
         // Reset error message
         stepContentError.textContent = "";

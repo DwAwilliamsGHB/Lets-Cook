@@ -2,12 +2,12 @@ const Recipe = require('../models/recipe')
 
 module.exports = {
     create,
-    createGroupIngredient,
+    groupIngredientCreate,
     edit,
-    editGroupIngredient,
+    groupIngredientEdit,
     update,
-    updateGroupIngredient,
-    delete: deleteIngredient
+    groupIngredientUpdate,
+    delete: ingredientDelete
 }
 
 function create(req, res) {
@@ -38,8 +38,8 @@ function create(req, res) {
     });
 }
 
-function createGroupIngredient(req, res) {
-    Recipe.findOne({ _id: req.params.id, 'groups._id': req.params.groupId }, function (err, recipe) {
+function groupIngredientCreate(req, res) {
+    Recipe.findOne({ _id: req.params.id, 'ingredientGroups._id': req.params.ingredientGroupId }, function (err, recipe) {
         if (err || !recipe) {
             return res.status(404).json({ message: 'Recipe or Group not found' });
         }
@@ -54,8 +54,8 @@ function createGroupIngredient(req, res) {
             content: req.body.content,
         };
 
-        const group = recipe.groups.id(req.params.groupId);
-        group.ingredients.push(ingredient);
+        const ingredientGroup = recipe.ingredientGroups.id(req.params.ingredientGroupId);
+        ingredientGroup.ingredients.push(ingredient);
 
         recipe.save(function (err) {
             if (err) {
@@ -77,12 +77,12 @@ async function edit(req, res, next) {
     }
 }
 
-async function editGroupIngredient(req, res, next) {
+async function groupIngredientEdit(req, res, next) {
     try {
         const recipe = await Recipe.findById(req.params.id);
-        const group = recipe.groups.id(req.params.groupId);
-        const ingredient = group.ingredients.id(req.params.ingredientId);
-        res.render('groupIngredients/groupIngredientEdit', { title: 'Edit Ingredient', recipe, group, ingredient });
+        const ingredientGroup = recipe.ingredientGroups.id(req.params.ingredientGroupId);
+        const ingredient = ingredientGroup.ingredients.id(req.params.ingredientId);
+        res.render('groupIngredients/edit', { title: 'Edit Ingredient', recipe, ingredientGroup, ingredient });
     } catch (err) {
         return next(err);
     }
@@ -107,12 +107,12 @@ async function update(req, res, next) {
     }
 }
 
-async function updateGroupIngredient(req, res, next) {
+async function groupIngredientUpdate(req, res, next) {
     try {
-        const { id, groupId, ingredientId } = req.params;
+        const { id, ingredientGroupId, ingredientId } = req.params;
         const recipe = await Recipe.findById(id);
-        const group = recipe.groups.id(groupId);
-        const ingredient = group.ingredients.id(ingredientId);
+        const ingredientGroup = recipe.ingredientGroups.id(ingredientGroupId);
+        const ingredient = ingredientGroup.ingredients.id(ingredientId);
 
         // Update the ingredient properties
         ingredient.quantity = req.body.quantity;
@@ -127,7 +127,7 @@ async function updateGroupIngredient(req, res, next) {
     }
 }
   
-async function deleteIngredient(req, res, next) {
+async function ingredientDelete(req, res, next) {
     try {
         // Attempt to find the recipe
         const recipe = await Recipe.findOne({ _id: req.params.id });
@@ -140,12 +140,12 @@ async function deleteIngredient(req, res, next) {
         let ingredient = recipe.ingredients.id(req.params.ingredientId);
 
         if (!ingredient) {
-            // If the ingredient is not in the main recipe's list, search within groups
-            for (const group of recipe.groups) {
-                ingredient = group.ingredients.id(req.params.ingredientId);
+            // If the ingredient is not in the main recipe's list, search within ingredientGroups
+            for (const ingredientGroup of recipe.ingredientGroups) {
+                ingredient = ingredientGroup.ingredients.id(req.params.ingredientId);
                 if (ingredient) {
-                    // Remove the ingredient from the group
-                    group.ingredients.remove(ingredient);
+                    // Remove the ingredient from the ingredientGroup
+                    ingredientGroup.ingredients.remove(ingredient);
                     break; // Exit the loop once found
                 }
             }
