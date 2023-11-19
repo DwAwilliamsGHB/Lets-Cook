@@ -281,7 +281,7 @@
     <div class="input-div">
       <form id="add-step-group-form" method="POST" action="/recipes/<%= recipe._id %>/stepGroups">
         <input id="name-form-step-group" name="name" placeholder="Group Name"></input>
-        <input type="submit" value="Add Step Group" data-processing="false">
+        <input type="submit" value="Add Instruction Group" data-processing="false">
       </form>
       <div class="error-message-container">
         <span class="error-message" id="name-error-step-group"></span>
@@ -431,7 +431,7 @@
     let quantityValue = quantityField.value;
 
     // Convert .33 to .333 and .66 to .667
-    quantityValue = quantityValue.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667");
+    quantityValue = quantityValue.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667").replace(/\.67(?![\d])/g, ".667");
     quantityField.value = quantityValue;
 
     // Continue with the form submission
@@ -444,7 +444,7 @@
       let quantityValue = quantityField.value;
 
       // Replace .33 with .333 and .66 with .667
-      quantityValue = quantityValue.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667");
+      quantityValue = quantityValue.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667").replace(/\.67(?![\d])/g, ".667");
       quantityField.value = quantityValue;
 
       // Continue with the form submission
