@@ -46,7 +46,7 @@ function edit(req, res) {
             return res.status(404).json({ message: 'Step Group not found' });
         }
 
-        res.render('stepGroups/edit', { title: 'Edit Step Group', recipe, stepGroup });
+        res.render('stepGroups/edit', { title: 'Edit Group Name', recipe, stepGroup });
     });
 }
 

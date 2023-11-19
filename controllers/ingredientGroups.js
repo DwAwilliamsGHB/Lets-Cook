@@ -22,7 +22,7 @@ function create(req, res) {
         recipe.save((err) => {
             if (err) {
                 console.error(err);
-                return res.status(500).json({ error: 'Failed to create a group' });
+                return res.status(500).json({ error: 'Failed to create an ingredient group' });
             }
             res.redirect(`/recipes/${recipe._id}`);
         });
@@ -33,7 +33,7 @@ function edit(req, res) {
     Recipe.findOne({ 'ingredientGroups._id': req.params.ingredientGroupId }, (err, recipe) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Failed to find the group' });
+            return res.status(500).json({ error: 'Failed to find the ingredient group' });
         }
 
         if (!recipe) {
@@ -43,10 +43,10 @@ function edit(req, res) {
         const ingredientGroup = recipe.ingredientGroups.id(req.params.ingredientGroupId);
 
         if (!ingredientGroup) {
-            return res.status(404).json({ message: 'Group not found' });
+            return res.status(404).json({ message: 'Ingredient Group not found' });
         }
 
-        res.render('ingredientGroups/edit', { title: 'Edit Ingredient', recipe, ingredientGroup });
+        res.render('ingredientGroups/edit', { title: 'Edit Group Name', recipe, ingredientGroup });
     });
 }
 
@@ -64,7 +64,7 @@ function update(req, res) {
         (err, recipe) => {
             if (err) {
                 console.error(err);
-                return res.status(500).json({ error: 'Failed to update the group' });
+                return res.status(500).json({ error: 'Failed to update the ingredient group' });
             }
 
             if (!recipe) {
