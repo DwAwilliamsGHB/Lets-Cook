@@ -56,8 +56,6 @@ function update(req, res) {
         {
             $set: {
                 'stepGroups.$.name': req.body.name,
-                'stepGroups.$.description': req.body.description
-                // Add more fields as needed
             }
         },
         { new: true },

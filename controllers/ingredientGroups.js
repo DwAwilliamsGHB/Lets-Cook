@@ -56,8 +56,6 @@ function update(req, res) {
         {
             $set: {
                 'ingredientGroups.$.name': req.body.name,
-                'ingredientGroups.$.description': req.body.description
-                // Add more fields as needed
             }
         },
         { new: true },
