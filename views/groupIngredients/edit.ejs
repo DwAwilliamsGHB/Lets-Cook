@@ -4,7 +4,7 @@
     <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients/<%= ingredient._id %>?_method=PUT" class="add-group-ingredient-form" id="add-group-ingredient-form" method="POST" onsubmit="convertQuantity()">
         <input  name="quantity" id="quantity-form-group-ingredient" class="quantity-form-group-ingredient" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
         <select name="measurement" id="measurement-form">
-            <option value="" selected disabled>Measurement</option>
+            <option value="" <%= !ingredient.measurement ? 'selected' : '' %>>Measurement</option>
             <option value="Pinch" <%= ingredient.measurement === 'Pinch' ? 'selected' : '' %>>Pinch</option>
             <option value="Dash" <%= ingredient.measurement === 'Dash' ? 'selected' : '' %>>Dash</option>
             <option value="Teaspoon" <%= ingredient.measurement === 'Teaspoon' ? 'selected' : '' %>>Teaspoon</option>

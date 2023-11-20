@@ -112,7 +112,7 @@
         action="/recipes/<%= recipe._id %>/ingredients"  onsubmit="convertQuantity()">
         <input  name="quantity" id="quantity-form-ingredient" placeholder="Qty."></input>
         <select name="measurement" id="measurement-form">
-          <option value="" selected disabled>Measurement</option>
+          <option value="">Measurement</option>
           <option value="Pinch">Pinch</option>
           <option value="Dash">Dash</option>
           <option value="Teaspoon">Teaspoon</option>
@@ -204,7 +204,7 @@
                   action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients" onsubmit="convertQuantityGroup(); return validateGroupIngredientForm('<%= ingredientGroup._id %>')">
                   <input name="quantity" id="quantity-form-group-ingredient-<%= ingredientGroup._id %>" class="quantity-form-group-ingredient" placeholder="Qty."></input>
                   <select name="measurement" id="measurement-form">
-                    <option value="" selected disabled>Measurement</option>
+                    <option value="">Measurement</option>
                     <option value="Pinch">Pinch</option>
                     <option value="Dash">Dash</option>
                     <option value="Teaspoon">Teaspoon</option>

@@ -22,7 +22,7 @@ function create(req, res) {
             userName: req.user.name,
             userAvatar: req.user.avatar,
             quantity: req.body.quantity,
-            measurement: req.body.measurement,
+            measurement: req.body.measurement || undefined,
             content: req.body.content,
         };
 
@@ -50,7 +50,7 @@ function groupIngredientCreate(req, res) {
             userName: req.user.name,
             userAvatar: req.user.avatar,
             quantity: req.body.quantity,
-            measurement: req.body.measurement,
+            measurement: req.body.measurement || undefined,
             content: req.body.content,
         };
 
@@ -96,7 +96,7 @@ async function update(req, res, next) {
 
         // Update the ingredient properties
         ingredient.quantity = req.body.quantity;
-        ingredient.measurement = req.body.measurement;
+        ingredient.measurement = req.body.measurement || undefined;
         ingredient.content = req.body.content;
 
         await recipe.save();
@@ -116,7 +116,7 @@ async function groupIngredientUpdate(req, res, next) {
 
         // Update the ingredient properties
         ingredient.quantity = req.body.quantity;
-        ingredient.measurement = req.body.measurement;
+        ingredient.measurement = req.body.measurement || undefined;
         ingredient.content = req.body.content;
 
         await recipe.save();
