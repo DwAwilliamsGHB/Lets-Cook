@@ -387,7 +387,7 @@ hr {
   border-radius: 5px 5px 5px 5px;
   padding: 7px 7px;
   margin-left: 10px;
-  width: 60px;
+  max-width: 90px;
 }
 
 #add-ingredient-form, .add-group-ingredient-form {

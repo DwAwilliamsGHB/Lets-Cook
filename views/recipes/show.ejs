@@ -699,29 +699,27 @@
   }
 
   function setEditState(editState) {
-    Cookies.set('editState', editState);
+    // Save edit state for the current recipe in localStorage
+    const recipeId = '<%= recipe._id %>'; // Make sure this is dynamically set by your server-side template
+    localStorage.setItem(`editState_${recipeId}`, editState);
   }
 
   function getEditState() {
-    return Cookies.get('editState');
+    const recipeId = '<%= recipe._id %>'; // Dynamically set as above
+    return localStorage.getItem(`editState_${recipeId}`) === 'true';
   }
 
   function toggleEditState() {
-    const editState = getEditState() !== 'false';
-    setEditState(!editState);
+    const currentEditState = getEditState();
+    setEditState(!currentEditState);
 
     const editButtons = document.querySelectorAll('.list-edit-button, .x-form, .input-div');
-
-    if (!editState) {
-      editButtons.forEach((button) => {
-            button.style.display = 'block';
-        });
+    if (currentEditState) {
+        editButtons.forEach(button => button.style.display = 'none');
     } else {
-      editButtons.forEach((button) => {
-            button.style.display = 'none';
-        });
+        editButtons.forEach(button => button.style.display = 'block');
     }
-  }
+}
 
   function initializeServingsInput() {
     const servingsInput = document.getElementById("servings-input");
@@ -737,24 +735,25 @@
   }
 
   function initializeEditState() {
-    const editState = getEditState() === 'true';
+    const editState = getEditState();
 
-    if (!editState) {
-        restoreEditButton();
+    const editButtons = document.querySelectorAll('.list-edit-button, .x-form, .input-div');
+    if (editState) {
+        editButtons.forEach(button => button.style.display = 'block');
     } else {
-        replaceEditButtons();
+        editButtons.forEach(button => button.style.display = 'none');
     }
 
-    if (!editState) {
-      const editButtons = document.querySelectorAll('.list-edit-button, .x-form, .input-div');
-      editButtons.forEach((button) => {
-        button.style.display = 'none';
-      });
+    // Set the correct visibility of the edit and delete button groups
+    const editOriginalButton = document.getElementById("editOriginalButton");
+    const editNewButtons = document.getElementById("editNewButtons");
+
+    if (editState) {
+        editOriginalButton.classList.add("hidden");
+        editNewButtons.classList.remove("hidden");
     } else {
-      const editButtons = document.querySelectorAll('.list-edit-button, .x-form, .input-div');
-      editButtons.forEach((button) => {
-        button.style.display = 'block';
-      });
+        editOriginalButton.classList.remove("hidden");
+        editNewButtons.classList.add("hidden");
     }
   }
 
