@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients/<%= ingredient._id %>?_method=PUT" class="add-group-ingredient-form" id="add-group-ingredient-form" method="POST" onsubmit="convertQuantity()">
+    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients/<%= ingredient._id %>?_method=PUT" class="add-group-ingredient-form" id="add-group-ingredient-form" method="POST">
         <input  name="quantity" id="quantity-form-group-ingredient" class="quantity-form-group-ingredient" placeholder="Qty." value="<%= ingredient.quantity %>"></input>
         <select name="measurement" id="measurement-form">
             <option value="" <%= !ingredient.measurement ? 'selected' : '' %>>Measurement</option>
@@ -32,17 +32,6 @@
 
 <script>
     
-    function convertQuantity() {
-        const quantityField = document.getElementById("quantity-form-group-ingredient");
-        let quantityValue = quantityField.value;
-    
-        // Convert .33 to .333 and .66 to .667
-        quantityValue = quantityValue.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667").replace(/\.67(?![\d])/g, ".667");
-        quantityField.value = quantityValue;
-    
-        // Continue with the form submission
-    }
-
     const formElements = document.querySelectorAll("form");
     formElements.forEach((form) => {
         form.addEventListener("submit", (event) => {
@@ -69,11 +58,11 @@
         return () => true;
     }
 
-    function validateGroupIngredientForm() {
-        const quantityField = document.getElementById("quantity-form-group-ingredient");
-        const contentField = document.getElementById("content-form-group-ingredient");
-        const quantityError = document.getElementById("quantity-error-group-ingredient");
-        const contentError = document.getElementById("content-error-group-ingredient");
+    function validateGroupIngredientForm(ingredientGroupId) {
+        const quantityField = document.getElementById(`quantity-form-group-ingredient-${ingredientGroupId}`);
+        const contentField = document.getElementById(`content-form-group-ingredient-${ingredientGroupId}`);
+        const quantityError = document.getElementById(`quantity-error-group-ingredient-${ingredientGroupId}`);
+        const contentError = document.getElementById(`content-error-group-ingredient-${ingredientGroupId}`);
 
         // Reset error messages
         quantityError.textContent = "";
@@ -81,20 +70,18 @@
 
         let isValid = true;
 
-        // Validate quantity (if filled, it must be a decimal number)
+        // Extend the quantity validation to include whole numbers, fractions, and mixed numbers
         const quantityValue = quantityField.value.trim();
-        if (quantityValue !== "") {
-        if (isNaN(quantityValue) || parseFloat(quantityValue) <= 0 || !/^(0?\.)?\d+(\.\d+)?$/.test(quantityValue)) {
-            quantityError.textContent = "Please enter a valid positive decimal number (ex: .33 or 1.5 or 2).";
+        if (quantityValue === "" || !/^(\d+\s\d+\/\d+|\d+\/\d+|\d*\.\d+|\.\d+|\d+)$/.test(quantityValue)) {
+            quantityError.textContent = "Please enter a valid quantity (whole number, fraction, mixed number, or decimal).";
             isValid = false;
-        }
         }
 
         // Validate content (must not be empty)
         const contentValue = contentField.value.trim();
         if (contentValue === "") {
-        contentError.textContent = "Please enter an ingredient name.";
-        isValid = false;
+            contentError.textContent = "Please enter an ingredient name.";
+            isValid = false;
         }
 
         return isValid;

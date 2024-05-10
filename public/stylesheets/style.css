@@ -340,7 +340,7 @@ hr {
   padding: 7px 20px;
 }
 
-#servings-adjuster {
+#ingredients-adjuster {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -379,15 +379,43 @@ hr {
   text-align: center;
 }
 
-#toggleQuantityFormat {
+#display-mode {
   color: white;
   font-size: 16px;
   background-color: #444444;
   border: 1px solid #444444;
-  border-radius: 5px 5px 5px 5px;
-  padding: 7px 7px;
+  border-radius: 5px;
+  padding: 7px 10px;
   margin-left: 10px;
-  max-width: 90px;
+  max-width: 130px;
+}
+
+.fraction {
+  display: inline-block;
+  vertical-align: middle;  
+  text-align: center;
+}
+
+.numerator {
+  display: inline-block;
+  font-size: 0.75em;  
+  position: relative;
+  bottom: 5.5px;  
+  left: 2px;
+}
+
+.denominator {
+  display: inline-block;
+  font-size: 0.75em;
+  position: relative;
+  right: 1px;
+  top: 2px;
+}
+
+.solidus {
+  display: inline-block;
+  transform: rotate(15deg);  
+  margin: 0 2px;  
 }
 
 #add-ingredient-form, .add-group-ingredient-form {

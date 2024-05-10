@@ -64,24 +64,25 @@
   <% if (recipe.ingredients.length) { %>
     <div class="instruction-list">
       <h2>Ingredients</h2>
-      <div id="servings-adjuster">
+      <div id="ingredients-adjuster">
         <div>Servings</div>
         <div>
           <button id="decrease-servings" onclick="adjustServings(-1)">-</button>
-          <input type="number" id="servings-input" value="<%= recipe.serving %>">
+          <input type="number" id="servings-input" value="<%= recipe.serving %>" data-original-servings="<%= recipe.serving %>">
           <button id="increase-servings" onclick="adjustServings(1)">+</button>
         </div>
         <div>Display</div>
-        <% const useFractions = true; %>
-        <button id="toggleQuantityFormat" onclick="toggleQuantityFormat()">
-          <%- useFractions ? '1.23' : '1/2' %>
-        </button>
+        <select id="display-mode" onchange="updateIngredientQuantities()">
+          <option value="original">Original</option>
+          <option value="fraction">Fraction</option>
+          <option value="decimal">Decimal</option>
+        </select>
       </div>
       <ul>
         <% let total = 0 %>
         <% recipe.ingredients.forEach(function(ingredient) { %>
           <li class="ingredient-li">
-            <span class="ingredient-quantity" data-quantity="<%= ingredient.quantity %>"><%= ingredient.quantity %></span>
+            <span class="ingredient-quantity" data-original-quantity="<%= ingredient.quantity %>"><%= ingredient.quantity %></span>
             <%= ingredient.measurement %>
             <%= ingredient.content %>
           </li>
@@ -109,7 +110,7 @@
   <% if(user) { %>
     <div class="input-div">
       <form id="add-ingredient-form" method="POST"
-        action="/recipes/<%= recipe._id %>/ingredients"  onsubmit="convertQuantity()">
+        action="/recipes/<%= recipe._id %>/ingredients">
         <input  name="quantity" id="quantity-form-ingredient" placeholder="Qty."></input>
         <select name="measurement" id="measurement-form">
           <option value="">Measurement</option>
@@ -176,7 +177,7 @@
             <ul>
               <% ingredientGroup.ingredients.forEach(function(ingredient) { %>
                 <li class="ingredient-li">
-                  <span class="ingredient-quantity" data-quantity="<%= ingredient.quantity %>"><%= ingredient.quantity %></span>
+                  <span class="ingredient-quantity" data-original-quantity="<%= ingredient.quantity %>"><%= ingredient.quantity %></span>
                   <%= ingredient.measurement %>
                   <%= ingredient.content %>
                 </li>
@@ -201,7 +202,7 @@
             <% if (user) { %>
               <div class="input-div">
                 <form class="add-group-ingredient-form" id="add-group-ingredient-form-<%= ingredientGroup._id %>" method="POST"
-                  action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients" onsubmit="convertQuantityGroup(); return validateGroupIngredientForm('<%= ingredientGroup._id %>')">
+                  action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients" onsubmit="return validateGroupIngredientForm('<%= ingredientGroup._id %>')">
                   <input name="quantity" id="quantity-form-group-ingredient-<%= ingredientGroup._id %>" class="quantity-form-group-ingredient" placeholder="Qty."></input>
                   <select name="measurement" id="measurement-form">
                     <option value="">Measurement</option>
@@ -359,95 +360,115 @@
 
 <script>
 
-  const originalServings = <%= recipe.serving %>;
-  let currentServings = originalServings;
-
   function updateIngredientQuantities() {
+    const displayMode = document.getElementById("display-mode").value;
+    const originalServings = parseInt(document.getElementById("servings-input").getAttribute('data-original-servings'));
+    const currentServings = parseInt(document.getElementById("servings-input").value);
     const scalingFactor = currentServings / originalServings;
+
     const ingredientQuantities = document.querySelectorAll(".ingredient-li .ingredient-quantity");
+    ingredientQuantities.forEach(element => {
+      const originalQuantity = element.getAttribute("data-original-quantity");
+      const parsedQuantity = parseQuantity(originalQuantity);
+      const scaledQuantity = parsedQuantity * scalingFactor;
 
-    ingredientQuantities.forEach(function (quantityElement) {
-      const originalQuantity = parseFloat(quantityElement.getAttribute("data-quantity"));
-
-      // Check if the originalQuantity is NaN
-      if (isNaN(originalQuantity)) {
-        quantityElement.style.display = "none"; // Hide the element
-        return; // Exit the loop for this element
-      } else {
-        quantityElement.style.display = "inline";
+      let newQuantity;
+      switch (displayMode) {
+        case "fraction":
+          newQuantity = convertToFraction(scaledQuantity);
+          break;
+        case "decimal":
+          newQuantity = parseFloat(scaledQuantity.toFixed(2)).toString();
+          break;
+        default:
+          // Calculate the scaled value in its original format (either as a decimal or as a fraction/mixed number)
+          if (originalQuantity.includes('/') || originalQuantity.includes(' ')) {
+            // If the original was a fraction or mixed number, convert the scaled quantity back to its original format
+            newQuantity = convertToFraction(scaledQuantity);
+          } else {
+            // Otherwise, show as a decimal rounded to two places if necessary
+            newQuantity = parseFloat(scaledQuantity.toFixed(2)).toString();
+          }
       }
-
-      let newQuantity = originalQuantity * scalingFactor; // as a floating-point number
-
-      if (useFractions) {
-        // Convert decimal to fraction
-        newQuantity = decimalToFraction(newQuantity);
-      } else {
-        // Display decimal
-        newQuantity = newQuantity.toFixed(2).replace(/\.?0+$/, "");
-      }
-
-      quantityElement.textContent = newQuantity;
+      element.innerHTML = newQuantity;
     });
   }
 
-  function decimalToFraction(decimal) {
-    if (decimal === 0) return "0";
-
-    const tolerance = 0.01; // Define your tolerance level for rounding
-
-    let sign = 1;
-    if (decimal < 0) {
-      sign = -1;
-      decimal = Math.abs(decimal);
-    }
-
-    let wholeNumberPart = Math.floor(decimal);
-    let fractionalPart = decimal - wholeNumberPart;
-
-    for (let denominator = 2; denominator <= 8; denominator++) {
-      for (let numerator = 1; numerator < denominator; numerator++) {
-        const fractionValue = numerator / denominator;
-        if (Math.abs(fractionalPart - fractionValue) < tolerance) {
-          let fraction = "";
-          if (wholeNumberPart > 0) {
-            fraction = wholeNumberPart + " ";
-          }
-          if (numerator === 1) {
-            fraction += "1/" + denominator;
-          } else {
-            fraction += numerator + "/" + denominator;
-          }
-          return sign === -1 ? "-" + fraction : fraction;
-        }
+  function parseQuantity(input) {
+    if (!input || isNaN(input)) {
+      if (input.includes(' ')) { // Handle mixed numbers
+        const [whole, fraction] = input.split(' ');
+        const [numerator, denominator] = fraction.split('/');
+        return parseInt(whole) + (parseInt(numerator) / parseInt(denominator));
+      } else if (input.includes('/')) { // Handle pure fractions
+        const [numerator, denominator] = input.split('/');
+        return parseInt(numerator) / parseInt(denominator);
       }
     }
-
-    return (sign === -1 ? "-" : "") + decimal.toFixed(2).replace(/\.?0+$/, "");
+    input = input.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667").replace(/\.67(?![\d])/g, ".667");
+    return parseFloat(input); // Handle decimal and whole numbers
   }
 
-  function convertQuantity() {
-    const quantityField = document.getElementById("quantity-form-ingredient");
-    let quantityValue = quantityField.value;
+  function convertToFraction(decimal) {
+    if (decimal === 0) return "0";
+    if (decimal > 0 && decimal < 0.035) return "<span class='numerator'>1</span><span class='solidus'>/</span><span class='denominator'>16</span>";
 
-    // Convert .33 to .333 and .66 to .667
-    quantityValue = quantityValue.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667").replace(/\.67(?![\d])/g, ".667");
-    quantityField.value = quantityValue;
+    const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+    let bestDiff = Math.abs(decimal);
+    let bestNumerator = 1;
+    let bestDenominator = 1;
 
-    // Continue with the form submission
+    for (let denominator = 1; denominator <= 16; denominator++) {
+        let numerator = Math.round(decimal * denominator);
+        let diff = Math.abs(decimal - numerator / denominator);
+
+        if (diff < bestDiff) {
+            bestDiff = diff;
+            bestNumerator = numerator;
+            bestDenominator = denominator;
+        }
+    }
+
+    let reducedNumerator = bestNumerator;
+    let reducedDenominator = bestDenominator;
+
+    const divisor = gcd(reducedNumerator, reducedDenominator);
+    reducedNumerator /= divisor;
+    reducedDenominator /= divisor;
+
+    if (reducedNumerator === 0) return "0";
+
+    if (decimal < 0) reducedNumerator = -reducedNumerator;
+
+    if (reducedNumerator % reducedDenominator === 0) {
+        return (reducedNumerator / reducedDenominator).toString();
+    } else if (Math.abs(reducedNumerator) < reducedDenominator) {
+        // Pure fraction
+        return `<span class="numerator">${Math.abs(reducedNumerator)}</span><span class="solidus">/</span><span class="denominator">${reducedDenominator}</span>`;
+    } else {
+        // Mixed number
+        const whole = Math.floor(reducedNumerator / reducedDenominator);
+        reducedNumerator %= reducedDenominator;
+        return `${whole} <span class="numerator">${Math.abs(reducedNumerator)}</span><span class="solidus">/</span><span class="denominator">${reducedDenominator}</span>`;
+    }
   }
 
-  function convertQuantityGroup() {
-    const quantityFields = document.querySelectorAll(".quantity-form-group-ingredient");
+  function adjustServings(change) {
+    const servingsInput = document.getElementById("servings-input");
+    let newServings = parseInt(servingsInput.value) + change;
+    if (newServings < 1) newServings = 1; // Prevent servings from going below 1
+    servingsInput.value = newServings;
+    updateIngredientQuantities(); // Update quantities with the new servings
+  }
 
-    quantityFields.forEach((quantityField) => {
-      let quantityValue = quantityField.value;
+  function initializeServingsInput() {
+    const servingsInput = document.getElementById("servings-input");
 
-      // Replace .33 with .333 and .66 with .667
-      quantityValue = quantityValue.replace(/\.33(?![\d])/g, ".333").replace(/\.66(?![\d])/g, ".667").replace(/\.67(?![\d])/g, ".667");
-      quantityField.value = quantityValue;
-
-      // Continue with the form submission
+    servingsInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();  // Prevent the form from being submitted if it's part of a form
+            adjustServings(0);  // Adjust servings without change, essentially updating the display
+        }
     });
   }
 
@@ -500,23 +521,19 @@
     const quantityError = document.getElementById("quantity-error-ingredient");
     const contentError = document.getElementById("content-error-ingredient");
 
-    // Reset error messages
     quantityError.textContent = "";
     contentError.textContent = "";
 
+    const quantityValue = quantityField.value.trim();
+    const contentValue = contentField.value.trim();
+
     let isValid = true;
 
-    // Validate quantity (if filled, it must be a decimal number)
-    const quantityValue = quantityField.value.trim();
-    if (quantityValue !== "") {
-      if (isNaN(quantityValue) || parseFloat(quantityValue) <= 0 || !/^(0?\.)?\d+(\.\d+)?$/.test(quantityValue)) {
-        quantityError.textContent = "Please enter a valid positive decimal number (ex: .33 or 1.5 or 2).";
+    if (quantityValue === "" || !/^(\d+\s\d+\/\d+|\d+\/\d+|\d*\.\d+|\.\d+|\d+)$/.test(quantityValue)) {
+        quantityError.textContent = "Please enter a valid quantity (whole number, fraction, mixed number, or decimal).";
         isValid = false;
-      }
     }
 
-    // Validate content (must not be empty)
-    const contentValue = contentField.value.trim();
     if (contentValue === "") {
       contentError.textContent = "Please enter an ingredient name.";
       isValid = false;
@@ -537,20 +554,18 @@
 
     let isValid = true;
 
-    // Validate quantity (if filled, it must be a decimal number)
+    // Extend the quantity validation to include whole numbers, fractions, and mixed numbers
     const quantityValue = quantityField.value.trim();
-    if (quantityValue !== "") {
-      if (isNaN(quantityValue) || parseFloat(quantityValue) <= 0 || !/^(0?\.)?\d+(\.\d+)?$/.test(quantityValue)) {
-        quantityError.textContent = "Please enter a valid positive decimal number (ex: .33 or 1.5 or 2).";
+    if (quantityValue === "" || !/^(\d+\s\d+\/\d+|\d+\/\d+|\d*\.\d+|\.\d+|\d+)$/.test(quantityValue)) {
+        quantityError.textContent = "Please enter a valid quantity (whole number, fraction, mixed number, or decimal).";
         isValid = false;
-      }
     }
 
     // Validate content (must not be empty)
     const contentValue = contentField.value.trim();
     if (contentValue === "") {
-      contentError.textContent = "Please enter an ingredient name.";
-      isValid = false;
+        contentError.textContent = "Please enter an ingredient name.";
+        isValid = false;
     }
 
     return isValid;
@@ -631,30 +646,6 @@
 
     return isValid;
   }
-
-  let useFractions = true; // By default, start with fractions
-
-  function toggleQuantityFormat() {
-    useFractions = !useFractions;
-    updateIngredientQuantities();
-
-    const toggleButton = document.getElementById("toggleQuantityFormat");
-    toggleButton.innerText = useFractions ? '1.23' : '1/2';
-
-  }
-
-  function adjustServings(change) {
-    const servingsInput = document.getElementById("servings-input");
-    const newServings = parseInt(servingsInput.value) + change;
-
-    if (newServings < 1) return;
-
-    servingsInput.value = newServings;
-    currentServings = newServings;
-    updateIngredientQuantities();
-  }
-
-  updateIngredientQuantities();
     
   function replaceEditButtons() {
     var originalButton = document.getElementById("editOriginalButton");
@@ -721,19 +712,6 @@
     }
 }
 
-  function initializeServingsInput() {
-    const servingsInput = document.getElementById("servings-input");
-
-    if (servingsInput) {
-      servingsInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          adjustServings(0);
-        }
-      });
-    }
-  }
-
   function initializeEditState() {
     const editState = getEditState();
 
@@ -780,8 +758,15 @@
   // Set the scroll position when the page loads
   window.addEventListener('load', () => setScrollPosition(currentRecipeId));
   
-  window.addEventListener('load', initializeServingsInput);
-  window.addEventListener('load', initializeEditState);
+  window.addEventListener('load', function() {
+    initializeEditState();
+    initializeServingsInput();
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+    updateIngredientQuantities(); // Initial call to set quantities
+  });
+
 </script>
 
 <%- include('../partials/footer') %>
