@@ -1,13 +1,13 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>?_method=PUT" id="add-ingredient-group-form" method="POST">
-        <input id="name-form-ingredient-group" name="name" placeholder="Edit group name" value="<%= ingredientGroup.name %>"></input>
+    <form action="/recipes/<%= recipe._id %>/equipments/<%= equipment._id %>?_method=PUT" id="add-equipment-form" method="POST">
+        <input id="content-form-equipment" name="content" placeholder="Edit equipment item name" value="<%= equipment.content %>"></input>
         <input type="hidden" name="_method" value="PUT">
-        <input type="submit" value="Update Group">
+        <input type="submit" value="Update equipment item">
     </form>
     <div class="error-message-container">
-        <span class="error-message" id="name-error-ingredient-group"></span>
+        <span class="error-message" id="content-error-equipment"></span>
     </div>
 </div>
 
@@ -35,30 +35,29 @@
     });
 
     function getValidationFunction(form) {
-        if (form.id === "add-ingredient-group-form") {
-            return validateIngredientGroupForm;
+        if (form.id === "add-equipment-form") {
+            return validateEquipmentForm;
         }
         return () => true;
     }
 
-    function validateIngredientGroupForm() {
-        const ingredientGroupNameField = document.getElementById("name-form-ingredient-group");
-        const ingredientGroupNameError = document.getElementById("name-error-ingredient-group");
+    function validateEquipmentForm() {
+        const equipmentContentField = document.getElementById("content-form-equipment");
+        const equipmentContentError = document.getElementById("content-error-equipment");
 
         // Reset error message
-        ingredientGroupNameError.textContent = "";
+        equipmentContentError.textContent = "";
 
         let isValid = true;
 
-        // Validate ingredientGroup name (must not be empty)
-        const ingredientGroupNameValue = ingredientGroupNameField.value.trim();
-        if (ingredientGroupNameValue === "") {
-        ingredientGroupNameError.textContent = "Please enter a group name.";
+        // Validate equipment content (must not be empty)
+        const equipmentContentValue = equipmentContentField.value.trim();
+        if (equipmentContentValue === "") {
+        equipmentContentError.textContent = "Please enter an equipment item name.";
         isValid = false;
         }
 
         return isValid;
     }
-
 
 </script>

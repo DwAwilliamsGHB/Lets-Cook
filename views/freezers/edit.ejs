@@ -1,13 +1,13 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>?_method=PUT" id="add-ingredient-group-form" method="POST">
-        <input id="name-form-ingredient-group" name="name" placeholder="Edit group name" value="<%= ingredientGroup.name %>"></input>
+    <form action="/recipes/<%= recipe._id %>/freezers/<%= freezer._id %>?_method=PUT" id="add-freezer-form" method="POST">
+        <textarea id="content-form-freezer" name="content" placeholder="Edit freezing info"><%= freezer.content %></textarea>
         <input type="hidden" name="_method" value="PUT">
-        <input type="submit" value="Update Group">
+        <input type="submit" value="Update freezing info">
     </form>
     <div class="error-message-container">
-        <span class="error-message" id="name-error-ingredient-group"></span>
+        <span class="error-message" id="content-error-freezer"></span>
     </div>
 </div>
 
@@ -35,30 +35,29 @@
     });
 
     function getValidationFunction(form) {
-        if (form.id === "add-ingredient-group-form") {
-            return validateIngredientGroupForm;
+        if (form.id === "add-freezer-form") {
+            return validateFreezerForm;
         }
         return () => true;
     }
 
-    function validateIngredientGroupForm() {
-        const ingredientGroupNameField = document.getElementById("name-form-ingredient-group");
-        const ingredientGroupNameError = document.getElementById("name-error-ingredient-group");
+    function validateFreezerForm() {
+        const freezerContentField = document.getElementById("content-form-freezer");
+        const freezerContentError = document.getElementById("content-error-freezer");
 
         // Reset error message
-        ingredientGroupNameError.textContent = "";
+        freezerContentError.textContent = "";
 
         let isValid = true;
 
-        // Validate ingredientGroup name (must not be empty)
-        const ingredientGroupNameValue = ingredientGroupNameField.value.trim();
-        if (ingredientGroupNameValue === "") {
-        ingredientGroupNameError.textContent = "Please enter a group name.";
+        // Validate freezing info content (must not be empty)
+        const freezerContentValue = freezerContentField.value.trim();
+        if (freezerContentValue === "") {
+        freezerContentError.textContent = "Please enter freezing info content.";
         isValid = false;
         }
 
         return isValid;
     }
-
 
 </script>

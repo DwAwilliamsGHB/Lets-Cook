@@ -209,6 +209,7 @@ h3 {
   border-radius: 5px 0px 0px 5px;
   padding: 10px 20px;
   font-size: 1.6em;
+  width: 450px;
 }
 
 hr {
@@ -320,6 +321,10 @@ hr {
 #add-ingredient-form input[type="submit"],
 .add-group-ingredient-form input[type="submit"],
 #add-step-form input[type="submit"],
+#add-storage-form input[type="submit"],
+#add-equipment-form input[type="submit"],
+#add-note-form input[type="submit"],
+#add-freezer-form input[type="submit"],
 .add-group-step-form input[type="submit"],
 #add-ingredient-group-form input[type="submit"],
 #add-step-group-form input[type="submit"] {
@@ -424,7 +429,13 @@ hr {
   width: 800px;
 }
 
-#add-step-form, .add-group-step-form {
+#add-equipment-form {
+  display: grid;
+  grid-template-columns: 9fr 1fr;
+  width: 800px;
+}
+
+#add-step-form, #add-storage-form, #add-note-form, #add-freezer-form, .add-group-step-form {
   display: grid;
   grid-template-columns: 9fr 1fr;
   vertical-align: top;
@@ -435,7 +446,7 @@ hr {
   display: grid;
   grid-template-columns: 3fr 1fr;
   vertical-align: top;
-  width: 450px;
+  width: 800px;
   font-size: 20px;
 }
 
@@ -483,7 +494,16 @@ select {
   padding: 7px;
 }
 
-#content-form-step, .content-form-group-step {
+#content-form-equipment {
+  border-radius: 5px 0px 0px 5px;
+  border-width: 1px 0px 1px 1px;
+  border-style: solid;
+  border-color: #444444;
+  padding: 7px;
+  font-size: 20px;
+}
+
+#content-form-step, #content-form-storage, #content-form-note, #content-form-freezer, .content-form-group-step {
   border-radius: 5px 0px 0px 5px;
   border: 1px solid #444444;
   height: 100px;
@@ -492,7 +512,7 @@ select {
   resize: none;
 }
 
-.instruction-list {
+.instruction-list, .storage-list, .equipment-list, .note-list, .freezer-list {
   font-size: 20px;
   text-align: left;
   background-color: #fafafa;
@@ -551,7 +571,7 @@ ul, ol {
   padding: 2px 0px;
 }
 
-.step-li {
+.step-li, .storage-li, .equipment-li, .note-li, .freezer-li {
   width: 564px;
   padding: 2px 0px;
 }

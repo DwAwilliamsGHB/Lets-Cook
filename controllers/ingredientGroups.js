@@ -43,10 +43,10 @@ function edit(req, res) {
         const ingredientGroup = recipe.ingredientGroups.id(req.params.ingredientGroupId);
 
         if (!ingredientGroup) {
-            return res.status(404).json({ message: 'Ingredient Group not found' });
+            return res.status(404).json({ message: 'Ingredient group not found' });
         }
 
-        res.render('ingredientGroups/edit', { title: 'Edit Group Name', recipe, ingredientGroup });
+        res.render('ingredientGroups/edit', { title: 'Edit Group', recipe, ingredientGroup });
     });
 }
 

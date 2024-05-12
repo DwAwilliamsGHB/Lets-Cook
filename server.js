@@ -18,6 +18,10 @@ var ingredientsRouter = require('./routes/ingredients');
 var stepGroupsRouter = require('./routes/stepGroups')
 var stepsRouter = require('./routes/steps');
 var cuisinesRouter = require('./routes/cuisines');
+var storagesRouter = require('./routes/storages');
+var equipmentsRouter = require('./routes/equipments');
+var notesRouter = require('./routes/notes');
+var freezersRouter = require('./routes/freezers');
 
 var app = express();
 
@@ -51,6 +55,10 @@ app.use('/', ingredientsRouter);
 app.use('/', stepGroupsRouter);
 app.use('/', stepsRouter);
 app.use('/', cuisinesRouter);
+app.use('/', storagesRouter);
+app.use('/', equipmentsRouter);
+app.use('/', notesRouter);
+app.use('/', freezersRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));

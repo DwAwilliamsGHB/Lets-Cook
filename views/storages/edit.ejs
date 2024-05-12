@@ -1,13 +1,13 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>?_method=PUT" id="add-ingredient-group-form" method="POST">
-        <input id="name-form-ingredient-group" name="name" placeholder="Edit group name" value="<%= ingredientGroup.name %>"></input>
+    <form action="/recipes/<%= recipe._id %>/storages/<%= storage._id %>?_method=PUT" id="add-storage-form" method="POST">
+        <textarea id="content-form-storage" name="content" placeholder="Edit storage info"><%= storage.content %></textarea>
         <input type="hidden" name="_method" value="PUT">
-        <input type="submit" value="Update Group">
+        <input type="submit" value="Update storage info">
     </form>
     <div class="error-message-container">
-        <span class="error-message" id="name-error-ingredient-group"></span>
+        <span class="error-message" id="content-error-storage"></span>
     </div>
 </div>
 
@@ -35,30 +35,29 @@
     });
 
     function getValidationFunction(form) {
-        if (form.id === "add-ingredient-group-form") {
-            return validateIngredientGroupForm;
+        if (form.id === "add-storage-form") {
+            return validateStorageForm;
         }
         return () => true;
     }
 
-    function validateIngredientGroupForm() {
-        const ingredientGroupNameField = document.getElementById("name-form-ingredient-group");
-        const ingredientGroupNameError = document.getElementById("name-error-ingredient-group");
+    function validateStorageForm() {
+        const storageContentField = document.getElementById("content-form-storage");
+        const storageContentError = document.getElementById("content-error-storage");
 
         // Reset error message
-        ingredientGroupNameError.textContent = "";
+        storageContentError.textContent = "";
 
         let isValid = true;
 
-        // Validate ingredientGroup name (must not be empty)
-        const ingredientGroupNameValue = ingredientGroupNameField.value.trim();
-        if (ingredientGroupNameValue === "") {
-        ingredientGroupNameError.textContent = "Please enter a group name.";
+        // Validate storage info content (must not be empty)
+        const storageContentValue = storageContentField.value.trim();
+        if (storageContentValue === "") {
+        storageContentError.textContent = "Please enter storage info content.";
         isValid = false;
         }
 
         return isValid;
     }
-
 
 </script>

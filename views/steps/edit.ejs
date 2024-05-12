@@ -2,9 +2,9 @@
 
 <div class="input-div">
     <form action="/recipes/<%= recipe._id %>/steps/<%= step._id %>?_method=PUT" id="add-step-form" method="POST">
-        <textarea id="content-form-step" name="content" placeholder="Add New Step"><%= step.content %></textarea>
+        <textarea id="content-form-step" name="content" placeholder="Edit step"><%= step.content %></textarea>
         <input type="hidden" name="_method" value="PUT">
-        <input type="submit" value="Update Step">
+        <input type="submit" value="Update step">
     </form>
     <div class="error-message-container">
         <span class="error-message" id="content-error-step"></span>

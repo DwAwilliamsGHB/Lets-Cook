@@ -2,9 +2,9 @@
 
 <div class="input-div">
     <form action="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/steps/<%= step._id %>?_method=PUT" class="add-group-step-form" id="add-group-step-form" method="POST">
-        <textarea id="content-form-group-step" name="content" class="content-form-group-step" placeholder="Add New Step"><%= step.content %></textarea>
+        <textarea id="content-form-group-step" name="content" class="content-form-group-step" placeholder="Edit step"><%= step.content %></textarea>
         <input type="hidden" name="_method" value="PUT">
-        <input type="submit" value="Update Step" data-processing="false">
+        <input type="submit" value="Update step" data-processing="false">
         <br>
     </form>
     <div class="error-message-container">

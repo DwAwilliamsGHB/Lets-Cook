@@ -27,7 +27,7 @@ function create(req, res) {
 function groupStepCreate(req, res) {
     Recipe.findOne({ _id: req.params.id, 'stepGroups._id': req.params.stepGroupId }, function(err, recipe) {
         if (err || !recipe) {
-            return res.status(404).json({ message: 'Recipe or Step Group not found' });
+            return res.status(404).json({ message: 'Recipe or Step group not found' });
         }
 
         const step = {

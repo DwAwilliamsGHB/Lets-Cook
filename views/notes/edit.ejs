@@ -1,13 +1,13 @@
 <%- include('../partials/header') %>
 
 <div class="input-div">
-    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>?_method=PUT" id="add-ingredient-group-form" method="POST">
-        <input id="name-form-ingredient-group" name="name" placeholder="Edit group name" value="<%= ingredientGroup.name %>"></input>
+    <form action="/recipes/<%= recipe._id %>/notes/<%= note._id %>?_method=PUT" id="add-note-form" method="POST">
+        <textarea id="content-form-note" name="content" placeholder="Edit note"><%= note.content %></textarea>
         <input type="hidden" name="_method" value="PUT">
-        <input type="submit" value="Update Group">
+        <input type="submit" value="Update note">
     </form>
     <div class="error-message-container">
-        <span class="error-message" id="name-error-ingredient-group"></span>
+        <span class="error-message" id="content-error-note"></span>
     </div>
 </div>
 
@@ -35,30 +35,29 @@
     });
 
     function getValidationFunction(form) {
-        if (form.id === "add-ingredient-group-form") {
-            return validateIngredientGroupForm;
+        if (form.id === "add-note-form") {
+            return validateNoteForm;
         }
         return () => true;
     }
 
-    function validateIngredientGroupForm() {
-        const ingredientGroupNameField = document.getElementById("name-form-ingredient-group");
-        const ingredientGroupNameError = document.getElementById("name-error-ingredient-group");
+    function validateNoteForm() {
+        const noteContentField = document.getElementById("content-form-note");
+        const noteContentError = document.getElementById("content-error-note");
 
         // Reset error message
-        ingredientGroupNameError.textContent = "";
+        noteContentError.textContent = "";
 
         let isValid = true;
 
-        // Validate ingredientGroup name (must not be empty)
-        const ingredientGroupNameValue = ingredientGroupNameField.value.trim();
-        if (ingredientGroupNameValue === "") {
-        ingredientGroupNameError.textContent = "Please enter a group name.";
+        // Validate note content (must not be empty)
+        const noteContentValue = noteContentField.value.trim();
+        if (noteContentValue === "") {
+        noteContentError.textContent = "Please enter note content.";
         isValid = false;
         }
 
         return isValid;
     }
-
 
 </script>

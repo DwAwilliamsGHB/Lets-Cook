@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
 <form action="/cuisines/<%= cuisine._id %>?_method=PUT" method="POST" id="add-cuisine-form">
-  <input type="text" name="name" value="<%= cuisine.name %>" id="name-form-cuisine" placeholder="Enter cuisine here">
+  <input type="text" name="name" value="<%= cuisine.name %>" id="name-form-cuisine" placeholder="Edit cuisine name">
   <input type="submit" value="Update Cuisine" data-processing="false">
 </form>
 <div class="error-message-container">

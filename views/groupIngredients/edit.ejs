@@ -17,9 +17,9 @@
             <option value="Quart" <%= ingredient.measurement === 'Quart' ? 'selected' : '' %>>Quart</option>
             <option value="Gallon" <%= ingredient.measurement === 'Gallon' ? 'selected' : '' %>>Gallon</option>
         </select>
-        <input  name="content" id="content-form-group-ingredient" class="content-form-group-ingredient" placeholder="Ingredient Name" value="<%= ingredient.content %>"></input>
+        <input  name="content" id="content-form-group-ingredient" class="content-form-group-ingredient" placeholder="Edit ingredient name" value="<%= ingredient.content %>"></input>
         <input type="hidden" name="_method" value="PUT">
-        <input type="submit" value="Update Ingredient" data-processing="false">
+        <input type="submit" value="Update ingredient" data-processing="false">
       <br>
     </form>
     <div class="error-message-container">

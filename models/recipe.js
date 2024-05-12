@@ -4,7 +4,11 @@ const Schema = mongoose.Schema;
 const Ingredient = require("./ingredient");
 const Step = require("./step");
 const ingredientGroup = require("./ingredientGroup");
-const stepGroup = require('./stepGroup')
+const stepGroup = require('./stepGroup');
+const Storage = require('./storage');
+const Equipment = require('./equipment');
+const Note = require('./note');
+const Freezer = require('./freezer');
 
 const recipeSchema = new Schema({
   dishName: {
@@ -38,7 +42,11 @@ const recipeSchema = new Schema({
   ingredientGroups: [ingredientGroup.schema],
   ingredients: [Ingredient.schema],
   stepGroups: [stepGroup.schema],
-  steps: [Step.schema]
+  steps: [Step.schema],
+  storages: [Storage.schema],
+  equipments: [Equipment.schema],
+  notes: [Note.schema],
+  freezers: [Freezer.schema],
 }, {
   timestamps: true
 });

@@ -61,7 +61,51 @@
     <% } %>
   </div>
 
-  <% if (recipe.ingredients.length) { %>
+  <% if (recipe.equipments.length) { %>
+    <div class="equipment-list">
+      <h2>Equipment</h2>
+        <ul>
+          <% let total = 0 %>
+          <% recipe.equipments.forEach(function(equipment) { %>
+                <li class="equipment-li">
+                  <%= equipment.content %>
+                </li>
+                <div>
+                  <% if (user?._id.equals(equipment.user)) { %>
+                    <button class="list-edit-button">
+                      <a href="recipes/equipments/<%= equipment._id %>/edit">
+                        Edit
+                      </a>
+                    </button>
+                  <% } %>
+                </div>
+                <div>
+                  <% if (user?._id.equals(equipment.user)) { %>
+                    <form action="/recipes/<%= recipe._id %>/equipments/<%= equipment._id %>?_method=DELETE" method="POST" class="x-form">
+                      <button class="x-button" type="submit">X</button>
+                  </form>
+                  <% } %>
+                </div>
+          <% }); %>
+        </ul>
+    </div>
+  <% } %>
+
+  <% if(user) { %>
+    <div class="input-div">
+      <form id="add-equipment-form" method="POST"
+        action="/recipes/<%= recipe._id %>/equipments">
+        <input id="content-form-equipment" name="content" placeholder="Equipment item name (e.g., blender, pastry cutter)"></input>
+        <input type="submit" value="Add equipment item" data-processing="false">
+      </form>
+      <div class="error-message-container">
+        <span class="error-message" id="content-error-equipment"></span>
+      </div>
+      <div class="group-divider"></div>
+    </div>
+  <% } %>
+
+  <% if (recipe.ingredients.length || recipe.ingredientGroups.length) { %>
     <div class="instruction-list">
       <h2>Ingredients</h2>
       <div id="ingredients-adjuster">
@@ -126,8 +170,8 @@
           <option value="Quart">Quart</option>
           <option value="Gallon">Gallon</option>
         </select>
-        <input  name="content" id="content-form-ingredient" placeholder="Ingredient Name"></input>
-        <input type="submit" value="Add Ingredient" data-processing="false">
+        <input  name="content" id="content-form-ingredient" placeholder="Ingredient name (e.g., flour, salt, eggs)"></input>
+        <input type="submit" value="Add ingredient" data-processing="false">
       </form>
       <div class="error-message-container">
         <span class="error-message" id="quantity-error-ingredient"></span>
@@ -140,8 +184,8 @@
   <% if (user) { %>
     <div class="input-div">
       <form id="add-ingredient-group-form" method="POST" action="/recipes/<%= recipe._id %>/ingredientGroups">
-        <input id="name-form-ingredient-group" name="name" placeholder="Group Name"></input>
-        <input type="submit" value="Add Ingredient Group" data-processing="false">
+        <input id="name-form-ingredient-group" name="name" placeholder="Group name (e.g., Dry Ingredients, For the Topping)"></input>
+        <input type="submit" value="Add ingredient group" data-processing="false">
       </form>
       <div class="error-message-container">
         <span class="error-message" id="name-error-ingredient-group"></span>
@@ -218,8 +262,8 @@
                     <option value="Quart">Quart</option>
                     <option value="Gallon">Gallon</option>
                   </select>
-                  <input name="content" id="content-form-group-ingredient-<%= ingredientGroup._id %>" class="content-form-group-ingredient" placeholder="Ingredient Name"></input>
-                  <input type="submit" value="Add Ingredient to Group" data-processing="false">
+                  <input name="content" id="content-form-group-ingredient-<%= ingredientGroup._id %>" class="content-form-group-ingredient" placeholder="Ingredient name (e.g., flour, salt, eggs)"></input>
+                  <input type="submit" value="Add ingredient to group" data-processing="false">
                 </form>
                 <div class="error-message-container">
                   <span class="error-message" id="quantity-error-group-ingredient-<%= ingredientGroup._id %>"></span>
@@ -234,7 +278,7 @@
     </div>
   <% } %>
   
-  <% if (recipe.steps.length) { %>
+  <% if (recipe.steps.length || recipe.stepGroups.length) { %>
     <div class="instruction-list">
       <h2>Instructions</h2>
         <ol>
@@ -268,8 +312,8 @@
     <div class="input-div">
       <form id="add-step-form" method="POST"
         action="/recipes/<%= recipe._id %>/steps">
-        <textarea id="content-form-step" name="content" placeholder="Add New Step"></textarea>
-        <input type="submit" value="Add Step" data-processing="false">
+        <textarea id="content-form-step" name="content" placeholder="Add step (e.g., Mix flour and sugar together until well combined.)"></textarea>
+        <input type="submit" value="Add step" data-processing="false">
       </form>
       <div class="error-message-container">
         <span class="error-message" id="content-error-step"></span>
@@ -281,8 +325,8 @@
   <% if (user) { %>
     <div class="input-div">
       <form id="add-step-group-form" method="POST" action="/recipes/<%= recipe._id %>/stepGroups">
-        <input id="name-form-step-group" name="name" placeholder="Group Name"></input>
-        <input type="submit" value="Add Instruction Group" data-processing="false">
+        <input id="name-form-step-group" name="name" placeholder="Group name (e.g., For the Sauce, Final Assembly)"></input>
+        <input type="submit" value="Add instruction group" data-processing="false">
       </form>
       <div class="error-message-container">
         <span class="error-message" id="name-error-step-group"></span>
@@ -341,8 +385,8 @@
             <% if (user) { %>
               <div class="input-div">
                 <form class="add-group-step-form" id="add-group-step-form-<%= stepGroup._id %>" method="POST" action="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/steps">
-                  <textarea id="content-form-group-step-<%= stepGroup._id %>" name="content" class="content-form-group-step" placeholder="Add New Step"></textarea>
-                  <input type="submit" value="Add Step to Group" data-processing="false">
+                  <textarea id="content-form-group-step-<%= stepGroup._id %>" name="content" class="content-form-group-step" placeholder="Add step (e.g., Mix flour and sugar together until well combined.)"></textarea>
+                  <input type="submit" value="Add step to group" data-processing="false">
                 </form>
                 <div class="error-message-container">
                   <span class="error-message" id="content-error-group-step-<%= stepGroup._id %>"></span>
@@ -353,6 +397,138 @@
           </div>
         <% }); %>
       </div>
+    </div>
+  <% } %>
+
+  <% if (recipe.notes.length) { %>
+    <div class="note-list">
+      <h2>Notes</h2>
+        <ul>
+          <% let total = 0 %>
+          <% recipe.notes.forEach(function(note) { %>
+                <li class="note-li">
+                  <%= note.content %>
+                </li>
+                <div>
+                  <% if (user?._id.equals(note.user)) { %>
+                    <button class="list-edit-button">
+                      <a href="recipes/notes/<%= note._id %>/edit">
+                        Edit
+                      </a>
+                    </button>
+                  <% } %>
+                </div>
+                <div>
+                  <% if (user?._id.equals(note.user)) { %>
+                    <form action="/recipes/<%= recipe._id %>/notes/<%= note._id %>?_method=DELETE" method="POST" class="x-form">
+                      <button class="x-button" type="submit">X</button>
+                  </form>
+                  <% } %>
+                </div>
+          <% }); %>
+        </ul>
+    </div>
+  <% } %>
+
+  <% if(user) { %>
+    <div class="input-div">
+      <form id="add-note-form" method="POST"
+        action="/recipes/<%= recipe._id %>/notes">
+        <textarea id="content-form-note" name="content" placeholder="Add note (Any additional tips or variations for this recipe)"></textarea>
+        <input type="submit" value="Add note" data-processing="false">
+      </form>
+      <div class="error-message-container">
+        <span class="error-message" id="content-error-note"></span>
+      </div>
+      <div class="group-divider"></div>
+    </div>
+  <% } %>
+
+  <% if (recipe.storages.length) { %>
+    <div class="storage-list">
+      <h2>Storage</h2>
+        <ul>
+          <% let total = 0 %>
+          <% recipe.storages.forEach(function(storage) { %>
+                <li class="storage-li">
+                  <%= storage.content %>
+                </li>
+                <div>
+                  <% if (user?._id.equals(storage.user)) { %>
+                    <button class="list-edit-button">
+                      <a href="recipes/storages/<%= storage._id %>/edit">
+                        Edit
+                      </a>
+                    </button>
+                  <% } %>
+                </div>
+                <div>
+                  <% if (user?._id.equals(storage.user)) { %>
+                    <form action="/recipes/<%= recipe._id %>/storages/<%= storage._id %>?_method=DELETE" method="POST" class="x-form">
+                      <button class="x-button" type="submit">X</button>
+                  </form>
+                  <% } %>
+                </div>
+          <% }); %>
+        </ul>
+    </div>
+  <% } %>
+
+  <% if(user) { %>
+    <div class="input-div">
+      <form id="add-storage-form" method="POST"
+        action="/recipes/<%= recipe._id %>/storages">
+        <textarea id="content-form-storage" name="content" placeholder="Add storage info (e.g., Store in an airtight container at room temperature for up to 3 days.)"></textarea>
+        <input type="submit" value="Add storage info" data-processing="false">
+      </form>
+      <div class="error-message-container">
+        <span class="error-message" id="content-error-storage"></span>
+      </div>
+      <div class="group-divider"></div>
+    </div>
+  <% } %>
+
+  <% if (recipe.freezers.length) { %>
+    <div class="freezer-list">
+      <h2>Freezing</h2>
+        <ul>
+          <% let total = 0 %>
+          <% recipe.freezers.forEach(function(freezer) { %>
+                <li class="freezer-li">
+                  <%= freezer.content %>
+                </li>
+                <div>
+                  <% if (user?._id.equals(freezer.user)) { %>
+                    <button class="list-edit-button">
+                      <a href="recipes/freezers/<%= freezer._id %>/edit">
+                        Edit
+                      </a>
+                    </button>
+                  <% } %>
+                </div>
+                <div>
+                  <% if (user?._id.equals(freezer.user)) { %>
+                    <form action="/recipes/<%= recipe._id %>/freezers/<%= freezer._id %>?_method=DELETE" method="POST" class="x-form">
+                      <button class="x-button" type="submit">X</button>
+                  </form>
+                  <% } %>
+                </div>
+          <% }); %>
+        </ul>
+    </div>
+  <% } %>
+
+  <% if(user) { %>
+    <div class="input-div">
+      <form id="add-freezer-form" method="POST"
+        action="/recipes/<%= recipe._id %>/freezers">
+        <textarea id="content-form-freezer" name="content" placeholder="Add freezing info (e.g., Freeze in a sealed container for up to 1 month. Thaw overnight in the refrigerator before serving.)"></textarea>
+        <input type="submit" value="Add freezing info" data-processing="false">
+      </form>
+      <div class="error-message-container">
+        <span class="error-message" id="content-error-freezer"></span>
+      </div>
+      <div class="group-divider"></div>
     </div>
   <% } %>
 
@@ -508,6 +684,14 @@
       return validateStepGroupForm;
     } else if (form.id === "add-step-form") {
       return validateStepForm;
+    } else if (form.id === "add-storage-form") {
+      return validateStorageForm;
+    } else if (form.id === "add-equipment-form") {
+      return validateEquipmentForm;
+    } else if (form.id === "add-note-form") {
+      return validateNoteForm;
+    } else if (form.id === "add-freezer-form") {
+      return validateFreezerForm;
     }
 
     // Return a default function if the form context is not recognized
@@ -646,6 +830,82 @@
 
     return isValid;
   }
+
+  function validateStorageForm() {
+    const storageContentField = document.getElementById("content-form-storage");
+    const storageContentError = document.getElementById("content-error-storage");
+
+    // Reset error message
+    storageContentError.textContent = "";
+
+    let isValid = true;
+
+    // Validate storage info content (must not be empty)
+    const storageContentValue = storageContentField.value.trim();
+    if (storageContentValue === "") {
+      storageContentError.textContent = "Please enter storage info content.";
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  function validateEquipmentForm() {
+        const equipmentContentField = document.getElementById("content-form-equipment");
+        const equipmentContentError = document.getElementById("content-error-equipment");
+
+        // Reset error message
+        equipmentContentError.textContent = "";
+
+        let isValid = true;
+
+        // Validate equipment content (must not be empty)
+        const equipmentContentValue = equipmentContentField.value.trim();
+        if (equipmentContentValue === "") {
+        equipmentContentError.textContent = "Please enter an equipment item name.";
+        isValid = false;
+        }
+
+        return isValid;
+    }
+
+  function validateNoteForm() {
+        const noteContentField = document.getElementById("content-form-note");
+        const noteContentError = document.getElementById("content-error-note");
+
+        // Reset error message
+        noteContentError.textContent = "";
+
+        let isValid = true;
+
+        // Validate note content (must not be empty)
+        const noteContentValue = noteContentField.value.trim();
+        if (noteContentValue === "") {
+        noteContentError.textContent = "Please enter note content.";
+        isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function validateFreezerForm() {
+        const freezerContentField = document.getElementById("content-form-freezer");
+        const freezerContentError = document.getElementById("content-error-freezer");
+
+        // Reset error message
+        freezerContentError.textContent = "";
+
+        let isValid = true;
+
+        // Validate freezing info content (must not be empty)
+        const freezerContentValue = freezerContentField.value.trim();
+        if (freezerContentValue === "") {
+        freezerContentError.textContent = "Please enter freezing info content.";
+        isValid = false;
+        }
+
+        return isValid;
+    }
     
   function replaceEditButtons() {
     var originalButton = document.getElementById("editOriginalButton");

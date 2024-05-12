@@ -43,10 +43,10 @@ function edit(req, res) {
         const stepGroup = recipe.stepGroups.id(req.params.stepGroupId);
 
         if (!stepGroup) {
-            return res.status(404).json({ message: 'Step Group not found' });
+            return res.status(404).json({ message: 'Step group not found' });
         }
 
-        res.render('stepGroups/edit', { title: 'Edit Group Name', recipe, stepGroup });
+        res.render('stepGroups/edit', { title: 'Edit Group', recipe, stepGroup });
     });
 }
 
