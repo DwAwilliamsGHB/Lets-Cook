@@ -115,6 +115,7 @@
           <input type="number" id="servings-input" value="<%= recipe.serving %>" data-original-servings="<%= recipe.serving %>">
           <button id="increase-servings" onclick="adjustServings(1)">+</button>
         </div>
+        <button id="reset-servings" onclick="resetServingsToOriginal()">Reset</button>
         <div>Display</div>
         <select id="display-mode" onchange="updateIngredientQuantities()">
           <option value="original">Original</option>
@@ -570,6 +571,21 @@
     });
   }
 
+  function saveDisplayMode() {
+    const displayModeSelect = document.getElementById("display-mode");
+    localStorage.setItem("displayMode", displayModeSelect.value);
+  }
+
+  // Function to set the display mode from local storage
+  function setDisplayMode() {
+      const savedDisplayMode = localStorage.getItem("displayMode");
+      const displayModeSelect = document.getElementById("display-mode");
+      if (savedDisplayMode) {
+          displayModeSelect.value = savedDisplayMode;
+          updateIngredientQuantities(); // Update quantities based on the saved display mode
+      }
+  }
+
   function parseQuantity(input) {
     if (!input || isNaN(input)) {
       if (input.includes(' ')) { // Handle mixed numbers
@@ -634,11 +650,18 @@
     let newServings = parseInt(servingsInput.value) + change;
     if (newServings < 1) newServings = 1; // Prevent servings from going below 1
     servingsInput.value = newServings;
+    localStorage.setItem('currentServings', newServings);
     updateIngredientQuantities(); // Update quantities with the new servings
   }
 
   function initializeServingsInput() {
     const servingsInput = document.getElementById("servings-input");
+    const savedServings = localStorage.getItem('currentServings'); // Retrieve saved servings from local storage
+    
+    if (savedServings) {
+        servingsInput.value = savedServings; // Set the value of the input to the saved servings
+        updateIngredientQuantities(); // Update the ingredient quantities based on the saved servings
+    }
 
     servingsInput.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
@@ -646,6 +669,14 @@
             adjustServings(0);  // Adjust servings without change, essentially updating the display
         }
     });
+  }
+
+  function resetServingsToOriginal() {
+    const servingsInput = document.getElementById("servings-input");
+    const originalServings = servingsInput.getAttribute('data-original-servings');
+    servingsInput.value = originalServings; // Reset to original servings
+    updateIngredientQuantities(); // Recalculate the ingredient quantities based on the new serving size
+    localStorage.setItem('currentServings', originalServings); // Update local storage to the original servings
   }
 
   const formElements = document.querySelectorAll("form");
@@ -1019,6 +1050,7 @@
   window.addEventListener('load', () => setScrollPosition(currentRecipeId));
   
   window.addEventListener('load', function() {
+    setDisplayMode();
     initializeEditState();
     initializeServingsInput();
   });
@@ -1026,6 +1058,11 @@
   document.addEventListener("DOMContentLoaded", function() {
     updateIngredientQuantities(); // Initial call to set quantities
   });
+
+  document.getElementById("display-mode").addEventListener("change", function() {
+    updateIngredientQuantities();
+    saveDisplayMode(); // Save the display mode whenever it changes
+});
 
 </script>
 
