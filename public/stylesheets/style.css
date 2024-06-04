@@ -146,10 +146,24 @@ input+input {
 table {
   background-color: #fafafa;
   padding: 15px;
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
 }
 
-table thead th {
-  padding: 5px;
+thead {
+  width: 100%;
+}
+
+thead tr {
+  display: grid;
+  grid-template-columns: 6fr 2fr 2fr 1fr 3fr 1.5fr;
+  width: 100%;
+}
+
+thead th {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
 table td {
@@ -163,6 +177,64 @@ table td {
 
 tbody {
   list-style-type: decimal;
+  width: 100%;
+}
+
+tbody tr {
+  display: grid;
+  grid-template-columns: 6fr 2fr 2fr 1fr 3fr 1.5fr;
+  width: 100%;
+}
+
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+table th, table td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.filter-container {
+  display: grid;
+  grid-template-columns: 6fr 2fr 2fr 1fr 1.5fr 1.5fr 1.5fr;
+  width: 100%;
+}
+
+.filter-item {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#toggle-filters, #clear-filters {
+  padding: 10px 20px;
+  background-color: #444444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+#clear-filters {
+  display: block;
+  margin: 0 auto 10px auto; /* Center the button and add margin to the bottom */
+}
+
+#search-name {
+  border-radius: 5px 0px 0px 5px;
+}
+
+#search-cuisine, #search-type, #search-servings, #search-time-min, #search-time-max {
+  border-radius: 0;
+}
+
+#search-made {
+  border-radius: 0px 5px 5px 0px;
 }
 
 #list td:nth-child(2), #list td:nth-child(3){

@@ -18,7 +18,8 @@ async function index(req, res) {
   try {
     // Fetch all recipes and populate the 'cuisine' field with cuisine data
     const recipes = await Recipe.find().populate('cuisine').exec();
-    res.render('recipes/index', { recipes, title: 'All Recipes' }); // Make sure to pass the 'title' option here
+    const cuisines = await Cuisine.find(); // Fetch all cuisines
+    res.render('recipes/index', { recipes, cuisines, title: 'All Recipes' }); // Make sure to pass the 'title' option here
   } catch (error) {
     // Handle any potential errors
     console.error(error);

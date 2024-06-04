@@ -6,6 +6,7 @@ var logger = require('morgan');
 const session = require('express-session');
 const passport = require('passport');
 const methodOverride = require('method-override');
+const Cuisine = require("./models/cuisine");
 
 require('dotenv').config();
 require('./config/database');
@@ -48,6 +49,17 @@ app.use(function(req, res, next) {
   next()
 })
 
+function loadCuisines(req, res, next) {
+  Cuisine.find({}, (err, cuisines) => {
+    if (err) {
+      return next(err);
+    }
+    res.locals.cuisines = cuisines; // Make cuisines available as a local variable in all views
+    next();
+  });
+}
+
+app.use(loadCuisines);
 app.use('/', indexRouter);
 app.use('/recipes', recipesRouter);
 app.use('/', ingredientGroupsRouter);

@@ -1,5 +1,37 @@
 <%- include('../partials/header') %>
 
+<button id="toggle-filters">Show Filters</button>
+<div id="filter-container" style="display: none;">
+  <button id="clear-filters">Clear</button>
+  <form id="filter-form">
+    <div class="filter-container">
+      <input type="text" id="search-name" class="filter-item" placeholder="Search by name" aria-label="Search by name">
+      <select id="search-cuisine" class="filter-item" aria-label="Filter by cuisine">
+        <option value="">All Cuisines</option>
+        <% cuisines.forEach(function(cuisine) { %>
+          <option value="<%= cuisine.name %>"><%= cuisine.name %></option>
+        <% }); %>
+      </select>
+      <select id="search-type" class="filter-item" aria-label="Filter by type of dish">
+        <option value="">All Types</option>
+        <option value="Appetizer">Appetizer</option>
+        <option value="Main Dish">Main Dish</option>
+        <option value="Side Dish">Side Dish</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Full Course">Full Course</option>
+      </select>
+      <input type="number" id="search-servings" class="filter-item" placeholder="Servings" aria-label="Filter by servings">
+      <input type="number" id="search-time-min" class="filter-item" placeholder="Min Time (mins)" aria-label="Filter by minimum total time">
+      <input type="number" id="search-time-max" class="filter-item" placeholder="Max Time (mins)" aria-label="Filter by maximum total time">
+      <select id="search-made" class="filter-item" aria-label="Filter by made before">
+        <option value="">Any</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+  </form>
+</div>
+
 <table id="list">
   <thead>
     <tr>
@@ -13,16 +45,122 @@
   </thead>
   <tbody>
     <% recipes.forEach(function(g) { %>
-      <tr>
-        <td><a href="/recipes/<%= g._id %>" class="recipe-name"><%= g.dishName %></a></td>
-        <td><%= g.cuisine ? g.cuisine.name : '' %></td> <!-- Add the conditional check here -->        
-        <td><%= g.dishType %></td>
-        <td><%= g.serving %></td>
-        <td><%= g.totalTime %></td>
-        <td><%= g.haveMade ? 'Yes' : 'No' %></td>
-      </tr>
-      <% }); %>
-    </tbody>
+    <tr>
+      <td><a href="/recipes/<%= g._id %>" class="recipe-name"><%= g.dishName %></a></td>
+      <td><%= g.cuisine ? g.cuisine.name : '' %></td>
+      <td><%= g.dishType %></td>
+      <td><%= g.serving %></td>
+      <td><%= g.totalTime %></td>
+      <td><%= g.haveMade ? 'Yes' : 'No' %></td>
+    </tr>
+    <% }); %>
+  </tbody>
 </table>
-  
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const filterContainer = document.getElementById('filter-container');
+    const toggleButton = document.getElementById('toggle-filters');
+    const clearButton = document.getElementById('clear-filters');
+    const form = document.getElementById('filter-form');
+
+    // Restore filter visibility state from local storage
+    const filterState = localStorage.getItem('filterState');
+    if (filterState === 'visible') {
+      filterContainer.style.display = 'block';
+      toggleButton.textContent = 'Hide Filters';
+    } else {
+      filterContainer.style.display = 'none';
+      toggleButton.textContent = 'Show Filters';
+    }
+
+    toggleButton.addEventListener('click', function() {
+      if (filterContainer.style.display === 'none') {
+        filterContainer.style.display = 'block';
+        toggleButton.textContent = 'Hide Filters';
+        localStorage.setItem('filterState', 'visible'); // Save state as visible
+      } else {
+        filterContainer.style.display = 'none';
+        toggleButton.textContent = 'Show Filters';
+        localStorage.setItem('filterState', 'hidden'); // Save state as hidden
+      }
+    });
+
+    form.addEventListener('input', debounce(filterRecipes, 300));
+    clearButton.addEventListener('click', clearFilters);
+
+    function filterRecipes() {
+      const nameValue = document.getElementById('search-name').value.toLowerCase();
+      const cuisineValue = document.getElementById('search-cuisine').value.toLowerCase();
+      const typeValue = document.getElementById('search-type').value.toLowerCase();
+      const servingsValue = document.getElementById('search-servings').value;
+      const minTimeValue = document.getElementById('search-time-min').value;
+      const maxTimeValue = document.getElementById('search-time-max').value;
+      const madeValue = document.getElementById('search-made').value.toLowerCase();
+
+      const rows = document.querySelectorAll('#list tbody tr');
+      rows.forEach(row => {
+        const nameText = row.cells[0].textContent.toLowerCase();
+        const cuisineText = row.cells[1].textContent.toLowerCase();
+        const typeText = row.cells[2].textContent.toLowerCase();
+        const servingsText = row.cells[3].textContent;
+        const timeText = row.cells[4].textContent;
+        const madeText = row.cells[5].textContent.toLowerCase();
+
+        const nameMatch = nameText.includes(nameValue);
+        const cuisineMatch = !cuisineValue || cuisineText === cuisineValue;
+        const typeMatch = !typeValue || typeText === typeValue;
+        const servingsMatch = !servingsValue || servingsText === servingsValue;
+        const minTimeMatch = !minTimeValue || convertToMinutes(timeText) >= parseInt(minTimeValue);
+        const maxTimeMatch = !maxTimeValue || convertToMinutes(timeText) <= parseInt(maxTimeValue);
+        const madeMatch = !madeValue || madeText === madeValue;
+
+        if (nameMatch && cuisineMatch && typeMatch && servingsMatch && minTimeMatch && maxTimeMatch && madeMatch) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function convertToMinutes(timeText) {
+      const timeParts = timeText.split(' ');
+      let totalMinutes = 0;
+
+      for (let i = 0; i < timeParts.length; i += 2) {
+        const value = parseInt(timeParts[i]);
+        const unit = timeParts[i + 1];
+
+        if (unit.includes('hour')) {
+          totalMinutes += value * 60;
+        } else if (unit.includes('minute')) {
+          totalMinutes += value;
+        }
+      }
+
+      return totalMinutes;
+    }
+
+    function clearFilters() {
+      document.getElementById('search-name').value = '';
+      document.getElementById('search-cuisine').value = '';
+      document.getElementById('search-type').value = '';
+      document.getElementById('search-servings').value = '';
+      document.getElementById('search-time-min').value = '';
+      document.getElementById('search-time-max').value = '';
+      document.getElementById('search-made').value = '';
+      filterRecipes();
+    }
+
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+      };
+    }
+  });
+</script>
+
 <%- include('../partials/footer') %>
