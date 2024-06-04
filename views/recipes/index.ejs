@@ -57,12 +57,21 @@
   </tbody>
 </table>
 
+<div class="pagination">
+  <button id="prev-page" class="pagination-button">Previous</button>
+  <span id="page-info"></span>
+  <button id="next-page" class="pagination-button">Next</button>
+</div>
+
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     const filterContainer = document.getElementById('filter-container');
     const toggleButton = document.getElementById('toggle-filters');
     const clearButton = document.getElementById('clear-filters');
     const form = document.getElementById('filter-form');
+    const recipes = Array.from(document.querySelectorAll('#list tbody tr'));
+    const itemsPerPage = 14;
+    let currentPage = 1;
 
     // Restore filter visibility state from local storage
     const filterState = localStorage.getItem('filterState');
@@ -89,6 +98,9 @@
     form.addEventListener('input', debounce(filterRecipes, 300));
     clearButton.addEventListener('click', clearFilters);
 
+    document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
+    document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
+
     function filterRecipes() {
       const nameValue = document.getElementById('search-name').value.toLowerCase();
       const cuisineValue = document.getElementById('search-cuisine').value.toLowerCase();
@@ -98,8 +110,7 @@
       const maxTimeValue = document.getElementById('search-time-max').value;
       const madeValue = document.getElementById('search-made').value.toLowerCase();
 
-      const rows = document.querySelectorAll('#list tbody tr');
-      rows.forEach(row => {
+      const rows = recipes.filter(row => {
         const nameText = row.cells[0].textContent.toLowerCase();
         const cuisineText = row.cells[1].textContent.toLowerCase();
         const typeText = row.cells[2].textContent.toLowerCase();
@@ -115,12 +126,15 @@
         const maxTimeMatch = !maxTimeValue || convertToMinutes(timeText) <= parseInt(maxTimeValue);
         const madeMatch = !madeValue || madeText === madeValue;
 
-        if (nameMatch && cuisineMatch && typeMatch && servingsMatch && minTimeMatch && maxTimeMatch && madeMatch) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
+        return nameMatch && cuisineMatch && typeMatch && servingsMatch && minTimeMatch && maxTimeMatch && madeMatch;
       });
+
+      const totalPages = Math.ceil(rows.length / itemsPerPage) || 1;
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      displayPage(rows, totalPages);
     }
 
     function convertToMinutes(timeText) {
@@ -151,6 +165,28 @@
       document.getElementById('search-made').value = '';
       filterRecipes();
     }
+
+    function displayPage(filteredRecipes, totalPages) {
+      const tbody = document.querySelector('#list tbody');
+      tbody.innerHTML = '';
+
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageRecipes = filteredRecipes.slice(start, end);
+
+      pageRecipes.forEach(row => tbody.appendChild(row));
+
+      document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById('prev-page').disabled = currentPage === 1 || filteredRecipes.length === 0;
+      document.getElementById('next-page').disabled = currentPage === totalPages || filteredRecipes.length === 0;
+    }
+
+    function changePage(page) {
+      currentPage = Math.max(1, page);
+      filterRecipes();
+    }
+
+    filterRecipes();
 
     function debounce(func, wait) {
       let timeout;

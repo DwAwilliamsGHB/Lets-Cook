@@ -145,10 +145,10 @@ input+input {
 
 table {
   background-color: #fafafa;
-  padding: 15px;
+  padding-bottom: 10px;
   width: 100%;
   margin-bottom: 20px;
-  border-collapse: collapse;
+  border-radius: 5px;
 }
 
 thead {
@@ -235,6 +235,32 @@ table th, table td {
 
 #search-made {
   border-radius: 0px 5px 5px 0px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.pagination-button {
+  padding: 10px 20px;
+  background-color: #444444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.pagination-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#page-info {
+  font-size: 16px;
 }
 
 #list td:nth-child(2), #list td:nth-child(3){
