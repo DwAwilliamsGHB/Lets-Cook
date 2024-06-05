@@ -30,27 +30,49 @@ function edit(req, res) {
         const storage = recipe.storages.id(req.params.storageId);
         if (!storage) return res.status(404).json({ message: 'Storage info not found' });
 
+        if (!storage.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
+        }
+
         res.render('storages/edit', { title: 'Edit Storage Info', recipe, storage });
     });
 }
 
 function update(req, res) {
-    Recipe.findOneAndUpdate(
-        { 'storages._id': req.params.storageId },
-        { $set: { 'storages.$.content': req.body.content } },
-        { new: true },
-        function(err, recipe) {
-            if (err || !recipe) return res.status(404).json({ message: 'Storage info not found' });
-            res.redirect(`/recipes/${recipe._id}`);
+    Recipe.findOne({ 'storages._id': req.params.storageId }, function(err, recipe) {
+        if (err || !recipe) return res.status(404).json({ message: 'Recipe not found' });
+
+        const storage = recipe.storages.id(req.params.storageId);
+        if (!storage) return res.status(404).json({ message: 'Storage info not found' });
+
+        if (!storage.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
         }
-    );
+
+        storage.content = req.body.content;
+
+        recipe.save(function(err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Failed to update storage info' });
+            }
+            res.redirect(`/recipes/${recipe._id}`);
+        });
+    });
 }
 
 function deleteStorage(req, res) {
     Recipe.findOne({ 'storages._id': req.params.storageId }, function(err, recipe) {
         if (err || !recipe) return res.redirect('/recipes');
 
-        recipe.storages.id(req.params.storageId).remove();
+        const storage = recipe.storages.id(req.params.storageId);
+        if (!storage) return res.status(404).json({ message: 'Storage info not found' });
+
+        if (!storage.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
+        }
+
+        storage.remove();
         recipe.save(function(err) {
             if (err) console.error(err);
             res.redirect(`/recipes/${recipe._id}`);

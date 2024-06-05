@@ -31,7 +31,7 @@ function show(req, res) {
   Recipe.findById(req.params.id)
     .populate("cuisine")
     .populate("ingredientGroups")
-    .populate("stepGroups") 
+    .populate("stepGroups")
     .exec(async function (err, recipe) {
       if (err || !recipe) {
         return res.status(404).json({ message: 'Recipe not found' });
@@ -64,7 +64,8 @@ function create(req, res) {
       // Handle error
     }
     const recipe = new Recipe(req.body);
-    recipe.cuisine = cuisine; 
+    recipe.cuisine = cuisine;
+    recipe.user = req.user._id;  // Set the user to the currently logged in user
     recipe.save(function (err) {
       if (err) {
         // Handle error
@@ -79,10 +80,14 @@ function edit(req, res) {
   Recipe.findById(req.params.id)
     .populate("cuisine")
     .populate("ingredientGroups")
-    .populate("stepGroups") 
+    .populate("stepGroups")
     .exec(async function (err, recipe) {
       if (err || !recipe) {
         return res.status(404).json({ message: 'Recipe not found' });
+      }
+
+      if (!recipe.user.equals(req.user._id)) {
+        return res.status(403).send('Forbidden');
       }
 
       const ingredientGroups = await ingredientGroup.find({ recipe: recipe._id }).exec();
@@ -108,7 +113,11 @@ function update(req, res) {
     if (err || !recipe) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
-  
+
+    if (!recipe.user.equals(req.user._id)) {
+      return res.status(403).send('Forbidden');
+    }
+
     recipe.dishName = req.body.dishName;
     recipe.dishType = req.body.dishType;
     recipe.serving = req.body.serving;
@@ -116,12 +125,12 @@ function update(req, res) {
     recipe.cookTime = req.body.cookTime;
     recipe.cuisine = req.body.cuisine;
     recipe.haveMade = !!req.body.haveMade;
-  
+
     recipe.save(function (err) {
       if (err) {
         // Handle error
       }
-  
+
       res.redirect(`/recipes/${recipe._id}`);
     });
   });
@@ -134,6 +143,11 @@ function confirmDelete(req, res) {
       if (err || !recipe) {
         return res.status(404).json({ message: 'Recipe not found' });
       }
+
+      if (!recipe.user.equals(req.user._id)) {
+        return res.status(403).send('Forbidden');
+      }
+
       res.render('recipes/confirmDelete', {
         title: 'Confirm Delete',
         recipe

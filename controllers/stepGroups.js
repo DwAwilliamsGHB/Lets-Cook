@@ -46,32 +46,45 @@ function edit(req, res) {
             return res.status(404).json({ message: 'Step group not found' });
         }
 
+        if (!stepGroup.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
+        }
+
         res.render('stepGroups/edit', { title: 'Edit Group', recipe, stepGroup });
     });
 }
 
 function update(req, res) {
-    Recipe.findOneAndUpdate(
-        { 'stepGroups._id': req.params.stepGroupId },
-        {
-            $set: {
-                'stepGroups.$.name': req.body.name,
-            }
-        },
-        { new: true },
-        (err, recipe) => {
+    Recipe.findOne({ 'stepGroups._id': req.params.stepGroupId }, (err, recipe) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Failed to find the step group' });
+        }
+
+        if (!recipe) {
+            return res.status(404).json({ message: 'Recipe not found' });
+        }
+
+        const stepGroup = recipe.stepGroups.id(req.params.stepGroupId);
+        
+        if (!stepGroup) {
+            return res.status(404).json({ message: 'Step group not found' });
+        }
+
+        if (!stepGroup.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
+        }
+
+        stepGroup.name = req.body.name;
+
+        recipe.save((err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ error: 'Failed to update the step group' });
             }
-
-            if (!recipe) {
-                return res.status(404).json({ message: 'Recipe not found' });
-            }
-
             res.redirect(`/recipes/${recipe._id}`);
-        }
-    );
+        });
+    });
 }
 
 async function stepGroupDelete(req, res, next) {
@@ -80,6 +93,12 @@ async function stepGroupDelete(req, res, next) {
 
         if (!recipe) {
             return res.redirect('/recipes');
+        }
+
+        const stepGroup = recipe.stepGroups.id(req.params.stepGroupId);
+
+        if (!stepGroup.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
         }
 
         recipe.stepGroups.remove(req.params.stepGroupId);

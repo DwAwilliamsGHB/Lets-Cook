@@ -14,8 +14,7 @@
       <a href="/" <%- title === 'Lets Cook' ? 'class="active"' : '' %>>Lets Cook</a>
       <a href="/recipes" <%- title === 'All Recipes' ? 'class="active"' : '' %>>Recipes</a>
       <% if (user) { %>
-        <a href="/cuisines/index"	<%- title === 'Add Cuisine' ? 'class="active"' : '' %>>
-        Cuisines</a>
+        <a href="/cuisines/index"	<%- title === 'Add Cuisine' ? 'class="active"' : '' %>>Cuisines</a>
         <a href="/recipes/new" <%- title === 'Add Recipe' ? 'class="active"' : '' %>>Add Recipe</a>
         <a href="/logout">Sign Out</a>
       <% } else { %>

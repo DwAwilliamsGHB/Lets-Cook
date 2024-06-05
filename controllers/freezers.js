@@ -30,27 +30,49 @@ function edit(req, res) {
         const freezer = recipe.freezers.id(req.params.freezerId);
         if (!freezer) return res.status(404).json({ message: 'Freezing info not found' });
 
+        if (!freezer.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
+        }
+
         res.render('freezers/edit', { title: 'Edit Freezing Info', recipe, freezer });
     });
 }
 
 function update(req, res) {
-    Recipe.findOneAndUpdate(
-        { 'freezers._id': req.params.freezerId },
-        { $set: { 'freezers.$.content': req.body.content } },
-        { new: true },
-        function(err, recipe) {
-            if (err || !recipe) return res.status(404).json({ message: 'Freezing info not found' });
-            res.redirect(`/recipes/${recipe._id}`);
+    Recipe.findOne({ 'freezers._id': req.params.freezerId }, function(err, recipe) {
+        if (err || !recipe) return res.status(404).json({ message: 'Recipe not found' });
+
+        const freezer = recipe.freezers.id(req.params.freezerId);
+        if (!freezer) return res.status(404).json({ message: 'Freezing info not found' });
+
+        if (!freezer.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
         }
-    );
+
+        freezer.content = req.body.content;
+
+        recipe.save(function(err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Failed to update freezing info' });
+            }
+            res.redirect(`/recipes/${recipe._id}`);
+        });
+    });
 }
 
 function deleteFreezer(req, res) {
     Recipe.findOne({ 'freezers._id': req.params.freezerId }, function(err, recipe) {
         if (err || !recipe) return res.redirect('/recipes');
 
-        recipe.freezers.id(req.params.freezerId).remove();
+        const freezer = recipe.freezers.id(req.params.freezerId);
+        if (!freezer) return res.status(404).json({ message: 'Freezing info not found' });
+
+        if (!freezer.user.equals(req.user._id)) {
+            return res.status(403).send('Forbidden');
+        }
+
+        freezer.remove();
         recipe.save(function(err) {
             if (err) console.error(err);
             res.redirect(`/recipes/${recipe._id}`);

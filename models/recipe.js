@@ -47,6 +47,11 @@ const recipeSchema = new Schema({
   equipments: [Equipment.schema],
   notes: [Note.schema],
   freezers: [Freezer.schema],
+  user: {  // Reference to the user who created the recipe
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
 }, {
   timestamps: true
 });

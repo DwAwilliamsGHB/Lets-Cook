@@ -21,7 +21,7 @@
       <div>Have made before: </div>
       <div><%= recipe.haveMade ? 'Yes' : 'No' %></div>
     </div>
-    <% if(user) { %>
+    <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
       <div id="ed-de-div">
         <div class="edit-button">
           <button id="editOriginalButton" onclick="replaceAndToggleEditButtons()" id="toggleEditButtons">
@@ -91,7 +91,7 @@
     </div>
   <% } %>
 
-  <% if(user) { %>
+  <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
     <div class="input-div">
       <form id="add-equipment-form" method="POST"
         action="/recipes/<%= recipe._id %>/equipments">
@@ -152,7 +152,7 @@
     </div>
   <% } %>
   
-  <% if(user) { %>
+  <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
     <div class="input-div">
       <form id="add-ingredient-form" method="POST"
         action="/recipes/<%= recipe._id %>/ingredients">
@@ -182,7 +182,7 @@
     </div>
   <% } %>
 
-  <% if (user) { %>
+  <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
     <div class="input-div">
       <form id="add-ingredient-group-form" method="POST" action="/recipes/<%= recipe._id %>/ingredientGroups">
         <input id="name-form-ingredient-group" name="name" placeholder="Group name (e.g., Dry Ingredients, For the Topping)"></input>
@@ -244,7 +244,7 @@
                 </div>
               <% }); %>
             </ul>
-            <% if (user) { %>
+            <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
               <div class="input-div">
                 <form class="add-group-ingredient-form" id="add-group-ingredient-form-<%= ingredientGroup._id %>" method="POST"
                   action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients" onsubmit="return validateGroupIngredientForm('<%= ingredientGroup._id %>')">
@@ -309,7 +309,7 @@
     </div>
   <% } %>
   
-  <% if(user) { %>
+  <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
     <div class="input-div">
       <form id="add-step-form" method="POST"
         action="/recipes/<%= recipe._id %>/steps">
@@ -323,7 +323,7 @@
     </div>
   <% } %>
 
-  <% if (user) { %>
+  <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
     <div class="input-div">
       <form id="add-step-group-form" method="POST" action="/recipes/<%= recipe._id %>/stepGroups">
         <input id="name-form-step-group" name="name" placeholder="Group name (e.g., For the Sauce, Final Assembly)"></input>
@@ -383,7 +383,7 @@
                 </div>
               <% }); %>
             </ol>
-            <% if (user) { %>
+            <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
               <div class="input-div">
                 <form class="add-group-step-form" id="add-group-step-form-<%= stepGroup._id %>" method="POST" action="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/steps">
                   <textarea id="content-form-group-step-<%= stepGroup._id %>" name="content" class="content-form-group-step" placeholder="Add step (e.g., Mix flour and sugar together until well combined.)"></textarea>
@@ -431,7 +431,7 @@
     </div>
   <% } %>
 
-  <% if(user) { %>
+  <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
     <div class="input-div">
       <form id="add-note-form" method="POST"
         action="/recipes/<%= recipe._id %>/notes">
@@ -475,7 +475,7 @@
     </div>
   <% } %>
 
-  <% if(user) { %>
+  <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
     <div class="input-div">
       <form id="add-storage-form" method="POST"
         action="/recipes/<%= recipe._id %>/storages">
@@ -519,7 +519,7 @@
     </div>
   <% } %>
 
-  <% if(user) { %>
+  <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
     <div class="input-div">
       <form id="add-freezer-form" method="POST"
         action="/recipes/<%= recipe._id %>/freezers">
