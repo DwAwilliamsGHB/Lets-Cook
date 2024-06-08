@@ -1,0 +1,20 @@
+<%- include('../partials/header') %>
+
+<div class="account-container">
+    <div class="profile-info">
+        <img src="<%= user.avatar %>" alt="<%= user.name %>'s Avatar">
+        <div>
+            <h3><%= user.name %></h3>
+            <p>Email: <%= user.email %></p>
+            <p>Username: <%= user.username %></p>
+        </div>
+    </div>
+    <div class="username-edit-button">
+        <a id="username-edit" href="/accounts/editUsername">Edit Username</a>
+    </div>
+    <div class="signout-button">
+        <a href="/logout">Sign Out</a>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

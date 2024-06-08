@@ -4,23 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="/stylesheets/style.css"  />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
     <title>Lets Cook!</title>
   </head>
   <body>
     <nav>
-      <img src="/images/spatula.png">
-      <a href="/" <%- title === 'Lets Cook' ? 'class="active"' : '' %>>Lets Cook</a>
-      <a href="/recipes" <%- title === 'All Recipes' ? 'class="active"' : '' %>>Recipes</a>
-      <% if (user) { %>
-        <a href="/cuisines/index"	<%- title === 'Add Cuisine' ? 'class="active"' : '' %>>Cuisines</a>
-        <a href="/recipes/new" <%- title === 'Add Recipe' ? 'class="active"' : '' %>>Add Recipe</a>
-        <a href="/logout">Sign Out</a>
-      <% } else { %>
-        <a href="/auth/google" class="login">Sign In&nbsp;<img src="https://i.imgur.com/FHjYyi0.png"></a>
-      <% } %>
+      <div class="nav-left">
+        <img src="/images/spatula.png">
+        <a href="/" <%- title === 'Lets Cook' ? 'class="active"' : '' %>>Lets Cook</a>
+        <a href="/recipes" <%- title === 'All Recipes' ? 'class="active"' : '' %>>Recipes</a>
+        <% if (user) { %>
+          <a href="/cuisines/index" <%- title === 'Add Cuisine' ? 'class="active"' : '' %>>Cuisines</a>
+          <a href="/recipes/new" <%- title === 'Add Recipe' ? 'class="active"' : '' %>>Add Recipe</a>
+        <% } %>
+      </div>
+      <div class="nav-right">
+        <% if (user) { %>
+          <a href="/accounts"><img src="<%= user.avatar %>" alt="Account" class="nav-avatar"></a>
+        <% } else { %>
+          <a href="/auth/google" class="login">Sign In&nbsp;<img src="https://i.imgur.com/FHjYyi0.png"></a>
+        <% } %>
+      </div>
     </nav>
-
+    
     <main>
       <h1><%= title %></h1>

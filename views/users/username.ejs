@@ -1,0 +1,13 @@
+<%- include('../partials/header') %>
+
+<div class="username-form-container">
+    <form id="create-username-form" method="POST" action="/username">
+        <input id="username-content" name="username" placeholder="Username" value="<%= username %>" required>
+        <input type="submit" value="Create Username">
+    </form>
+    <% if (error) { %>
+        <p class="error-message"><%= error %></p>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>
