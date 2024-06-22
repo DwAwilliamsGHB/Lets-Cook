@@ -1,23 +1,23 @@
 <%- include('../partials/header') %>
 
-<div class="form-container">
-  <form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST" autocomplete="off" class="form-container" id="add-recipe-form">
+<div class="create-recipe-container">
+  <form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST" autocomplete="off" id="add-recipe-form">
     <label>Dish Name:
       <input type="text" name="dishName" value="<%= recipe.dishName %>">
     </label>
     <div class="error-message-container">
       <span class="error-message" id="dishName-error"></span>
     </div>
-    <br>
-    <label>Cuisine:
+
+    <label class="no-error-label">Cuisine:
       <select name="cuisine">
         <% cuisines.forEach(cuisine => { %>
           <option value="<%= cuisine._id %>" <%= recipe.cuisine && recipe.cuisine._id.toString() === cuisine._id.toString() ? 'selected' : '' %>><%= cuisine.name %></option>
         <% }); %>
       </select>
     </label>
-    <br>
-    <label>Type of Dish:
+
+    <label class="no-error-label">Type of Dish:
       <select name="dishType">
         <option value="Appetizer" <%= recipe.dishType === 'Appetizer' ? 'selected' : '' %>>Appetizer</option>
         <option value="Side Dish" <%= recipe.dishType === 'Side Dish' ? 'selected' : '' %>>Side Dish</option>
@@ -26,33 +26,33 @@
         <option value="Full Course" <%= recipe.dishType === 'Full Course' ? 'selected' : '' %>>Full Course</option>
       </select>
     </label>
-    <br>
+
     <label>Servings:
       <input type="number" name="serving" value="<%= recipe.serving %>">
     </label>
     <div class="error-message-container">
       <span class="error-message" id="serving-error"></span>
     </div>
-    <br>
-    <label>Prep Time:
+
+    <label class="create-recipe-label">Prep Time:
       <input type="number" name="prepTime" value="<%= recipe.prepTime %>">
     </label>
     <div class="error-message-container">
       <span class="error-message" id="prepTime-error"></span>
     </div>
-    <br>
-    <label>Cook Time:
+
+    <label class="create-recipe-label">Cook Time:
       <input type="number" name="cookTime" value="<%= recipe.cookTime %>">
     </label>
     <div class="error-message-container">
       <span class="error-message" id="cookTime-error"></span>
     </div>
-    <br>
-    <label>Have made before:
+
+    <label class="create-recipe-label no-error-label">Have made before:
       <input type="checkbox" name="haveMade" <%= recipe.haveMade ? 'checked' : '' %>>
     </label>
-    <br>
-    <input type="submit" value="Update Recipe" data-processing="false"></input>
+
+    <input type="submit" value="Update Recipe" data-processing="false">
   </form>
 </div>
 
@@ -76,10 +76,10 @@
   });
 
   function getValidationFunction(form) {
-      if (form.id === "add-recipe-form") {
-          return validateRecipeForm;
-      }
-      return () => true;
+    if (form.id === "add-recipe-form") {
+      return validateRecipeForm;
+    }
+    return () => true;
   }
 
   async function validateRecipeForm() {

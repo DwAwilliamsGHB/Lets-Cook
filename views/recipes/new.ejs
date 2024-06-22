@@ -1,14 +1,14 @@
 <%- include('../partials/header') %>
 
-<div class="form-container">
-  <form action="/recipes" method="POST" class="form-container" id="add-recipe-form">
+<div class="create-recipe-container">
+  <form action="/recipes" method="POST" id="add-recipe-form">
     <label>Dish Name:
       <input type="text" name="dishName">
     </label>
     <div class="error-message-container">
       <span class="error-message" id="dishName-error"></span>
     </div>
-    <br>
+
     <label for="cuisine">Cuisine:
       <select id="cuisine" name="cuisine">
         <option value="" selected disabled>Pick a cuisine</option>
@@ -20,7 +20,7 @@
     <div class="error-message-container">
       <span class="error-message" id="cuisine-error"></span>
     </div>
-    <br>
+
     <label>Type of Dish:
       <select name="dishType">
         <option value="" selected disabled>Pick a dish type</option>
@@ -34,40 +34,40 @@
     <div class="error-message-container">
       <span class="error-message" id="dishType-error"></span>
     </div>
-    <br>
+
     <label>Servings:
       <input type="number" name="serving">
     </label>
     <div class="error-message-container">
       <span class="error-message" id="serving-error"></span>
     </div>
-    <br>
-    <label>Prep Time:
+
+    <label class="create-recipe-label">Prep Time (minutes):
       <input type="number" name="prepTime">
     </label>
     <div class="error-message-container">
       <span class="error-message" id="prepTime-error"></span>
     </div>
-    <br>
-    <label>Cook Time:
+
+    <label class="create-recipe-label">Cook Time (minutes):
       <input type="number" name="cookTime">
     </label>
     <div class="error-message-container">
       <span class="error-message" id="cookTime-error"></span>
     </div>
-    <br>
-    <label>Have made before:
+
+    <label class="create-recipe-label no-error-label">Have made before:
       <input type="checkbox" name="haveMade" checked>
     </label>
-    <br>
-    <input type="submit" data-processing="false" value="Add Recipe"></input>
+
+    <input type="submit" data-processing="false" value="Add Recipe">
   </form>
 </div>
 
 <%- include('../partials/footer') %>
 
 <script>
-  
+
   const formElements = document.querySelectorAll("form");
   formElements.forEach((form) => {
     form.addEventListener("submit", async (event) => {
@@ -84,10 +84,10 @@
   });
 
   function getValidationFunction(form) {
-      if (form.id === "add-recipe-form") {
-          return validateRecipeForm;
-      }
-      return () => true;
+    if (form.id === "add-recipe-form") {
+      return validateRecipeForm;
+    }
+    return () => true;
   }
 
   async function validateRecipeForm() {
