@@ -127,9 +127,19 @@ function initializeServingsInput() {
     const recipeId = document.getElementById("recipe-div").getAttribute("data-recipe-id"); // Get the recipe ID
     const servingsInput = document.getElementById("servings-input");
     const savedServings = localStorage.getItem(`currentServings_${recipeId}`); // Retrieve saved servings from local storage
+    const originalServings = servingsInput?.getAttribute('data-original-servings'); // Get the current original serving value
+    const savedOriginalServings = localStorage.getItem(`originalServings_${recipeId}`); // Retrieve saved original servings from local storage
 
-    if (savedServings && servingsInput) {
-        servingsInput.value = savedServings; // Set the value of the input to the saved servings
+    // Check if the original servings value has changed
+    if (originalServings && originalServings !== savedOriginalServings) {
+        // Update the input to the new original servings
+        servingsInput.value = originalServings;
+        updateIngredientQuantities(); // Update the ingredient quantities based on the new servings
+        localStorage.setItem(`currentServings_${recipeId}`, originalServings); // Update local storage to the new original servings
+        localStorage.setItem(`originalServings_${recipeId}`, originalServings); // Save the new original servings value
+    } else if (savedServings && servingsInput) {
+        // Use the saved servings value
+        servingsInput.value = savedServings;
         updateIngredientQuantities(); // Update the ingredient quantities based on the saved servings
     }
 
@@ -538,3 +548,7 @@ if (displayModeElement) {
         saveDisplayMode(); // Save the display mode whenever it changes
     });
 }
+
+function printPage() {
+    window.print();
+  }

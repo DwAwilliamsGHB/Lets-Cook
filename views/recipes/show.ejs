@@ -72,7 +72,7 @@
                 </li>
                 <div>
                   <% if (user?._id.equals(equipment.user)) { %>
-                    <button class="list-edit-button">
+                    <button class="list-edit-button hidden" >
                       <a href="recipes/equipments/<%= equipment._id %>/edit">
                         Edit
                       </a>
@@ -81,7 +81,7 @@
                 </div>
                 <div>
                   <% if (user?._id.equals(equipment.user)) { %>
-                    <form action="/recipes/<%= recipe._id %>/equipments/<%= equipment._id %>?_method=DELETE" method="POST" class="x-form">
+                    <form action="/recipes/<%= recipe._id %>/equipments/<%= equipment._id %>?_method=DELETE" method="POST" class="x-form hidden">
                       <button class="x-button" type="submit">X</button>
                   </form>
                   <% } %>
@@ -92,7 +92,7 @@
   <% } %>
 
   <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
-    <div class="input-div">
+    <div class="input-div hidden">
       <form id="add-equipment-form" method="POST"
         action="/recipes/<%= recipe._id %>/equipments">
         <input id="content-form-equipment" name="content" placeholder="Equipment item name (e.g., blender, pastry cutter)"></input>
@@ -133,7 +133,7 @@
           </li>
           <div>
             <% if (user?._id.equals(ingredient.user)) { %>
-              <button class="list-edit-button">
+              <button class="list-edit-button hidden">
                 <a href="/recipes/<%= recipe._id %>/ingredients/<%= ingredient._id %>/edit">
                   Edit
                 </a>
@@ -142,7 +142,7 @@
           </div>
           <div>
             <% if (user?._id.equals(ingredient.user)) { %>
-              <form action="/recipes/<%= recipe._id %>/ingredients/<%= ingredient._id %>?_method=DELETE" method="POST" class="x-form">
+              <form action="/recipes/<%= recipe._id %>/ingredients/<%= ingredient._id %>?_method=DELETE" method="POST" class="x-form hidden">
                 <button class="x-button" type="submit">X</button>
               </form>
             <% } %>
@@ -153,7 +153,7 @@
   <% } %>
   
   <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
-    <div class="input-div">
+    <div class="input-div hidden">
       <form id="add-ingredient-form" method="POST"
         action="/recipes/<%= recipe._id %>/ingredients">
         <input  name="quantity" id="quantity-form-ingredient" placeholder="Qty."></input>
@@ -183,7 +183,7 @@
   <% } %>
 
   <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
-    <div class="input-div">
+    <div class="input-div hidden">
       <form id="add-ingredient-group-form" method="POST" action="/recipes/<%= recipe._id %>/ingredientGroups">
         <input id="name-form-ingredient-group" name="name" placeholder="Group name (e.g., Dry Ingredients, For the Topping)"></input>
         <input type="submit" value="Create ingredient group" data-processing="false">
@@ -204,7 +204,7 @@
               <h3 class="ingredient-group-name"><%= ingredientGroup.name %></h3>
               <div class="group-edit">
                 <% if (user?._id.equals(ingredientGroup.user)) { %>
-                  <button class="list-edit-button">
+                  <button class="list-edit-button hidden">
                     <a href="recipes/ingredientGroups/<%= ingredientGroup._id %>/edit">
                       Edit
                     </a>
@@ -213,7 +213,7 @@
               </div>
               <div class="group-delete">
                 <% if (user?._id.equals(ingredientGroup.user)) { %>
-                  <form action="/ingredientGroups/<%= ingredientGroup._id %>?_method=DELETE" method="POST" class="x-form">
+                  <form action="/ingredientGroups/<%= ingredientGroup._id %>?_method=DELETE" method="POST" class="x-form hidden">
                     <button class="x-button" type="submit">X</button>
                   </form>
                 <% } %>
@@ -228,7 +228,7 @@
                 </li>
                 <div>
                   <% if (user?._id.equals(ingredient.user)) { %>
-                    <button class="list-edit-button">
+                    <button class="list-edit-button hidden">
                       <a href="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients/<%= ingredient._id %>/edit">
                         Edit
                       </a>
@@ -237,7 +237,7 @@
                 </div>
                 <div>
                   <% if (user?._id.equals(ingredient.user)) { %>
-                    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients/<%= ingredient._id %>?_method=DELETE" method="POST" class="x-form">
+                    <form action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients/<%= ingredient._id %>?_method=DELETE" method="POST" class="x-form hidden">
                       <button class="x-button" type="submit">X</button>
                     </form>
                   <% } %>
@@ -245,7 +245,7 @@
               <% }); %>
             </ul>
             <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
-              <div class="input-div">
+              <div class="input-div hidden">
                 <form class="add-group-ingredient-form" id="add-group-ingredient-form-<%= ingredientGroup._id %>" method="POST"
                   action="/recipes/<%= recipe._id %>/ingredientGroups/<%= ingredientGroup._id %>/ingredients" onsubmit="return validateGroupIngredientForm('<%= ingredientGroup._id %>')">
                   <input name="quantity" id="quantity-form-group-ingredient-<%= ingredientGroup._id %>" class="quantity-form-group-ingredient" placeholder="Qty."></input>
@@ -290,7 +290,7 @@
                 </li>
                 <div>
                   <% if (user?._id.equals(step.user)) { %>
-                    <button class="list-edit-button">
+                    <button class="list-edit-button hidden">
                       <a href="recipes/steps/<%= step._id %>/edit">
                         Edit
                       </a>
@@ -299,7 +299,7 @@
                 </div>
                 <div>
                   <% if (user?._id.equals(step.user)) { %>
-                    <form action="/steps/<%= step._id %>?_method=DELETE" method="POST" class="x-form">
+                    <form action="/steps/<%= step._id %>?_method=DELETE" method="POST" class="x-form hidden">
                       <button class="x-button" type="submit">X</button>
                     </form>
                   <% } %>
@@ -310,7 +310,7 @@
   <% } %>
   
   <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
-    <div class="input-div">
+    <div class="input-div hidden">
       <form id="add-step-form" method="POST"
         action="/recipes/<%= recipe._id %>/steps">
         <textarea id="content-form-step" name="content" placeholder="Add step (e.g., Mix flour and sugar together until well combined.)"></textarea>
@@ -324,7 +324,7 @@
   <% } %>
 
   <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
-    <div class="input-div">
+    <div class="input-div hidden">
       <form id="add-step-group-form" method="POST" action="/recipes/<%= recipe._id %>/stepGroups">
         <input id="name-form-step-group" name="name" placeholder="Group name (e.g., For the Sauce, Final Assembly)"></input>
         <input type="submit" value="Create instruction group" data-processing="false">
@@ -345,7 +345,7 @@
               <h3 class="step-group-name"><%= stepGroup.name %></h3>
               <div class="group-edit">
                 <% if (user?._id.equals(stepGroup.user)) { %>
-                  <button class="list-edit-button">
+                  <button class="list-edit-button hidden">
                     <a href="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/edit">
                       Edit
                     </a>
@@ -354,7 +354,7 @@
               </div>
               <div class="group-delete">
                 <% if (user?._id.equals(stepGroup.user)) { %>
-                  <form action="/stepGroups/<%= stepGroup._id %>?_method=DELETE" method="POST" class="x-form">
+                  <form action="/stepGroups/<%= stepGroup._id %>?_method=DELETE" method="POST" class="x-form hidden">
                     <button class="x-button" type="submit">X</button>
                   </form>
                 <% } %>
@@ -367,7 +367,7 @@
                 </li>
                 <div>
                   <% if (user?._id.equals(step.user)) { %>
-                    <button class="list-edit-button">
+                    <button class="list-edit-button hidden">
                       <a href="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/steps/<%= step._id %>/edit">
                         Edit
                       </a>
@@ -376,7 +376,7 @@
                 </div>
                 <div>
                   <% if (user?._id.equals(step.user)) { %>
-                    <form action="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/steps/<%= step._id %>?_method=DELETE" method="POST" class="x-form">
+                    <form action="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/steps/<%= step._id %>?_method=DELETE" method="POST" class="x-form hidden">
                       <button class="x-button" type="submit">X</button>
                     </form>
                   <% } %>
@@ -384,7 +384,7 @@
               <% }); %>
             </ol>
             <% if (user && recipe.user && recipe.user.equals(user._id)) { %>
-              <div class="input-div">
+              <div class="input-div hidden">
                 <form class="add-group-step-form" id="add-group-step-form-<%= stepGroup._id %>" method="POST" action="/recipes/<%= recipe._id %>/stepGroups/<%= stepGroup._id %>/steps">
                   <textarea id="content-form-group-step-<%= stepGroup._id %>" name="content" class="content-form-group-step" placeholder="Add step (e.g., Mix flour and sugar together until well combined.)"></textarea>
                   <input type="submit" value="Add step to group" data-processing="false">
@@ -412,7 +412,7 @@
                 </li>
                 <div>
                   <% if (user?._id.equals(note.user)) { %>
-                    <button class="list-edit-button">
+                    <button class="list-edit-button hidden">
                       <a href="recipes/notes/<%= note._id %>/edit">
                         Edit
                       </a>
@@ -421,7 +421,7 @@
                 </div>
                 <div>
                   <% if (user?._id.equals(note.user)) { %>
-                    <form action="/recipes/<%= recipe._id %>/notes/<%= note._id %>?_method=DELETE" method="POST" class="x-form">
+                    <form action="/recipes/<%= recipe._id %>/notes/<%= note._id %>?_method=DELETE" method="POST" class="x-form hidden">
                       <button class="x-button" type="submit">X</button>
                   </form>
                   <% } %>
@@ -432,7 +432,7 @@
   <% } %>
 
   <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
-    <div class="input-div">
+    <div class="input-div hidden">
       <form id="add-note-form" method="POST"
         action="/recipes/<%= recipe._id %>/notes">
         <textarea id="content-form-note" name="content" placeholder="Add note (Any additional tips or variations for this recipe)"></textarea>
@@ -456,7 +456,7 @@
                 </li>
                 <div>
                   <% if (user?._id.equals(storage.user)) { %>
-                    <button class="list-edit-button">
+                    <button class="list-edit-button hidden">
                       <a href="recipes/storages/<%= storage._id %>/edit">
                         Edit
                       </a>
@@ -465,7 +465,7 @@
                 </div>
                 <div>
                   <% if (user?._id.equals(storage.user)) { %>
-                    <form action="/recipes/<%= recipe._id %>/storages/<%= storage._id %>?_method=DELETE" method="POST" class="x-form">
+                    <form action="/recipes/<%= recipe._id %>/storages/<%= storage._id %>?_method=DELETE" method="POST" class="x-form hidden">
                       <button class="x-button" type="submit">X</button>
                   </form>
                   <% } %>
@@ -476,7 +476,7 @@
   <% } %>
 
   <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
-    <div class="input-div">
+    <div class="input-div hidden">
       <form id="add-storage-form" method="POST"
         action="/recipes/<%= recipe._id %>/storages">
         <textarea id="content-form-storage" name="content" placeholder="Add storage info (e.g., Store in an airtight container at room temperature for up to 3 days.)"></textarea>
@@ -500,7 +500,7 @@
                 </li>
                 <div>
                   <% if (user?._id.equals(freezer.user)) { %>
-                    <button class="list-edit-button">
+                    <button class="list-edit-button hidden">
                       <a href="recipes/freezers/<%= freezer._id %>/edit">
                         Edit
                       </a>
@@ -509,7 +509,7 @@
                 </div>
                 <div>
                   <% if (user?._id.equals(freezer.user)) { %>
-                    <form action="/recipes/<%= recipe._id %>/freezers/<%= freezer._id %>?_method=DELETE" method="POST" class="x-form">
+                    <form action="/recipes/<%= recipe._id %>/freezers/<%= freezer._id %>?_method=DELETE" method="POST" class="x-form hidden">
                       <button class="x-button" type="submit">X</button>
                   </form>
                   <% } %>
@@ -520,7 +520,7 @@
   <% } %>
 
   <% if(user && recipe.user && recipe.user.equals(user._id)) { %>
-    <div class="input-div">
+    <div class="input-div hidden">
       <form id="add-freezer-form" method="POST"
         action="/recipes/<%= recipe._id %>/freezers">
         <textarea id="content-form-freezer" name="content" placeholder="Add freezing info (e.g., Freeze in a sealed container for up to 1 month. Thaw overnight in the refrigerator before serving.)"></textarea>
@@ -531,6 +531,10 @@
       </div>
     </div>
   <% } %>
+
+  <div class="print-button-container">
+    <button id="print-button" onclick="printPage()">Print Recipe</button>
+  </div>  
 
 </div>
 

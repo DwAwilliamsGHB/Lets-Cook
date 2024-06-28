@@ -390,6 +390,10 @@ input+input {
 
 .recipe-name {
   color: #333333;
+  white-space: normal;
+  word-wrap: break-word;
+  display: block;
+  max-width: 100%;  
 }
 
 table {
@@ -975,4 +979,31 @@ ul, ol {
   padding: 5px;
   display: flex;
   flex-direction: column;
+}
+
+.print-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#print-button {
+  padding: 7px 10px;
+  font-size: 16px;
+  background-color: #444444;
+  border: 1px solid #444444;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#print-button:hover {
+  background-color: #333333;
+}
+
+@media print {
+  .input-div, .x-button, .list-edit-button, #ed-de-div, .main-nav, .nav-left, .nav-right, #ingredients-adjuster, #print-button {
+    display: none !important;
+  }
 }
